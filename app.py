@@ -1,4 +1,6 @@
 import streamlit as st
+import numpy as np
+import plotly.graph_objs as go
 
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
