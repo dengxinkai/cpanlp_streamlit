@@ -14,7 +14,7 @@ import plotly.express as px
 
 @st.cache
 def loadData():
-	df = pd.read_csv("2010-capitalbikeshare-tripdata.csv")
+	df = pd.read_csv("https://github.com/dengxinkai/cpanlp_streamlit/blob/main/app4/2010-capitalbikeshare-tripdata.csv")
 	return df
 
 # Basic preprocessing required for all the models.  
