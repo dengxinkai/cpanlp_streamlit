@@ -86,7 +86,7 @@ def accept_user_data():
 # Loading the data for showing visualization of vehicals starting from various start locations on the world map.
 @st.cache
 def showMap():
-	plotData = pd.read_csv("Trip history with locations.csv")
+	plotData = pd.read_csv("https://github.com/dengxinkai/cpanlp_streamlit/blob/main/app4/Trip history with locations.csv")
 	Data = pd.DataFrame()
 	Data['lat'] = plotData['lat']
 	Data['lon'] = plotData['lon']
