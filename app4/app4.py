@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import warnings
 warnings.filterwarnings("ignore")
 
-data = pd.read_csv("../Forest_fire.csv")
+data = pd.read_csv("//Forest_fire.csv")
 data = np.array(data)
 
 X = data[1:, 1:-1]
