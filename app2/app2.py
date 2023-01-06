@@ -4,7 +4,7 @@ import streamlit as st
 st.title("My cool app")
 
 doc = [{
-    "text": "But Google is starting from behind.",
+    "text": "你真的很厉害呀哈哈哈哈",
     "ents": [{"start": 4, "end": 10, "label": "ORG"}],
     "title": None
 }]
