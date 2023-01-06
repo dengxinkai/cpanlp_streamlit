@@ -1,9 +1,4 @@
 import streamlit as st
 
-st.title('My first Streamlit app')
+st.title('cpanlp自然语言处理项目')
 
-text = st.text_input('Enter some text:')
-st.write('You entered:', text)
-
-slider = st.slider('Select a range of values:', 0, 100)
-st.write('You selected:', slider)
