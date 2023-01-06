@@ -13,6 +13,6 @@ spacy_streamlit.visualize_ner(
     doc,
     labels=["ORG"],
     show_table=False,
-    title="Manual visualization of organisations",
+    title="你真的很厉害呀哈哈哈哈",
     manual=True
 )
