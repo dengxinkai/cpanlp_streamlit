@@ -1,6 +1,8 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import base64
+
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
 data = [(1, 2, 3)]
 df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
