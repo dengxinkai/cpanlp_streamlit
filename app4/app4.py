@@ -5,7 +5,6 @@ import os
 # NLP Pkgs
 from textblob import TextBlob 
 import spacy
-from gensim.summarization import summarize
 
 # Sumy Summary Pkg
 from sumy.parsers.plaintext import PlaintextParser
@@ -94,13 +93,9 @@ def main():
 				summary_result = sumy_summarizer(message)
 			elif summary_options == 'gensim':
 				st.text("Using Gensim Summarizer ..")
-				summary_result = summarize(rawtext)
 			else:
 				st.warning("Using Default Summarizer")
 				st.text("Using Gensim Summarizer ..")
-				summary_result = summarize(rawtext)
-
-		
 			st.success(summary_result)
 
 
