@@ -2,7 +2,8 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import base64
-
+data = [(1, 2, 3)]
+df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
 if uploaded_file is not None:
@@ -11,8 +12,7 @@ if uploaded_file is not None:
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
 
-data = [(1, 2, 3)]
-df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
+
 csv = df.to_csv(index=False)
 
 b64 = base64.b64encode(csv.encode()).decode()
