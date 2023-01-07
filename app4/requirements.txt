@@ -1,5 +1,3 @@
 streamlit
-textblob
-spacy
-gensim
-sumy
+numpy
+pandas
