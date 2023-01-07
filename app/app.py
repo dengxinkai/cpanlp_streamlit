@@ -1,8 +1,14 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+uploaded_file = st.file_uploader("上传csv文件", type="csv")
+data = [(1, 2, 3)]
+df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
+csv = df.to_csv(index=False)
 
+b64 = base64.b64encode(csv.encode()).decode()
+href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (right-click and save as &lt;some_name&gt;.csv)'
+st.markdown(href, unsafe_allow_html=True)
 if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
     st.write(data)
