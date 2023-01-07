@@ -1,6 +1,11 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
+uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
 
+if uploaded_file is not None:
+    data = pd.read_csv(uploaded_file)
+    st.write(data)
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
 import matplotlib.pyplot as plt
