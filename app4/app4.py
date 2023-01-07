@@ -26,4 +26,3 @@ if st.button("search"):
     st.write("{} Records ".format(str(df_result_search.shape[0])))
     st.dataframe(df_result_search)
 st.write(df)
-st.write(df_result_search)
