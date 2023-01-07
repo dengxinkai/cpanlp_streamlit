@@ -10,12 +10,13 @@ if uploaded_file is not None:
     st.write(df)
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
-if df is not None:
-    csv = df.to_csv(index=False)
 
-    b64 = base64.b64encode(csv.encode()).decode()
-    href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (右击保存为.csv的文件 &lt;some_name&gt;.csv)'
-    st.markdown(href, unsafe_allow_html=True)
+df = pd.Dateframe()
+csv = df.to_csv(index=False)
+
+b64 = base64.b64encode(csv.encode()).decode()
+href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (右击保存为.csv的文件 &lt;some_name&gt;.csv)'
+st.markdown(href, unsafe_allow_html=True)
 
 import matplotlib.pyplot as plt
 
