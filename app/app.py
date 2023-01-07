@@ -14,9 +14,8 @@ st.header("Chart with two lines")
 
 
 csv = df.to_csv(index=False)
-
 b64 = base64.b64encode(csv.encode()).decode()
-href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (右击保存为.csv的文件 &lt;some_name&gt;.csv)'
+href = f'<a href="data:file/csv;base64,{b64}.csv">Download CSV File</a> (右击保存为.csv的文件)'
 st.markdown(href, unsafe_allow_html=True)
 
 import matplotlib.pyplot as plt
