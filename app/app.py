@@ -11,7 +11,8 @@ if uploaded_file is not None:
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
 
-df = pd.Dateframe()
+data = [(1, 2, 3)]
+df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 csv = df.to_csv(index=False)
 
 b64 = base64.b64encode(csv.encode()).decode()
@@ -32,7 +33,7 @@ st.write("""
 # Simple Stock Price App
 Shown are the stock **closing price** and ***volume*** of Google!
 """)
-
+ 
 # https://towardsdatascience.com/how-to-get-stock-data-using-python-c0de1df17e75
 #define the ticker symbol
 tickerSymbol = 'GOOGL'
