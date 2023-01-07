@@ -8,8 +8,8 @@ uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
+    st.success("csv导入成df成功")
     st.write(df)
-    st.success("成功消息显示为")
 
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
