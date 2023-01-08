@@ -1,7 +1,5 @@
 import streamlit as st
 import numpy as np
-import streamlit as st
-import numpy as np
 import pandas as pd
 import base64
 import seaborn as sns
@@ -32,3 +30,16 @@ csv = df.to_csv(index=False)
 b64 = base64.b64encode(csv.encode()).decode()
 href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (右击保存为.csv的文件)'
 st.markdown(href, unsafe_allow_html=True)
+@st.cache
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')
+
+csv = convert_df(df)
+
+st.download_button(
+    label="Download data as CSV",
+    data=csv,
+    file_name='df.csv',
+    mime='text/csv',
+)
