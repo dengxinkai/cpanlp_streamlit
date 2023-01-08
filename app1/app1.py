@@ -2,7 +2,17 @@ import streamlit as st
 import pandas as pd
 from sklearn import datasets
 from sklearn.ensemble import RandomForestClassifier
-
+st.set_page_config(
+    page_title="cpanlp的机器学习",
+    page_icon="🐱",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://www.cpanlp.com/',
+        'Report a bug': "https://www.cpanlp.com/",
+        'About': "很高兴您使用cpanlp的机器学习项目"
+    }
+)
 st.write("""
 # Simple Iris Flower Prediction App
 This app predicts the **Iris flower** type!
