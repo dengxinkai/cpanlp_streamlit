@@ -2,6 +2,17 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import base64
+st.set_page_config(
+    page_title="cpanlp的机器学习",
+    page_icon="🐱",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://www.cpanlp.com/',
+        'Report a bug': "https://www.cpanlp.com/",
+        'About': "很高兴您使用cpanlp的机器学习项目"
+    }
+)
 data = [(1, 2, 3)]
 df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
