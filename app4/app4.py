@@ -1,28 +1,33 @@
-import streamlit as st 
+import streamlit as st
+import numpy as np
+import streamlit as st
+import numpy as np
 import pandas as pd
+import base64
+import seaborn as sns
+import matplotlib.pyplot as plt
+sns.set_style("whitegrid",{"font.sans-serif":['simhei','Arial']})
+data = [(1, 2, 3)]
+df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
+uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
-data = {'name':['Tom', 'nick', 'krish', 'jack','Tom'],
-        'nickname':['jack','krish','karim','joe','joe'],
-        'age':[20, 18, 19, 18,22]}
- 
-df = pd.DataFrame(data)
-df_result_search = pd.DataFrame() 
+if uploaded_file is not None:
+    df = pd.read_csv(uploaded_file)
+    st.success("csv导入成df成功")
+    st.write(df)
+    valx = st.sidebar.selectbox(
+    '选择x变量',
+    df.columns)
+    valy = st.sidebar.selectbox('选择y变量',df.columns)
+    if st.sidebar.button('Show Plots'):
+        fig = plt.figure(figsize=(10, 4))
+        sns.scatterplot(x = valx, y = valy, data = df)
+        st.pyplot(fig)
+st.title('cpanlp自然语言处理项目')
+st.header("Chart with two lines")
 
 
-searchcheckbox_name_nickname = st.checkbox("Name or Nickname ",value = False,key=1)
-searchcheckbox_age = st.checkbox("age",value = False,key=2)
-
-if searchcheckbox_name_nickname:
-    name_search = st.text_input("name")
-    nickname_search = st.text_input("nickname")
-if searchcheckbox_age:   
-    age_search = st.number_input("age",min_value=0)
-if st.button("search"):
-    df_result_search = df[df['name'].str.contains(name_search,case=False, na=False)]
-    df_result_search = df[df['nickname'].str.contains(nickname_search,case=False, na=False)]
-    
-    df_result_search = df[df['age']==(age_search)]
-                    
-    st.write("{} Records ".format(str(df_result_search.shape[0])))
-    st.dataframe(df_result_search)
-st.write(df)
+csv = df.to_csv(index=False)
+b64 = base64.b64encode(csv.encode()).decode()
+href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (右击保存为.csv的文件)'
+st.markdown(href, unsafe_allow_html=True)
