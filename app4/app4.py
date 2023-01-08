@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import base64
 import seaborn as sns
 import matplotlib.pyplot as plt
 
@@ -26,10 +25,7 @@ st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
 
 
-csv = df.to_csv(index=False)
-b64 = base64.b64encode(csv.encode()).decode()
-href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (右击保存为.csv的文件)'
-st.markdown(href, unsafe_allow_html=True)
+
 @st.cache
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
