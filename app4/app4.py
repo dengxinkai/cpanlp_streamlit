@@ -33,6 +33,18 @@ if uploaded_file is not None:
         st.pyplot(fig)
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
+#下载csv
+@st.cache
+def convert_df(df):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df.to_csv().encode('utf-8')
+csv = convert_df(df)
+st.download_button(
+    label="Download data as CSV",
+    data=csv,
+    file_name='df.csv',
+    mime='text/csv',
+)
 
 
 
