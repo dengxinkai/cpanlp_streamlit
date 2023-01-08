@@ -6,7 +6,7 @@ import pandas as pd
 import base64
 import seaborn as sns
 import matplotlib.pyplot as plt
-sns.set_style("whitegrid",{"font.sans-serif":['simhei','Arial']})
+
 data = [(1, 2, 3)]
 df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
@@ -21,6 +21,7 @@ if uploaded_file is not None:
     valy = st.sidebar.selectbox('选择y变量',df.columns)
     if st.sidebar.button('Show Plots'):
         fig = plt.figure(figsize=(10, 4))
+        plt.rcParams["font.sans-serif"]=["SimHei"]
         sns.scatterplot(x = valx, y = valy, data = df)
         st.pyplot(fig)
 st.title('cpanlp自然语言处理项目')
