@@ -14,7 +14,7 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
-st.write("[返回](https://https://cpanlp.com/example/)")
+st.write("[返回](https://cpanlp.com/example/)")
 data = [(1, 2, 3)]
 df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
