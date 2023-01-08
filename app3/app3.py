@@ -5,7 +5,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import yfinance as yf
-
+st.set_page_config(
+    page_title="cpanlp的机器学习",
+    page_icon="🐱",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://www.cpanlp.com/',
+        'Report a bug': "https://www.cpanlp.com/",
+        'About': "很高兴您使用cpanlp的机器学习项目"
+    }
+)
 st.title('S&P 500 App')
 
 st.markdown("""
