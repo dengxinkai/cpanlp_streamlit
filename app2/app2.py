@@ -1,17 +1,24 @@
 import streamlit as st 
 import numpy as np 
-
 import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn.model_selection import train_test_split
-
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
-
 from sklearn.metrics import accuracy_score
-
+st.set_page_config(
+    page_title="cpanlp的机器学习",
+    page_icon="🐱",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://www.cpanlp.com/',
+        'Report a bug': "https://www.cpanlp.com/",
+        'About': "很高兴您使用cpanlp的机器学习项目"
+    }
+)
 st.title('Streamlit Example')
 
 st.write("""
