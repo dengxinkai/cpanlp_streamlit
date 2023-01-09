@@ -19,7 +19,7 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
-plt.rcParams["font.sans-serif"]=["SimSun"] #设置字体
+plt.rcParams["font.sans-serif"]=["FangSong"] #设置字体
 plt.rcParams["axes.unicode_minus"]=False #正常显示负号
 st.write("[返回](https://cpanlp.com/example/)")
 
