@@ -72,19 +72,15 @@ st.markdown(html_temp, unsafe_allow_html=True)
 # predictions=rf_random.predict(X_test)
 # # file = open('/Users/dengxinkaiacca163.com/Desktop/语言学理论/react/streamlit/app5/random_forest_regression_model.pkl', 'wb')
 # pickle.dump(rf_random, file)
-@st.cache
 def Fuel_info(x):
     a={0: "97号油", 1: "汽油",2: '柴油'}
     return "选择了"+a[x]
-@st.cache
 def Seller_info(x):
     a={0: "个人", 1: "中介"}
     return "选择了"+a[x]
-@st.cache
 def Owner_info(x):
     a={1: "新手", 2: "2手",3:"3手"}
     return "选择了"+a[x]
-@st.cache
 def load_model():
     return pickle.load(open('./app5/random_forest_regression_model.pkl','rb'))
 model = load_model()
