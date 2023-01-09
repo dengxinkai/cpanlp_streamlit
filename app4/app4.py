@@ -18,8 +18,8 @@ st.write("[返回](https://cpanlp.com/example/)")
 html_temp = """
     <div style="background-color:#000080 ;padding:10px">
     <a href="https://cpanlp.com/example/">
-    <h3 style="color:white;text-align:center;">
-    机器学习项目 </h3>
+    <h4 style="color:white;text-align:center;">
+    机器学习项目 </h4>
     </a>
     </div>
     """
