@@ -16,7 +16,7 @@ st.set_page_config(
 )
 # st.write("[返回](https://cpanlp.com/example/)")
 html_temp = """
-    <div style="background-color:#000080 ;padding:10px">
+    <div style="background-color:#000080 ;padding:2ßpx">
     <a href="https://cpanlp.com/example/">
     <h4 style="color:white;text-align:center;">
     机器学习项目 </h4>
