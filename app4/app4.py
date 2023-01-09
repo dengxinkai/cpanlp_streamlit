@@ -24,7 +24,10 @@ html_temp = """
     </div>
     """
 st.markdown(html_temp, unsafe_allow_html=True)
-df = pd.read_csv('./app4/央行.csv')
+@st.cache
+def first_df():
+    return pd.read_csv('./app4/央行.csv')
+df = first_df()
 st.dataframe(df.style.highlight_max(axis=0))
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
