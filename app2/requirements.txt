@@ -1,5 +1,7 @@
 streamlit
 matplotlib
 scikit-learn
+freeglut3-dev
+libgtk2.0-dev
 language-pack-zh*-dev
 chinese*-dev
