@@ -81,6 +81,9 @@ def Seller_info(x):
 def Owner_info(x):
     a={1: "新手", 2: "2手",3:"3手"}
     return "选择了"+a[x]
+def Transmission_info(x):
+    a={0: "自动", 1: "手动"}
+    return "选择了"+a[x]
 def load_model():
     return pickle.load(open('./app5/random_forest_regression_model.pkl','rb'))
 model = load_model()
@@ -91,11 +94,11 @@ def predict_price(Present_Price, Kms_Driven, Fuel_Type, Seller_Type,
                      no_year]]).astype(np.float64)
     prediction=model.predict(input)
     return float(prediction)
-Present_Price = st.number_input("车子目前市场价值?(万）",min_value=0, max_value=200,value=3,step=0.5)
+Present_Price = st.number_input("车子目前市场价值?(万）",min_value=0.0, max_value=200.0,value=3.0,step=0.5)
 Kms_Driven = st.number_input("车子开了多少公里了?",min_value=0, max_value=100000,value=5000,step=500)
 Fuel_Type = st.radio("油的型号?",[0, 1, 2],format_func=lambda x: Fuel_info(x))
 Seller_Type = st.radio("销售商?",[0, 1],format_func=lambda x: Seller_info(x))
-Transmission = st.text_input("What is the type of Transmission?","Please type 0 for Automatic/ 1 for manual")
+Transmission = st.radio("换挡方式?",[0, 1],format_func=lambda x: Transmission_info(x))
 Owner = st.radio("几手?",[1, 2,3],format_func=lambda x: Owner_info(x))
 No_year = st.number_input("How many years old?",min_value=0, max_value=15,value=5,step=1)
 if st.button("Predict"):
