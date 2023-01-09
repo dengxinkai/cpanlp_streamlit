@@ -19,7 +19,8 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
-
+plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
+plt.rcParams['axes.unicode_minus'] = False #用来正常显示负号
 st.write("[返回](https://cpanlp.com/example/)")
 
 dataset_name = st.sidebar.selectbox(
@@ -102,8 +103,8 @@ plt.scatter(x1, x2,
         c=y, alpha=0.8,
         cmap='viridis')
 
-plt.xlabel('主成分 1')
-plt.ylabel('主成分 2')
+plt.xlabel(u'主成分 1')
+plt.ylabel(u'主成分 2')
 plt.colorbar()
 
 #plt.show()
