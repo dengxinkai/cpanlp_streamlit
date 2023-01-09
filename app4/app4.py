@@ -15,8 +15,7 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
-data = [(1, 2, 3)]
-df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
+df = pd.read_excel('tmp.xlsx')
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
 if uploaded_file is not None:
