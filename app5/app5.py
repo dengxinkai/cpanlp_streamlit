@@ -72,6 +72,10 @@ st.markdown(html_temp, unsafe_allow_html=True)
 # predictions=rf_random.predict(X_test)
 # # file = open('/Users/dengxinkaiacca163.com/Desktop/语言学理论/react/streamlit/app5/random_forest_regression_model.pkl', 'wb')
 # pickle.dump(rf_random, file)
+@st.cache
+def Fuel_info(x):
+    a={'0': "a", '1': "b", '2': 'c'}
+    return "选择了"+a[x]
 
 def load_model():
     return pickle.load(open('./app5/random_forest_regression_model.pkl','rb'))
@@ -85,7 +89,7 @@ def predict_price(Present_Price, Kms_Driven, Fuel_Type, Seller_Type,
     return float(prediction)
 Present_Price = st.number_input("车子目前市场价值?",value=3000,step=50)
 Kms_Driven = st.number_input("车子开了多少公里了?",value=5000,step=100)
-Fuel_Type = st.text_input("What is the type of fuel used?","Please Type 0 for CNG/ 1 for  Diesel/ 2 for Petrol")
+Fuel_Type = st.radio("油的型号?",('0', '1', '2'),index = 1,format_func=lambda x: Fuel_info(x))
 Seller_Type = st.text_input("What is the type of seller?","Please Type 0 for Dealer/ 1 for Individual")
 Transmission = st.text_input("What is the type of Transmission?","Please type 0 for Automatic/ 1 for manual")
 Owner = st.text_input("What is the no. of owners?", "Please type 0/1/3")
