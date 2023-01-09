@@ -16,6 +16,7 @@ st.set_page_config(
 )
 st.write("[返回](https://cpanlp.com/example/)")
 df = pd.read_csv('./app4/央行.csv')
+st.dataframe(df.style.highlight_max(axis=0))
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
 if uploaded_file is not None:
