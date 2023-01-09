@@ -32,7 +32,7 @@ classifier_name = st.sidebar.selectbox(
     'Select classifier',
     ('KNN', 'SVM', 'Random Forest')
 )
-@st.cache
+@st.cache(persist=True)
 def get_dataset(name):
     data = None
     if name == 'Iris':
@@ -102,8 +102,8 @@ plt.scatter(x1, x2,
         c=y, alpha=0.8,
         cmap='viridis')
 
-plt.xlabel('Principal Component 1')
-plt.ylabel('Principal Component 2')
+plt.xlabel('主成分 1')
+plt.ylabel('主成分 2')
 plt.colorbar()
 
 #plt.show()
