@@ -1,4 +1,3 @@
 streamlit
 matplotlib
 scikit-learn
-language pack zh
