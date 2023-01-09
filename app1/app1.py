@@ -13,6 +13,8 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
+st.write("[返回](https://cpanlp.com/example/)")
+
 st.write("""
 # Simple Iris Flower Prediction App
 This app predicts the **Iris flower** type!
