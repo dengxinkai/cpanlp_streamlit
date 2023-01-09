@@ -74,7 +74,15 @@ st.markdown(html_temp, unsafe_allow_html=True)
 # pickle.dump(rf_random, file)
 @st.cache
 def Fuel_info(x):
-    a={0: "a", 1: "b",2: 'c'}
+    a={0: "97号油", 1: "汽油",2: '柴油'}
+    return "选择了"+a[x]
+@st.cache
+def Seller_info(x):
+    a={0: "个人", 1: "中介"}
+    return "选择了"+a[x]
+@st.cache
+def Owner_info(x):
+    a={1: "新手", 2: "2手",3:"3手"}
     return "选择了"+a[x]
 
 def load_model():
@@ -90,9 +98,9 @@ def predict_price(Present_Price, Kms_Driven, Fuel_Type, Seller_Type,
 Present_Price = st.number_input("车子目前市场价值?",value=3000,step=50)
 Kms_Driven = st.number_input("车子开了多少公里了?",value=5000,step=100)
 Fuel_Type = st.radio("油的型号?",[0, 1, 2],format_func=lambda x: Fuel_info(x))
-Seller_Type = st.text_input("What is the type of seller?","Please Type 0 for Dealer/ 1 for Individual")
+Seller_Type = st.radio("销售商?",[0, 1],format_func=lambda x: Seller_info(x))
 Transmission = st.text_input("What is the type of Transmission?","Please type 0 for Automatic/ 1 for manual")
-Owner = st.text_input("What is the no. of owners?", "Please type 0/1/3")
+Owner = st.radio("几手?",[1, 2,3],format_func=lambda x: Owner_info(x))
 no_year = st.number_input("How many years old?",value=10,step=1)
 if st.button("Predict"):
     output=predict_price(Present_Price, Kms_Driven,Fuel_Type, Seller_Type,Transmission, Owner, no_year)
