@@ -19,25 +19,19 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
-st.title('Streamlit Example')
 
-st.write("""
-# Explore different classifier and datasets
-Which one is the best?
-""")
 
 dataset_name = st.sidebar.selectbox(
     'Select Dataset',
     ('Iris', 'Breast Cancer', 'Wine')
 )
-
 st.write(f"## {dataset_name} Dataset")
 
 classifier_name = st.sidebar.selectbox(
     'Select classifier',
     ('KNN', 'SVM', 'Random Forest')
 )
-
+@st.cache
 def get_dataset(name):
     data = None
     if name == 'Iris':
@@ -49,7 +43,6 @@ def get_dataset(name):
     X = data.data
     y = data.target
     return X, y
-
 X, y = get_dataset(dataset_name)
 st.write('Shape of dataset:', X.shape)
 st.write('number of classes:', len(np.unique(y)))
