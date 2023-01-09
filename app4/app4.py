@@ -14,7 +14,7 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
-st.write("[返回](https://cpanlp.com/example/)")
+# st.write("[返回](https://cpanlp.com/example/)")
 html_temp = """
     <div style="background-color:#000080 ;padding:10px">
     <a href="https://cpanlp.com/example/">
