@@ -23,7 +23,7 @@ html_temp = """
     <div style="background-color:#000080 ;padding:2ßpx">
     <a href="https://cpanlp.com/example/">
     <h4 style="color:white;text-align:center;">
-    机器学习项目 </h4>
+    车辆价格估算 </h4>
     </a>
     </div>
     """
@@ -83,13 +83,13 @@ def predict_price(Present_Price, Kms_Driven, Fuel_Type, Seller_Type,
                      no_year]]).astype(np.float64)
     prediction=model.predict(input)
     return float(prediction)
-Present_Price = st.text_input("What is the current market value of the car?","In Lakhs")
-Kms_Driven = st.text_input("How much kilometers the car has driven?","Type Here")
+Present_Price = st.number_input("What is the current market value of the car?",3000)
+Kms_Driven = st.number_input("How much kilometers the car has driven?","Type Here")
 Fuel_Type = st.text_input("What is the type of fuel used?","Please Type 0 for CNG/ 1 for  Diesel/ 2 for Petrol")
 Seller_Type = st.text_input("What is the type of seller?","Please Type 0 for Dealer/ 1 for Individual")
 Transmission = st.text_input("What is the type of Transmission?","Please type 0 for Automatic/ 1 for manual")
 Owner = st.text_input("What is the no. of owners?", "Please type 0/1/3")
-no_year = st.text_input("How many years old?","Type here")
+no_year = st.number_input("How many years old?",10)
 if st.button("Predict"):
     output=predict_price(Present_Price, Kms_Driven,Fuel_Type, Seller_Type,Transmission, Owner, no_year)
-    st.success('The selling price of this vehicle will be approximately {} lakhs'.format(round(output, 2)))
+    st.success('这辆车的售价预估为{} 元'.format(round(output, 2)))
