@@ -15,6 +15,13 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
+html_temp = """
+    <div style="background-color:#025246 ;padding:10px">
+    <h2 style="color:white;text-align:center;">
+    机器学习项目 </h2>
+    </div>
+    """
+st.markdown(html_temp, unsafe_allow_html=True)
 df = pd.read_csv('./app4/央行.csv')
 st.dataframe(df.style.highlight_max(axis=0))
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
