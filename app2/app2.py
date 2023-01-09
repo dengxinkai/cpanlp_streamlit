@@ -33,7 +33,7 @@ classifier_name = st.sidebar.selectbox(
     'Select classifier',
     ('KNN', 'SVM', 'Random Forest')
 )
-@st.cache(persist=True)
+@st.cache
 def get_dataset(name):
     data = None
     if name == 'Iris':
