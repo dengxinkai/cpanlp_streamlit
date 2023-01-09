@@ -3,4 +3,4 @@ matplotlib
 scikit-learn
 language-pack-zh*
 chinese*
-fonts.san-serif
+fonts-san-serif
