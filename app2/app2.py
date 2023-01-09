@@ -103,8 +103,8 @@ plt.scatter(x1, x2,
         c=y, alpha=0.8,
         cmap='viridis')
 
-plt.xlabel(u"主成分 1")
-plt.ylabel(u"主成分 2")
+plt.xlabel(主成分 1)
+plt.ylabel(主成分 2)
 plt.colorbar()
 
 #plt.show()
