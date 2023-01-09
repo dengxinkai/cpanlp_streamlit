@@ -84,7 +84,7 @@ def predict_price(Present_Price, Kms_Driven, Fuel_Type, Seller_Type,
     prediction=model.predict(input)
     return float(prediction)
 Present_Price = st.number_input("车子目前市场价值?",value=3000,step=50)
-Kms_Driven = st.number_input("车子开了多少公里了?",,value=5000,step=100)
+Kms_Driven = st.number_input("车子开了多少公里了?",value=5000,step=100)
 Fuel_Type = st.text_input("What is the type of fuel used?","Please Type 0 for CNG/ 1 for  Diesel/ 2 for Petrol")
 Seller_Type = st.text_input("What is the type of seller?","Please Type 0 for Dealer/ 1 for Individual")
 Transmission = st.text_input("What is the type of Transmission?","Please type 0 for Automatic/ 1 for manual")
