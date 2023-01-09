@@ -15,7 +15,8 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
-df = pd.read_excel('tmp.xlsx')
+@st.cache
+df = pd.read_excel('https://github.com/dengxinkai/cpanlp_streamlit/blob/main/app4/MoviesCSV.xlsx')
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
 
 if uploaded_file is not None:
