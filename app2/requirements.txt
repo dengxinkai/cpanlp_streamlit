@@ -1,6 +1,5 @@
 streamlit
 matplotlib
 scikit-learn
-language-pack-zh*
-chinese*
-fonts-san-serif
+sudo apt-get install language-pack-zh*
+sudo apt-get install chinese*
