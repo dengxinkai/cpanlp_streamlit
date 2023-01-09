@@ -16,6 +16,8 @@ st.set_page_config(
         'About': "很高兴您使用cpanlp的机器学习项目"
     }
 )
+st.write("[返回](https://cpanlp.com/example/)")
+
 st.title('S&P 500 App')
 
 st.markdown("""
