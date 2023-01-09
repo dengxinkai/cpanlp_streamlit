@@ -72,7 +72,7 @@ st.markdown(html_temp, unsafe_allow_html=True)
 # predictions=rf_random.predict(X_test)
 # # file = open('/Users/dengxinkaiacca163.com/Desktop/语言学理论/react/streamlit/app5/random_forest_regression_model.pkl', 'wb')
 # pickle.dump(rf_random, file)
-@st.cache
+
 def load_model():
     return pickle.load(open('./app5/random_forest_regression_model.pkl','rb'))
 model = load_model()
