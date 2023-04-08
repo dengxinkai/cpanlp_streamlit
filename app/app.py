@@ -11,6 +11,8 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 
 result=""
+if "prev_input_text" not in st.session_state:
+    st.session_state.prev_input_text = ""
 st.set_page_config(
     page_title="cpanlp的机器学习",
     page_icon="🐱",
