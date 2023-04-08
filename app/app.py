@@ -9,8 +9,6 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
-import fitz
-from PIL import Image
 result = ""
 global qa
 import os
@@ -21,11 +19,6 @@ input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2
 
 @st.cache(allow_output_mutation=True)
 def 分析财报(input_text):
-    with fitz.open(input_text) as pdf:
-        page = pdf.load_page(0)
-        pix = page.get_pixmap()
-        image = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-        st.image(image, caption='PDF第一页')
     loader = PyPDFLoader(input_text)
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
