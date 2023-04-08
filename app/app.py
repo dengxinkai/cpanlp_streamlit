@@ -16,6 +16,7 @@ qa = None
 input_text = st.text_input('PDF网址', '')
 
 if st.button('确认'):
+    global qa
     try:
         loader = PyPDFLoader(input_text)
         documents = loader.load()
@@ -29,7 +30,6 @@ if st.button('确认'):
         embeddings = OpenAIEmbeddings()
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
-        global qa
         qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
     except Exception as e:
         st.error(f"加载文档失败：{e}")
