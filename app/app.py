@@ -13,7 +13,9 @@ from langchain.vectorstores import Chroma
 result = ""
 global qa
 qa = None
+import os
 
+CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
 
 input_text = st.text_input('PDF网址', '')
 
@@ -29,7 +31,7 @@ if st.button('确认'):
         )
         texts = text_splitter.split_documents(documents)
         embeddings = OpenAIEmbeddings()
-        db = Chroma.from_documents(texts, embeddings)
+        db = Chroma.from_documents(texts, embeddings, path=CHROMA_PATH)
         retriever = db.as_retriever()
         qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
     except Exception as e:
