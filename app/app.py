@@ -24,6 +24,7 @@ st.set_page_config(
 )
 st.write("[返回](https://cpanlp.com/example/)")
 input_text = st.text_input('PDF网址', '')
+input_text1 = st.text_input('查询', '')
 if st.button('确认'):
     loader = PyPDFLoader(input_text)
     documents = loader.load()
@@ -38,11 +39,9 @@ if st.button('确认'):
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-    if st.button('确认1'):
-        # 上述代码
-        query = "总结下文档"
-        result = qa.run(query)
-        st.write(result)
+    query = input_text1
+    result = qa.run(query)
+st.write(result)
 
 
 data = [(1, 2, 3)]
