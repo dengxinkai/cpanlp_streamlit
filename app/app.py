@@ -38,7 +38,7 @@ if st.button('确认'):
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-if st.button('确认'):
+if st.button('确认1'):
     # 上述代码
     query = "总结下文档"
     result = qa.run(query)
