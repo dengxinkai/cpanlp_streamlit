@@ -23,20 +23,21 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
-loader = PyPDFLoader("http://static.cninfo.com.cn/finalpage/2023-04-08/1216358850.PDF")
-documents = loader.load()
-text_splitter = RecursiveCharacterTextSplitter(
-    # Set a really small chunk size, just to show.
-    chunk_size = 200,
-    chunk_overlap  = 20,
-    length_function = len,
-)
-texts = text_splitter.split_documents(documents)
-embeddings = OpenAIEmbeddings()
-db = Chroma.from_documents(texts, embeddings)
-retriever = db.as_retriever()
-qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-
+input_text = st.text_input('PDF网址', '')
+if st.button('确认'):
+    loader = PyPDFLoader(input_text)
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        # Set a really small chunk size, just to show.
+        chunk_size = 200,
+        chunk_overlap  = 20,
+        length_function = len,
+    )
+    texts = text_splitter.split_documents(documents)
+    embeddings = OpenAIEmbeddings()
+    db = Chroma.from_documents(texts, embeddings)
+    retriever = db.as_retriever()
+    qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
 query = "公司主营业务"
 b=qa.run(query)
 data = [(1, 2, 3)]
