@@ -39,12 +39,13 @@ if st.button('确认'):
     retriever = db.as_retriever()
     qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
 
-input_text1 = st.text_input('查询', '')
-if st.button('查询'):
-    query = input_text1
-    result = qa.run(query)
-    
-st.write(result)
+    input_text1 = st.text_input('查询', '')
+    if st.button('查询'):
+        query = input_text1
+        result = qa.run(query)
+
+        st.write(result)
+
 
 
 
