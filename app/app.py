@@ -16,7 +16,7 @@ import os
 
 CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
 
-input_text = st.text_input('PDF网址', '')
+input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-08/1216358994.PDF')
 
 @st.cache(allow_output_mutation=True)
 def 分析财报(input_text):
@@ -29,6 +29,7 @@ def 分析财报(input_text):
         length_function=len,
     )
     texts = text_splitter.split_documents(documents)
+    st.text(text[0][:50])
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
