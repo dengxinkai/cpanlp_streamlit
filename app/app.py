@@ -10,7 +10,8 @@ from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 
-result=""
+result = ""
+qa = None
 
 input_text = st.text_input('PDF网址', '')
 
