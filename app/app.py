@@ -19,7 +19,7 @@ CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
 input_text = st.text_input('PDF网址', '')
 
 @st.cache(allow_output_mutation=True)
-def get_qa(input_text):
+def 分析财报(input_text):
     loader = PyPDFLoader(input_text)
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
@@ -33,7 +33,7 @@ def get_qa(input_text):
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-qa = get_qa(input_text)
+qa = 分析财报(input_text)
 
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
