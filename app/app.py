@@ -43,11 +43,5 @@ if st.button('查询'):
         result = qa.run(query)
         st.write(result)
 
-uploaded_file = st.file_uploader("上传csv文件", type="csv")
-
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.success("csv导入成df成功")
-    st.write(df)
 
 
