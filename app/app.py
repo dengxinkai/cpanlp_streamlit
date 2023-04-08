@@ -7,8 +7,11 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
 
 os.environ["OPENAI_API_KEY"] = "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"
+
 st.set_page_config(
     page_title="cpanlp的机器学习",
     page_icon="🐱",
@@ -21,7 +24,22 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
+loader = PyPDFLoader("http://static.cninfo.com.cn/finalpage/2023-04-08/1216358850.PDF")
+documents = loader.load()
+text_splitter = RecursiveCharacterTextSplitter(
+    # Set a really small chunk size, just to show.
+    chunk_size = 200,
+    chunk_overlap  = 20,
+    length_function = len,
+)
+texts = text_splitter.split_documents(documents)
+embeddings = OpenAIEmbeddings()
+db = Chroma.from_documents(texts, embeddings)
+retriever = db.as_retriever()
+qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
 
+query = "公司主营业务"
+b=qa.run(query)
 data = [(1, 2, 3)]
 df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
@@ -30,7 +48,7 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     st.success("csv导入成df成功")
     st.write(df)
-
+st.title(b)
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
 
