@@ -10,7 +10,7 @@ from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 
-
+result=""
 st.set_page_config(
     page_title="cpanlp的机器学习",
     page_icon="🐱",
