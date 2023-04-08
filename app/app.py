@@ -25,12 +25,6 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
-input_text = st.text_input('PDF网址', '')
-input_text1 = st.text_input('查询', '')
-
-query = input_text1
-result = None
-do_query = False
 
 import pickle
 
