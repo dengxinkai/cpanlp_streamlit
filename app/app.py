@@ -37,9 +37,14 @@ if st.button('确认'):
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
-qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-query = "公司主营业务"
-b=qa.run(query)
+    qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
+if st.button('确认'):
+    # 上述代码
+    query = "总结下文档"
+    result = qa.run(query)
+    st.write(result)
+
+
 data = [(1, 2, 3)]
 df = pd.DataFrame(data, columns=["Col1", "Col2", "Col3"])
 uploaded_file = st.file_uploader("上传csv文件", type="csv")
@@ -48,7 +53,6 @@ if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     st.success("csv导入成df成功")
     st.write(df)
-st.title(b)
 st.title('cpanlp自然语言处理项目')
 st.header("Chart with two lines")
 
