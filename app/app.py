@@ -9,6 +9,7 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
+qa = None
 
 result=""
 
@@ -28,6 +29,7 @@ if st.button('确认'):
         embeddings = OpenAIEmbeddings()
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
+        global qa
         qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
     except Exception as e:
         st.error(f"加载文档失败：{e}")
