@@ -2,6 +2,23 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import base64
+import os
+from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains import RetrievalQA
+from langchain.llms import OpenAI
+
+texts = text_splitter.split_documents(documents)
+from langchain.embeddings import OpenAIEmbeddings
+embeddings = OpenAIEmbeddings()
+from langchain.vectorstores import Chroma
+db = Chroma.from_documents(texts, embeddings)
+retriever = db.as_retriever()
+qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
+
+query = "总结下文档"
+qa.run(query)
+os.environ["OPENAI_API_KEY"] = "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"
 st.set_page_config(
     page_title="cpanlp的机器学习",
     page_icon="🐱",
