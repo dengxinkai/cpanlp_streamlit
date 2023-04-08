@@ -24,27 +24,43 @@ st.set_page_config(
 )
 st.write("[返回](https://cpanlp.com/example/)")
 input_text = st.text_input('PDF网址', '')
+input_text1 = st.text_input('查询', '')
+
+query = input_text1
+result = None
+do_query = False
+
 if st.button('确认'):
-    loader = PyPDFLoader(input_text)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(
-        # Set a really small chunk size, just to show.
-        chunk_size = 200,
-        chunk_overlap  = 20,
-        length_function = len,
-    )
-    texts = text_splitter.split_documents(documents)
-    embeddings = OpenAIEmbeddings()
-    db = Chroma.from_documents(texts, embeddings)
-    retriever = db.as_retriever()
-    qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-
-    input_text1 = st.text_input('查询', '')
-    if st.button('查询'):
-        query = input_text1
+    if input_text != st.session_state.prev_input_text:
+        # 如果input_text变化了，则重新加载文档和QA模型
+        loader = PyPDFLoader(input_text)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            # Set a really small chunk size, just to show.
+            chunk_size=200,
+            chunk_overlap=20,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        embeddings = OpenAIEmbeddings()
+        db = Chroma.from_documents(texts, embeddings)
+        retriever = db.as_retriever()
+        qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
+        
+        # 更新prev_input_text的值
+        st.session_state.prev_input_text = input_text
+        # 执行查询
         result = qa.run(query)
+        do_query = True
+    else:
+        # 如果input_text没有变化，则只执行查询
+        result = qa.run(query)
+        do_query = True
 
-        st.write(result)
+# 输出结果
+if do_query:
+    st.write(result)
+st.write(result)
 
 
 
