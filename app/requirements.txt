@@ -1,7 +1,9 @@
-matplotlib
 streamlit
 pandas
-plotly
-requests
 numpy
 yfinance
+langchain
+openai
+tiktoken
+chromadb
+pypdf
