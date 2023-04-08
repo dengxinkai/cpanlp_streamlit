@@ -39,7 +39,6 @@ if st.button('确认'):
 
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
-    global qa
     if not qa:
         st.warning("请先加载文档。")
     else:
