@@ -10,7 +10,6 @@ from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 
-os.environ["OPENAI_API_KEY"] = "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"
 
 st.set_page_config(
     page_title="cpanlp的机器学习",
