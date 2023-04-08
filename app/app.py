@@ -12,7 +12,6 @@ from langchain.vectorstores import Chroma
 
 result = ""
 global qa
-qa = None
 import os
 
 CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
