@@ -29,7 +29,7 @@ def 分析财报(input_text):
         length_function=len,
     )
     texts = text_splitter.split_documents(documents)
-    st.text(text[0][:50])
+    st.text(texts[0][:50])
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
