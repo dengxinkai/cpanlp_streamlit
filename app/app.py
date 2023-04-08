@@ -11,13 +11,13 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 
 result = ""
+global qa
+qa = None
 
 
 input_text = st.text_input('PDF网址', '')
 
 if st.button('确认'):
-    global qa
-    qa = None
     try:
         loader = PyPDFLoader(input_text)
         documents = loader.load()
