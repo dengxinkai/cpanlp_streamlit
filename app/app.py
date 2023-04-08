@@ -18,25 +18,22 @@ CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
 
 input_text = st.text_input('PDF网址', '')
 
-if st.button('确认'):
-    try:
-        loader = PyPDFLoader(input_text)
-        documents = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(
-            # Set a really small chunk size, just to show.
-            chunk_size=200,
-            chunk_overlap=20,
-            length_function=len,
-        )
-        texts = text_splitter.split_documents(documents)
-        embeddings = OpenAIEmbeddings()
-        db = Chroma.from_documents(texts, embeddings, path=CHROMA_PATH)
-        retriever = db.as_retriever()
-        qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-    except Exception as e:
-        st.error(f"加载文档失败：{e}")
-    else:
-        st.success("文档加载成功。")
+@st.cache(allow_output_mutation=True)
+def get_qa(input_text):
+    loader = PyPDFLoader(input_text)
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        # Set a really small chunk size, just to show.
+        chunk_size=200,
+        chunk_overlap=20,
+        length_function=len,
+    )
+    texts = text_splitter.split_documents(documents)
+    embeddings = OpenAIEmbeddings()
+    db = Chroma.from_documents(texts, embeddings)
+    retriever = db.as_retriever()
+    return RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
+qa = get_qa(input_text)
 
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
