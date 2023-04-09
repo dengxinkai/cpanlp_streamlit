@@ -11,7 +11,6 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
 
-st.set_page_config(page_title="分析器", page_width=800, page_height=600)
 
 template = """给定一个长文档的以下提取部分和一个问题，创建一个带有参考文献（“SOURCES”）的最终答案。
 如果您不知道答案，请直接说您不知道。不要试图编造答案。
