@@ -14,13 +14,8 @@ global qa
 import os
 import tempfile
 
-st.title("上传并加载PDF文件")
-file = st.file_uploader("选择一个PDF文件", type="pdf")
-
-# 如果用户上传了PDF文件，则加载它
-
-input_text = st.text_input('PDF网址', '')
-
+file = st.file_uploader("上传财报PDF文件", type="pdf")
+input_text = st.text_input('财报PDF网址', '')
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
     if file is not None:
