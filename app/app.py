@@ -76,6 +76,18 @@ if st.button('查询'):
         query = input_text1
         result = qa.run(query)
         st.write(result)
-
+st.header("问答系统")
+question = st.text_input("请输入问题")
+if question:
+    prompt = prompt_template(question=question)
+    st.markdown(prompt)
+    result = 分析(bb + " " + question)
+    if result:
+        st.write(result.response)
+        st.write("SOURCES:", result.sources)
+    else:
+        st.write("抱歉，无法回答您的问题。")
+else:
+    st.write("请输入问题以获取答案。")
 
 
