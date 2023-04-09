@@ -30,7 +30,7 @@ def 分析(input_text):
     else:
         return None
     documents = loader.load()
-    bb=documents[1].to_text()
+    bb=documents[0].page_content
 
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
