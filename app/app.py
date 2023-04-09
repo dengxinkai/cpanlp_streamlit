@@ -24,6 +24,12 @@ input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
     if file is not None:
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file.flush()
+
+            loader = PyPDFLoader(tmp_file.name)
+    if file is not None:
         with open(file, "rb") as file1:
             loader = PyPDFLoader(file1)
     else:
