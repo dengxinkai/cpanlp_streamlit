@@ -39,7 +39,7 @@ result = ""
 
 
 st.header("上传")
-file = st.file_uploader("上传PDF文件", type="pdf")
+file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
@@ -75,7 +75,7 @@ def 分析(input_text):
 qa = 分析(input_text)
 
 st.header("问答")
-input_text1 = st.text_input('提问', '')
+input_text1 = st.text_input('')
 if st.button('问答'):
     if not qa:
         st.warning("请先加载文档。")
