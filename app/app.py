@@ -38,7 +38,7 @@ PROMPT1 = PromptTemplate(template=prompt_template1, input_variables=["text"])
 result = ""
 
 
-st.header("上传系统")
+st.header("上传")
 file = st.file_uploader("上传PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
@@ -74,7 +74,7 @@ def 分析(input_text):
 ), chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
 
-st.header("问答系统")
+st.header("问答")
 input_text1 = st.text_input('提问', '')
 if st.button('问答'):
     if not qa:
