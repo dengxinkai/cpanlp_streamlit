@@ -29,8 +29,10 @@ def 分析(input_text):
             tmp_file.flush()
 
             loader = PyPDFLoader(tmp_file.name)
-    else:        
+    elif input_text != "":        
         loader = PyPDFLoader(input_text)
+    else:
+        return None
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
