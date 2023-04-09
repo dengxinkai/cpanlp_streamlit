@@ -12,15 +12,6 @@ from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
 
 
-template = """给定一个长文档的以下提取部分和一个问题，创建一个带有参考文献（“SOURCES”）的最终答案。
-如果您不知道答案，请直接说您不知道。不要试图编造答案。
-始终在您的答案中返回“SOURCES”部分。
-用意大利语回答。
-问题：{question}
-最终答案："""
-
-# 定义PromptTemplate对象
-prompt_template = PromptTemplate(template=template, input_variables=["question"])
 
 result = ""
 global qa
@@ -68,25 +59,13 @@ qa = 分析(input_text)
 st.header("原文前100字")
 st.write(bb)
 st.header("问答系统")
-input_text1 = st.text_input('查询', '')
-if st.button('查询'):
+input_text1 = st.text_input('提问', '')
+if st.button('问答'):
     if not qa:
         st.warning("请先加载文档。")
     else:
         query = input_text1
         result = qa.run(query)
         st.write(result)
-question = st.text_input("请输入问题", '')
-if question:
-    prompt = prompt_template(question=question)
-    st.markdown(prompt)
-    result = 分析(bb + " " + question)
-    if result:
-        st.write(result.response)
-        st.write("SOURCES:", result.sources)
-    else:
-        st.write("抱歉，无法回答您的问题。")
-else:
-    st.write("请输入问题以获取答案。")
 
 
