@@ -75,6 +75,5 @@ if st.button('问答'):
         result = qa({"query": query})
 
         st.write(result["result"])
-        st.write(result["source_documents"])
 
 
