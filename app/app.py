@@ -84,43 +84,43 @@ if st.button('问答'):
         result = qa({"query": query})
 
         st.write(result["result"])
-st.header("总结系统")
-if st.button('总结'):
-    text_splitter = RecursiveCharacterTextSplitter(
-        # Set a really small chunk size, just to show.
-        chunk_size=400,
-        chunk_overlap=40,
-        length_function=len,
-    )
-    if file is not None:
-        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            tmp_file.write(file.read())
-            tmp_file.flush()
-            loader = PyPDFLoader(tmp_file.name)
-            documents = loader.load()
-            texts = text_splitter.split_documents(documents)
-            chain = load_summarize_chain(llm=ChatOpenAI(
-                model_name="gpt-3.5-turbo",
-                temperature=0,
-                frequency_penalty=0,
-                presence_penalty=0,
-                top_p=1.0,
-            ), chain_type="map_reduce", map_prompt=PROMPT1, combine_prompt=PROMPT1)
-            st.write(chain.run(texts))
-    elif input_text != "":        
-        loader = PyPDFLoader(input_text)
-        documents = loader.load()
-        texts = text_splitter.split_documents(documents)
-        chain = load_summarize_chain(llm=ChatOpenAI(
-            model_name="gpt-3.5-turbo",
-            temperature=0,
-            frequency_penalty=0,
-            presence_penalty=0,
-            top_p=1.0,
-        ), chain_type="map_reduce", map_prompt=PROMPT1, combine_prompt=PROMPT1)
-        st.write(chain.run(texts))
-    else:
-        st.warning("请先加载文档。")
-    documents = loader.load()
+# st.header("总结系统")
+# if st.button('总结'):
+#     text_splitter = RecursiveCharacterTextSplitter(
+#         # Set a really small chunk size, just to show.
+#         chunk_size=400,
+#         chunk_overlap=40,
+#         length_function=len,
+#     )
+#     if file is not None:
+#         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+#             tmp_file.write(file.read())
+#             tmp_file.flush()
+#             loader = PyPDFLoader(tmp_file.name)
+#             documents = loader.load()
+#             texts = text_splitter.split_documents(documents)
+#             chain = load_summarize_chain(llm=ChatOpenAI(
+#                 model_name="gpt-3.5-turbo",
+#                 temperature=0,
+#                 frequency_penalty=0,
+#                 presence_penalty=0,
+#                 top_p=1.0,
+#             ), chain_type="map_reduce", map_prompt=PROMPT1, combine_prompt=PROMPT1)
+#             st.write(chain.run(texts))
+#     elif input_text != "":        
+#         loader = PyPDFLoader(input_text)
+#         documents = loader.load()
+#         texts = text_splitter.split_documents(documents)
+#         chain = load_summarize_chain(llm=ChatOpenAI(
+#             model_name="gpt-3.5-turbo",
+#             temperature=0,
+#             frequency_penalty=0,
+#             presence_penalty=0,
+#             top_p=1.0,
+#         ), chain_type="map_reduce", map_prompt=PROMPT1, combine_prompt=PROMPT1)
+#         st.write(chain.run(texts))
+#     else:
+#         st.warning("请先加载文档。")
+#     documents = loader.load()
     
 
