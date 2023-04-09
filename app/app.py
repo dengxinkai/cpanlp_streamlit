@@ -71,7 +71,9 @@ if st.button('问答'):
         st.warning("请先加载文档。")
     else:
         query = input_text1
-        result = qa.run(query)
-        st.write(result)
+#         result = qa.run(query)
+        result = qa({"query": query})
+
+        st.write(result["result"])
 
 
