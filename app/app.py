@@ -62,7 +62,7 @@ def 分析(input_text):
     frequency_penalty=0,
     presence_penalty=0,
     top_p=1.0,
-), chain_type="stuff", retriever=retriever,, prompt=PROMPT)
+), chain_type="stuff", retriever=retriever, prompt=PROMPT)
 qa = 分析(input_text)
 st.text("原文前100字")
 st.write(bb)
