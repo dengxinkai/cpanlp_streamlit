@@ -18,7 +18,7 @@ file = st.file_uploader("选择一个PDF文件", type="pdf")
 
 # 如果用户上传了PDF文件，则加载它
 
-input_text = st.text_input('PDF网址', '')
+input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-08/1216358818.PDF')
 
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
