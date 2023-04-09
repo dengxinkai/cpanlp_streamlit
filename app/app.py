@@ -14,8 +14,8 @@ global qa
 import os
 import tempfile
 
-file = st.file_uploader("上传财报PDF文件", type="pdf")
-input_text = st.text_input('财报PDF网址', '')
+file = st.file_uploader("上传PDF文件", type="pdf")
+input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
     if file is not None:
