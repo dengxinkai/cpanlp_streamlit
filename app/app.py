@@ -10,6 +10,10 @@ from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
+import os
+import tempfile
+global qa
+
 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 {context}
@@ -22,9 +26,9 @@ PROMPT = PromptTemplate(
 chain_type_kwargs = {"prompt": PROMPT}
 
 result = ""
-global qa
-import os
-import tempfile
+
+
+st.header("上传系统")
 file = st.file_uploader("上传PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
