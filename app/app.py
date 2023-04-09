@@ -45,8 +45,7 @@ def 分析(input_text):
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
 qa = 分析(input_text)
-if bb:
-    st.write(bb)
+st.write(bb)
 
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
