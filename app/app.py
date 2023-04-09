@@ -11,15 +11,17 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
 
-template = """Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES"). 
-If you don't know the answer, just say that you don't know. Don't try to make up an answer.
-ALWAYS return a "SOURCES" part in your answer.
-Respond in Chinese.
+st.set_page_config(page_title="分析器", page_width=800, page_height=600)
 
-QUESTION: {question}
+template = """给定一个长文档的以下提取部分和一个问题，创建一个带有参考文献（“SOURCES”）的最终答案。
+如果您不知道答案，请直接说您不知道。不要试图编造答案。
+始终在您的答案中返回“SOURCES”部分。
+用意大利语回答。
+问题：{question}
+最终答案："""
 
-FINAL ANSWER IN ITALIAN:"""
-PROMPT = PromptTemplate(template=template, input_variables=["question"])
+# 定义PromptTemplate对象
+prompt_template = PromptTemplate(template=template, input_variables=["question"])
 
 result = ""
 global qa
@@ -62,7 +64,7 @@ def 分析(input_text):
     frequency_penalty=0,
     presence_penalty=0,
     top_p=1.0,
-), chain_type="stuff", retriever=retriever, prompt=PROMPT)
+), chain_type="stuff", retriever=retriever)
 qa = 分析(input_text)
 st.text("原文前100字")
 st.write(bb)
