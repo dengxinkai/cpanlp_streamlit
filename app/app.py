@@ -25,13 +25,10 @@ result = ""
 global qa
 import os
 import tempfile
-global bb
-bb = ""
 file = st.file_uploader("上传PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
-    global bb
     if file is not None:
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(file.read())
@@ -44,8 +41,6 @@ def 分析(input_text):
     else:
         return None
     documents = loader.load()
-    bb=documents[0].page_content[:100]
-
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
         chunk_size=200,
@@ -64,8 +59,7 @@ def 分析(input_text):
     top_p=1.0,
 ), chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
-st.header("原文前100字")
-st.write(bb)
+
 st.header("问答系统")
 input_text1 = st.text_input('提问', '')
 if st.button('问答'):
