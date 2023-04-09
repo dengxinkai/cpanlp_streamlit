@@ -32,7 +32,7 @@ def 分析(input_text):
     else:
         return None
     documents = loader.load()
-    bb=documents[0].page_content
+    bb=documents[0].page_content[:100]
 
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
@@ -46,7 +46,7 @@ def 分析(input_text):
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
 qa = 分析(input_text)
-st.write("<span style='font-size: 36px;'>bb</span>", unsafe_allow_html=True)
+st.write(bb)
 
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
