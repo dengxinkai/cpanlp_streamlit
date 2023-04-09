@@ -12,6 +12,7 @@ from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
 from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
+from langchain.chat_models import ChatOpenAI
 import tempfile
 global qa
 
@@ -56,7 +57,7 @@ def 分析(input_text):
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
-    return RetrievalQA.from_chain_type(llm=OpenAI(
+    return RetrievalQA.from_chain_type(llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
     temperature=0,
     frequency_penalty=0,
