@@ -9,7 +9,7 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
-from langchain.llms import OpenAI
+
 result = ""
 global qa
 import os
@@ -45,7 +45,7 @@ def 分析(input_text):
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
-    return RetrievalQA.from_chain_type(llm=ChatOpenAI(
+    return RetrievalQA.from_chain_type(llm=OpenAI(
     model_name="gpt-3.5-turbo",
     temperature=0,
     frequency_penalty=0,
