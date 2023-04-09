@@ -16,7 +16,7 @@ from langchain.chat_models import ChatOpenAI
 import tempfile
 global qa
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
-st.image(logo_url, width=100)
+st.image(logo_url, width=120)
 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 {context}
