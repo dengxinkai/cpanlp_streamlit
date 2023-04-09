@@ -10,7 +10,8 @@ from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.prompts import PromptTemplate
-import os
+from langchain.chains.mapreduce import MapReduceChain
+from langchain.chains.summarize import load_summarize_chain
 import tempfile
 global qa
 
