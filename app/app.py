@@ -75,7 +75,7 @@ def 分析(input_text):
 qa = 分析(input_text)
 
 st.header("问答")
-input_text1 = st.text_input('')
+input_text1 = st.text_input('提问','')
 if st.button('问答'):
     if not qa:
         st.warning("请先加载文档。")
