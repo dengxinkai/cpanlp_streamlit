@@ -12,6 +12,7 @@ from langchain.vectorstores import Chroma
 result = ""
 global qa
 import os
+import tempfile
 
 st.title("上传并加载PDF文件")
 file = st.file_uploader("选择一个PDF文件", type="pdf")
@@ -23,8 +24,11 @@ input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
     if file is not None:
-        with open(file, "rb") as file1:
-            loader = PyPDFLoader(file1)
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file.flush()
+
+            loader = PyPDFLoader(tmp_file.name)
     else:        
         loader = PyPDFLoader(input_text)
     documents = loader.load()
