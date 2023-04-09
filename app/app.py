@@ -65,9 +65,9 @@ def 分析(input_text):
     top_p=1.0,
 ), chain_type="stuff", retriever=retriever)
 qa = 分析(input_text)
-st.text("原文前100字")
+st.header("原文前100字")
 st.write(bb)
-
+st.header("问答系统")
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
     if not qa:
@@ -76,8 +76,7 @@ if st.button('查询'):
         query = input_text1
         result = qa.run(query)
         st.write(result)
-st.header("问答系统")
-question = st.text_input("请输入问题")
+question = st.text_input("请输入问题", '')
 if question:
     prompt = prompt_template(question=question)
     st.markdown(prompt)
