@@ -13,7 +13,7 @@ result = ""
 global qa
 import os
 import tempfile
-bb=""
+bb="11"
 file = st.file_uploader("上传PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
@@ -24,14 +24,14 @@ def 分析(input_text):
             tmp_file.flush()
 
             loader = PyPDFLoader(tmp_file.name)
-            data = loader.load()
-            bb=data[0]
 
     elif input_text != "":        
         loader = PyPDFLoader(input_text)
     else:
         return None
     documents = loader.load()
+    bb=documents[0]
+
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
         chunk_size=200,
