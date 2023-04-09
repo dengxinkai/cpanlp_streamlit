@@ -13,7 +13,7 @@ result = ""
 global qa
 import os
 import tempfile
-bb="11"
+global bb
 file = st.file_uploader("上传PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
