@@ -13,7 +13,6 @@ result = ""
 global qa
 import os
 
-CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
 st.title("上传并加载PDF文件")
 file = st.file_uploader("选择一个PDF文件", type="pdf")
 
@@ -29,9 +28,6 @@ def 分析(input_text):
             tmp_file.flush()
 
             loader = PyPDFLoader(tmp_file.name)
-    if file is not None:
-        with open(file, "rb") as file1:
-            loader = PyPDFLoader(file1)
     else:
         loader = PyPDFLoader(input_text)
     documents = loader.load()
