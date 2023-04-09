@@ -18,19 +18,15 @@ st.title("上传并加载PDF文件")
 file = st.file_uploader("选择一个PDF文件", type="pdf")
 
 # 如果用户上传了PDF文件，则加载它
-if file is not None:
-    # 使用PyPDFLoader加载PDF文件
-    loader = PyPDFLoader(file)
-    # 显示PDF页面数量
-    st.write(f"这个PDF文件有 {loader.num_pages()} 页。")
-    # 显示第一页
-    page = loader.load_page(1)
-    st.image(page.to_image())
-input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-08/1216358994.PDF')
+
+input_text = st.text_input('PDF网址', '')
 
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
-    loader = PyPDFLoader(input_text)
+    if file is not None:
+        loader = PyPDFLoader(file)
+    else:
+        loader = PyPDFLoader(input_text)
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
         # Set a really small chunk size, just to show.
