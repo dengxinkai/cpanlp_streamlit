@@ -44,7 +44,13 @@ def 分析(input_text):
     embeddings = OpenAIEmbeddings()
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
-    return RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
+    return RetrievalQA.from_chain_type(llm=ChatOpenAI(
+    model_name="gpt-3.5-turbo",
+    temperature=0,
+    frequency_penalty=0,
+    presence_penalty=0,
+    top_p=1.0,
+), chain_type="stuff", retriever=retriever)
 qa = 分析(input_text)
 st.text("原文前100字")
 st.write(bb)
