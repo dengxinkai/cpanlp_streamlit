@@ -14,11 +14,22 @@ global qa
 import os
 
 CHROMA_PATH = os.path.join(os.path.dirname(__file__), "chroma.db")
+st.title("上传并加载PDF文件")
+file = st.file_uploader("选择一个PDF文件", type="pdf")
 
+# 如果用户上传了PDF文件，则加载它
+if file is not None:
+    # 使用PyPDFLoader加载PDF文件
+    loader = PyPDFLoader(file)
+    # 显示PDF页面数量
+    st.write(f"这个PDF文件有 {loader.num_pages()} 页。")
+    # 显示第一页
+    page = loader.load_page(1)
+    st.image(page.to_image())
 input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-08/1216358994.PDF')
 
 @st.cache(allow_output_mutation=True)
-def 分析财报(input_text):
+def 分析(input_text):
     loader = PyPDFLoader(input_text)
     documents = loader.load()
     text_splitter = RecursiveCharacterTextSplitter(
@@ -32,7 +43,7 @@ def 分析财报(input_text):
     db = Chroma.from_documents(texts, embeddings)
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=retriever)
-qa = 分析财报(input_text)
+qa = 分析(input_text)
 
 input_text1 = st.text_input('查询', '')
 if st.button('查询'):
