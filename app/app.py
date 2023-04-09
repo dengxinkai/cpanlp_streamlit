@@ -9,6 +9,17 @@ from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
+from langchain.prompts import PromptTemplate
+
+template = """Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES"). 
+If you don't know the answer, just say that you don't know. Don't try to make up an answer.
+ALWAYS return a "SOURCES" part in your answer.
+Respond in Chinese.
+
+QUESTION: {question}
+
+FINAL ANSWER IN ITALIAN:"""
+PROMPT = PromptTemplate(template=template, input_variables=["question"])
 
 result = ""
 global qa
@@ -51,7 +62,7 @@ def 分析(input_text):
     frequency_penalty=0,
     presence_penalty=0,
     top_p=1.0,
-), chain_type="stuff", retriever=retriever)
+), chain_type="stuff", retriever=retriever,, prompt=PROMPT)
 qa = 分析(input_text)
 st.text("原文前100字")
 st.write(bb)
