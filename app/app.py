@@ -19,6 +19,7 @@ file = st.file_uploader("上传PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
 def 分析(input_text):
+    global bb
     if file is not None:
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(file.read())
