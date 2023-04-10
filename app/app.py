@@ -24,7 +24,7 @@ llm = OpenAI(temperature=0)
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
 global qa
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
-st.image(logo_url, width=120)
+st.image(logo_url, width=20)
 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 {context}
@@ -49,7 +49,7 @@ result = ""
 st.header("上传")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
-@st.cache(allow_output_mutation=True)
+@st.cache_data(allow_output_mutation=True)
 def 分析(input_text):
     if file is not None:
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
