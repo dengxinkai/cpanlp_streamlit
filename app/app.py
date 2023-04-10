@@ -77,7 +77,7 @@ Thought: you should always think about what to do,keep the Thought as concise as
 Action: the action to take, should be one of [{tool_names}],keep the Action as concise as possible.
 Action Input: the input to the action,keep the Action Input as concise as possible.
 Observation: the result of the action,keep the Observation as concise as possible.
-... (this Thought/Action/Action Input/Observation can repeat N times)
+... (this Thought/Action/Action Input/Observation can repeat 2 times)
 Thought: I now know the final answer,keep the Thought as concise as possible.
 Final Answer: the final answer to the original input question
 
