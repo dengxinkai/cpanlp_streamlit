@@ -60,8 +60,7 @@ prompt_template1 = """Write a concise summary of the following:
 CONCISE SUMMARY IN CHINESE:"""
 PROMPT1 = PromptTemplate(template=prompt_template1, input_variables=["text"])
 result = ""
-template3 = """Begin! Remember to speak in Chinese.All inputs and output tokens are limited to 3800.，Answer the following questions as best you can.
-When the question is unrelated to financial matters:
+template3 = """Answer the following questions as best you can.When the question is unrelated to financial matters:
 Thought:无法回答，因为与财金问题无关
 Action: 无法回答
 Action Input: 无法回答
@@ -79,6 +78,7 @@ Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat 1 times)
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question
+Remember to Give the Final Answer in Chinese.All inputs and output tokens are limited to 3800.
 Question: {input}
 {agent_scratchpad}"""
 
