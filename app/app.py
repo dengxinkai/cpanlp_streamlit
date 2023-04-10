@@ -111,7 +111,10 @@ if st.button('问答'):
 #         result = qa({"query": query})
         agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=True)
         response = agent({"input":query})
-        st.write(json.dumps(response["intermediate_steps"], indent=2))
+        st.write(response["intermediate_steps"])
+        intermediate_steps_str = json.dumps(response["intermediate_steps"], indent=2, ensure_ascii=False)
+        st.write(intermediate_steps_str)
+
         st.write(response["output"])
 
 # st.header("总结系统")
