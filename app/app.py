@@ -110,6 +110,7 @@ if st.button('问答'):
 #         result = qa({"query": query})
         agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=True)
         response = agent({"input":query})
+        st.json(json.dumps(response["intermediate_steps"]))
         st.write(response["intermediate_steps"])
         st.write(response["output"])
 
