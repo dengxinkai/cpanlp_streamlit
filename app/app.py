@@ -64,8 +64,8 @@ template3 = """Answer the following questions as best you can.当问题与经济
 Thought:表明无法回答，因为与经济金融问题无关
 Action: 无
 Action Input: 直接退出
-Observation:无
-You have access to the following tools:
+同时不使用tools。
+当问题与经济金融问题有关时，You have access to the following tools:
 
 {tools}
 
