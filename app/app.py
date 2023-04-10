@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import base64
+import json
 import os
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -110,7 +111,7 @@ if st.button('问答'):
 #         result = qa({"query": query})
         agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=True)
         response = agent({"input":query})
-        st.write(response["intermediate_steps"])
+        st.write(json.dumps(response["intermediate_steps"], indent=2))
         st.write(response["output"])
 
 # st.header("总结系统")
