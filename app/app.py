@@ -92,17 +92,17 @@ if st.button('问答'):
 #         result = qa.run(query)
         tools = [
             Tool(
-                name = "公司财报",
+                name = "通过上传财报查询",
                 func=qa.run,
                 description="这个工具适用于当您需要回答有关最近的公司财务报告的问题时。输入应该是一个完整的问题。"
             ),
             Tool(
-                name = "查询",
+                name = "Google查询",
                 func=search.run,
                 description="这个工具适用于当您需要回答有关当前事件的问题时。"
             ),
             Tool(
-                name="wikipedia",
+                name="wikipedia查询",
                 func=wikipedia.run,
                 description="这个工具适用于当您需要回答有关名词解释时。输入应该转换为英文，同时输出转换为中文"
             ),
