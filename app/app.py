@@ -60,7 +60,7 @@ prompt_template1 = """Write a concise summary of the following:
 CONCISE SUMMARY IN CHINESE:"""
 PROMPT1 = PromptTemplate(template=prompt_template1, input_variables=["text"])
 result = ""
-template3 = """Answer the following questions as best you can.尽量把问题和经济金融问题联系在一起， You have access to the following tools:
+template3 = """Answer the following questions as best you can.当问题与经济金融问题无关时，表明无法回答，因为与经济金融问题无关， You have access to the following tools:
 
 {tools}
 
