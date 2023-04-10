@@ -13,6 +13,8 @@ from langchain.prompts import PromptTemplate
 from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
+from langchain.agents import initialize_agent, Tool
+from langchain.agents import AgentType
 import tempfile
 global qa
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
@@ -82,9 +84,26 @@ if st.button('问答'):
     else:
         query = input_text1
 #         result = qa.run(query)
-        result = qa({"query": query})
-
-        st.write(result["result"])
+        tools = [
+            Tool(
+                name = "公司财报",
+                func=qa.run,
+                description="这个工具适用于当您需要回答有关最近的公司财务报告的问题时。输入应该是一个完整的问题。"
+            ),
+            Tool(
+                name = "查询",
+                func=search.run,
+                description="这个工具适用于当您需要回答有关当前事件的问题时。"
+            ),
+            Tool(
+                name="wikipedia",
+                func=wikipedia.run,
+                description="这个工具适用于当您需要回答有关名词解释时。输入应该转换为英文，同时输出转换为中文"
+            ),
+        ]
+#         result = qa({"query": query})
+        agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+        st.write(agent.run(query))
 # st.header("总结系统")
 # if st.button('总结'):
 #     text_splitter = RecursiveCharacterTextSplitter(
