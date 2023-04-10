@@ -1,9 +1,9 @@
 streamlit
 pandas
 numpy
-yfinance
 langchain
 openai
 tiktoken
 chromadb
 pypdf
+wikipedia
