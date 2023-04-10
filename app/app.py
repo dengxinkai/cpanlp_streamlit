@@ -49,7 +49,7 @@ result = ""
 st.header("上传")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
-@st.cache_resource()
+@st.cache(allow_output_mutation=True)
 def 分析(input_text):
     if file is not None:
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
