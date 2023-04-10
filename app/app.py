@@ -19,6 +19,7 @@ from langchain.agents import AgentType
 import tempfile
 from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import WikipediaAPIWrapper
+from langchain.prompts import StringPromptTemplate
 
 
 wikipedia = WikipediaAPIWrapper()
