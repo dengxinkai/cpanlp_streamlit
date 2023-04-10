@@ -207,7 +207,7 @@ if st.button('问答'):
             ),
             Tool(
                 name = "GOOGLE查询",
-                func=search.run,
+                func=search.run(num_chars=300),
                 description="这个工具适用于当您需要回答有关当前金融经济事件的问题时。"
             ),
             Tool(
