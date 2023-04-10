@@ -72,12 +72,12 @@ When the question is related to financial matters，You have access to the follo
 {tools}
 Use the following format:
 Question: the input question you must answer
-Thought: you should always think about what to do,keep the Thought as concise as possible.
-Action: the action to take, should be one of [{tool_names}],keep the Action as concise as possible.
-Action Input: the input to the action,keep the Action Input as concise as possible.
-Observation: the result of the action,keep the Observation as concise as possible.
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
 ... (this Thought/Action/Action Input/Observation can repeat 1 times)
-Thought: I now know the final answer,keep the Thought as concise as possible.
+Thought: I now know the final answer
 Final Answer: the final answer to the original input question
 Question: {input}
 {agent_scratchpad}"""
