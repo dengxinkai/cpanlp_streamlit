@@ -94,7 +94,7 @@ if st.button('问答'):
             Tool(
                 name = "通过上传财报查询",
                 func=qa.run,
-                description="这个工具适用于当您需要回答有关最近的公司财务报告的问题时。输入应该是一个完整的问题。"
+                description="这个工具适用于当您需要回答与上传的财报相关问题。输入应该是一个完整的问题。"
             ),
             Tool(
                 name = "Google查询",
