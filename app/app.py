@@ -191,7 +191,7 @@ if st.button('问答'):
             stop=["\nObservation:"], 
             allowed_tools=tool_names
         )
-        agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True)
+        agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
         response = agent_executor({"input":query})
         st.write(response["intermediate_steps"])
         st.write(response["output"])
@@ -229,7 +229,7 @@ if st.button('问答'):
             stop=["\nObservation:"], 
             allowed_tools=tool_names
         )
-        agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True)
+        agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
         response = agent_executor({"input":query})
         st.write(response["intermediate_steps"])
         st.write(response["output"])
