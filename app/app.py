@@ -81,7 +81,7 @@ Observation: the result of the action,keep the Observation as concise as possibl
 Thought: I now know the final answer,keep the Thought as concise as possible.
 Final Answer: the final answer to the original input question
 
-Begin! Remember to speak in Chinese.
+Begin! Remember to speak in Chinese.全部输入和输入token限制在3800
 
 Question: {input}
 {agent_scratchpad}"""
