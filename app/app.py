@@ -103,15 +103,7 @@ class CustomPromptTemplate(StringPromptTemplate):
         kwargs["tool_names"] = ", ".join([tool.name for tool in self.tools])
         return self.template.format(**kwargs)
 
-prompt3 = CustomPromptTemplate(
-    template=template3,
-    tools=tools,
-    # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
-    # This includes the `intermediate_steps` variable because that is needed
-    input_variables=["input", "intermediate_steps"]
-)
 
-llm_chain = LLMChain(llm=llm, prompt=prompt3)
 class CustomOutputParser(AgentOutputParser):
     
     def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
@@ -185,6 +177,14 @@ if st.button('问答'):
             )]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
+        prompt3 = CustomPromptTemplate(
+        template=template3,
+        tools=tools,
+        # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
+        # This includes the `intermediate_steps` variable because that is needed
+        input_variables=["input", "intermediate_steps"])
+
+        llm_chain = LLMChain(llm=llm, prompt=prompt3)
         agent3 = LLMSingleActionAgent(
             llm_chain=llm_chain, 
             output_parser=output_parser,
@@ -215,6 +215,14 @@ if st.button('问答'):
             )]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
+        prompt3 = CustomPromptTemplate(
+        template=template3,
+        tools=tools,
+        # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
+        # This includes the `intermediate_steps` variable because that is needed
+        input_variables=["input", "intermediate_steps"])
+
+        llm_chain = LLMChain(llm=llm, prompt=prompt3)
         agent3 = LLMSingleActionAgent(
             llm_chain=llm_chain, 
             output_parser=output_parser,
