@@ -108,8 +108,11 @@ if st.button('问答'):
             ),
         ]
 #         result = qa({"query": query})
-        agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
-        st.write(agent.run(query))
+        agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=True)
+        response = agent({"input":query})
+        st.write(response["intermediate_steps"])
+        st.write(response["output"])
+
 # st.header("总结系统")
 # if st.button('总结'):
 #     text_splitter = RecursiveCharacterTextSplitter(
