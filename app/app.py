@@ -76,7 +76,9 @@ Thought: I now know the final answer
 Final Answer: the final answer to the original input question
 All inputs and output tokens are limited to 3800.
 Question: {input}
-{agent_scratchpad}"""
+{agent_scratchpad}
+最后把输出的Final Answer结果翻译成中文
+"""
 
 # Set up a prompt template
 class CustomPromptTemplate(StringPromptTemplate):
