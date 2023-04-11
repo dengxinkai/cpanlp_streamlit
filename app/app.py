@@ -60,8 +60,7 @@ CONCISE SUMMARY IN CHINESE:"""
 PROMPT1 = PromptTemplate(template=prompt_template1, input_variables=["text"])
 result = ""
 template3 = """Answer the following questions as best you can.When the question is unrelated to financial matters:
-Action:无法回答
-Action Input:无法回答
+
 Final Answer:无法回答，因为与财经无关
 Don't use any tool。
 When the question is related to financial matters，You have access to the following tools:
