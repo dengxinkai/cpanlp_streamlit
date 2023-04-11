@@ -10,7 +10,6 @@ from langchain.prompts import StringPromptTemplate
 from langchain import OpenAI, SerpAPIWrapper, LLMChain
 from langchain.schema import AgentAction, AgentFinish
 import re
-
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
@@ -165,7 +164,7 @@ if st.button('问答'):
         tools = [ Tool(
                 name="维基",
                 func=wikipedia.run,
-                description="这个工具适用于当您需要回答关于财经主题的一般问题时。输入转换为英文，输出转换为中文"
+                description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
             ),
             Tool(
                 name = "谷歌",
@@ -204,7 +203,7 @@ if st.button('问答'):
                  Tool(
                 name="维基",
                 func=wikipedia.run,
-                description="这个工具适用于当您需要回答关于财经主题的一般问题时。输入转换为英文，输出转换为中文"
+                description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
             ),
             Tool(
                 name = "谷歌",
