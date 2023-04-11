@@ -161,16 +161,18 @@ input_text1 = st.text_input('提问','')
 if st.button('问答'):
     if not qa:
         query = input_text1
-        tools = [ Tool(
-                name="维基",
-                func=wikipedia.run,
-                description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
-            ),
+        tools = [
             Tool(
                 name = "谷歌",
                 func=search.run,
                 description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
             ),
+            Tool(
+                name="维基",
+                func=wikipedia.run,
+                description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
+            ),
+            
            ]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
@@ -200,16 +202,17 @@ if st.button('问答'):
             func=qa.run,
             description="这个工具适用于当您需要回答有关上传的公司财务报告的问题时。"
             ),
+                  Tool(
+                name = "谷歌",
+                func=search.run,
+                description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
+            ),
                  Tool(
                 name="维基",
                 func=wikipedia.run,
                 description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
             ),
-            Tool(
-                name = "谷歌",
-                func=search.run,
-                description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
-            ),
+           
            ]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
