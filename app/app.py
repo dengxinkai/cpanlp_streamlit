@@ -51,16 +51,11 @@ PROMPT = PromptTemplate(
 )
 chain_type_kwargs = {"prompt": PROMPT}
 prompt_template1 = """Write a concise summary of the following:
-
-
 {text}
-
-
 CONCISE SUMMARY IN CHINESE:"""
 PROMPT1 = PromptTemplate(template=prompt_template1, input_variables=["text"])
 result = ""
 template3 = """Answer the following questions as best you can.When the question is unrelated to financial matters:
-
 Final Answer:无法回答，因为与财经无关
 Don't use any tool。
 When the question is related to financial matters，You have access to the following tools:
@@ -78,14 +73,12 @@ Question: {input}
 {agent_scratchpad}
 最后把输出的Final Answer结果翻译成中文
 """
-
 # Set up a prompt template
 class CustomPromptTemplate(StringPromptTemplate):
     # The template to use
     template: str
     # The list of tools available
     tools: List[Tool]
-    
     def format(self, **kwargs) -> str:
         # Get the intermediate steps (AgentAction, Observation tuples)
         # Format them in a particular way
@@ -101,10 +94,7 @@ class CustomPromptTemplate(StringPromptTemplate):
         # Create a list of tool names for the tools provided
         kwargs["tool_names"] = ", ".join([tool.name for tool in self.tools])
         return self.template.format(**kwargs)
-
-
 class CustomOutputParser(AgentOutputParser):
-    
     def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
         # Check if agent should finish
         if "Final Answer:" in llm_output:
@@ -117,7 +107,6 @@ class CustomOutputParser(AgentOutputParser):
         # Parse out the action and action input
         regex = r"Action: (.*?)[\n]*Action Input:[\s]*(.*)"
         match = re.search(regex, llm_output, re.DOTALL)
-     
         action = match.group(1).strip()
         action_input = match.group(2)
         # Return the action and action input
@@ -164,12 +153,12 @@ if st.button('问答'):
         query = input_text1
         tools = [
             Tool(
-                name = "谷歌",
+                name = "Google",
                 func=search.run,
-                description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
+                description="This tool is useful when you need to answer questions about current financial questions."
             ),
 #             Tool(
-#                 name="维基",
+#                 name="Wiki",
 #                 func=wikipedia.run,
 #                 description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
 #             ),
@@ -199,14 +188,14 @@ if st.button('问答'):
         query = input_text1
 #         result = qa.run(query)
         tools = [Tool(
-            name = "公司财报",
+            name = "Kedu",
             func=qa.run,
-            description="这个工具适用于当您需要回答有关上传的公司财务报告的问题时。"
+            description="This tool is useful when you need to answer questions about company financial reports."
             ),
                   Tool(
-                name = "谷歌",
+                name = "Google",
                 func=search.run,
-                description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
+                description="This tool is useful when you need to answer questions about current financial questions."
             ),
 #                  Tool(
 #                 name="维基",
