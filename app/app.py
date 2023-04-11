@@ -63,7 +63,7 @@ result = ""
 template3 = """Answer the following questions as best you can.When the question is unrelated to financial matters:
 Action:无法回答
 Action Input:无法回答
-Final Answer:无法回答，因为与财金问题无关
+Final Answer:无法回答，因为与财经无关
 Don't use any tool。
 When the question is related to financial matters，You have access to the following tools:
 {tools}
@@ -164,14 +164,14 @@ if st.button('问答'):
         query = input_text1
         tools = [
             Tool(
-                name = "GOOGLE查询",
+                name = "谷歌",
                 func=search.run,
-                description="这个工具适用于当您需要回答有关当前金融经济事件的问题时。"
+                description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
             ),
             Tool(
-                name="wikipedia查询",
+                name="维基",
                 func=wikipedia.run,
-                description="这个工具适用于当您需要回答与当前问题有关的经济和金融理论时。输入应该转换为英文，同时输出转换为中文"
+                description="这个工具适用于当您需要回答与当前财经问题有关的名词解释时。输入转换为英文，输出转换为中文"
             )]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
@@ -199,17 +199,17 @@ if st.button('问答'):
         tools = [Tool(
             name = "公司财报",
             func=qa.run,
-            description="这个工具适用于当您需要回答有关上传的公司财务报告的问题时。输入应该是一个完整的问题。"
+            description="这个工具适用于当您需要回答有关上传的公司财务报告的问题时。"
             ),
             Tool(
-                name = "GOOGLE查询",
+                name = "谷歌",
                 func=search.run,
-                description="这个工具适用于当您需要回答有关当前金融经济事件的问题时。"
+                description="这个工具适用于当您需要回答有关当前财经事件的问题时。"
             ),
             Tool(
-                name="wikipedia查询",
+                name="维基",
                 func=wikipedia.run,
-                description="这个工具适用于当您需要回答与当前问题有关的名词解释时。输入应该转换为英文，输出转换为中文"
+                description="这个工具适用于当您需要回答与当前财经问题有关的名词解释时。输入转换为英文，输出转换为中文"
             )]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
