@@ -32,11 +32,6 @@ st.set_page_config(
     page_icon="🤖️",
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={
-        '获取帮助': 'https://www.cpanlp.com/',
-        '报告bug': "https://www.cpanlp.com/",
-        '关于': "可读-财报GPT版"
-    }
 )
 embeddings = OpenAIEmbeddings()
 wikipedia = WikipediaAPIWrapper()
