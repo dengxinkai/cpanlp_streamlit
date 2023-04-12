@@ -68,7 +68,7 @@ zgpa_tool =  Tool(
                 description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
             )
 ALL_TOOLS = [search_tool,zgpa_tool]
-docs = [Document(page_content=t["description"], metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
+docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
 vector_store = FAISS.from_documents(docs, OpenAIEmbeddings())
 retriever = vector_store.as_retriever()
 def get_tools(query):
