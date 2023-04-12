@@ -186,7 +186,6 @@ if st.button('问答'):
         query = input_text1
       
 #         result = qa({"query": query})
-        tool_names = [tool.name for tool in tools]
         prompt3 = CustomPromptTemplate(
         template=template3,
         tools_getter=get_tools,
