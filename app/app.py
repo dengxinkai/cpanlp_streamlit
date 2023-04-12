@@ -164,8 +164,10 @@ def 分析1(input_text):
                       namespace="ZGPA_601318")
     index = pinecone.Index(index_name="kedu")
     a=embeddings.embed_query(input_text)
-    www=index.query(vector=a, top_k=10, namespace='ZGPA_601318', include_metadata=True)
-    return www["matches"][0]["metadata"]["text"]
+    www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
+    c = [x["metadata"]["text"] for x in www["matches"]]
+#     return www["matches"][0]["metadata"]["text"]
+    return c
 st.header("问答")
 input_text1 = st.text_input('提问','')
 if st.button('问答'):
