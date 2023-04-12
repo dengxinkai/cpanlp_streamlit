@@ -7,4 +7,5 @@ tiktoken
 chromadb
 pypdf
 wikipedia
+pinecone-client
 google-api-python-client
