@@ -52,10 +52,10 @@ embeddings = OpenAIEmbeddings()
 wikipedia = WikipediaAPIWrapper()
 llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
-    temperature=0,
-    frequency_penalty=0,
-    presence_penalty=0,
-    top_p=1.0,
+    temperature=0.5,
+    frequency_penalty=1,
+    presence_penalty=1,
+    top_p=0.5,
 )
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
 search_tool =  Tool(
