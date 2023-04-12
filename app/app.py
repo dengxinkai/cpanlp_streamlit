@@ -27,6 +27,20 @@ import pinecone
 from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import WikipediaAPIWrapper
 from langchain.prompts import StringPromptTemplate
+from langchain.vectorstores import FAISS
+from langchain.schema import Document
+from typing import Callable
+
+@st.cache(allow_output_mutation=True)
+def 中国平安(input_text):
+    pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
+                      environment="us-east4-gcp",  # next to api key in console
+                      namespace="ZGPA_601318")
+    index = pinecone.Index(index_name="kedu")
+    a=embeddings.embed_query(input_text)
+    www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
+    c = [x["metadata"]["text"] for x in www["matches"]]
+    return c
 st.set_page_config(
     page_title="可读GPT",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -43,6 +57,23 @@ llm=ChatOpenAI(
     top_p=1.0,
 )
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
+search_tool =  Tool(
+                name = "Google",
+                func=search.run,
+                description="当您需要回答有关当前财经问题时，这个工具非常有用。"
+            )
+zgpa_tool =  Tool(
+                name = "ZGPA",
+                func=中国平安,
+                description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
+            ),
+ALL_TOOLS = [search_tool] + [zgpa_tool]
+docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
+vector_store = FAISS.from_documents(docs, OpenAIEmbeddings())
+retriever = vector_store.as_retriever()
+def get_tools(query):
+    docs = retriever.get_relevant_documents(query)
+    return [ALL_TOOLS[d.metadata["index"]] for d in docs]
 global qa
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 st.image(logo_url, width=80)
@@ -84,7 +115,7 @@ class CustomPromptTemplate(StringPromptTemplate):
     # The template to use
     template: str
     # The list of tools available
-    tools: List[Tool]
+    tools_getter: Callable
     def format(self, **kwargs) -> str:
         # Get the intermediate steps (AgentAction, Observation tuples)
         # Format them in a particular way
@@ -95,10 +126,11 @@ class CustomPromptTemplate(StringPromptTemplate):
             thoughts += f"\nObservation: {observation}\nThought: "
         # Set the agent_scratchpad variable to that value
         kwargs["agent_scratchpad"] = thoughts
+        tools = self.tools_getter(kwargs["input"])
         # Create a tools variable from the list of tools provided
-        kwargs["tools"] = "\n".join([f"{tool.name}: {tool.description}" for tool in self.tools])
+        kwargs["tools"] = "\n".join([f"{tool.name}: {tool.description}" for tool in tools])
         # Create a list of tool names for the tools provided
-        kwargs["tool_names"] = ", ".join([tool.name for tool in self.tools])
+        kwargs["tool_names"] = ", ".join([tool.name for tool in tools])
         return self.template.format(**kwargs)
 class CustomOutputParser(AgentOutputParser):
     def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
@@ -147,18 +179,7 @@ def 分析(input_text):
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
-@st.cache(allow_output_mutation=True)
-def 中国平安(input_text):
-      
-    pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
-                      environment="us-east4-gcp",  # next to api key in console
-                      namespace="ZGPA_601318")
-    index = pinecone.Index(index_name="kedu")
-    a=embeddings.embed_query(input_text)
-    www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
-    c = [x["metadata"]["text"] for x in www["matches"]]
-#     return www["matches"][0]["metadata"]["text"]
-    return c
+
 st.header("问答")
 input_text1 = st.text_input('提问','')
 if st.button('问答'):
@@ -186,12 +207,13 @@ if st.button('问答'):
         tool_names = [tool.name for tool in tools]
         prompt3 = CustomPromptTemplate(
         template=template3,
-        tools=tools,
+        tools_getter=get_tools,
         # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
         # This includes the `intermediate_steps` variable because that is needed
         input_variables=["input", "intermediate_steps"])
 
         llm_chain = LLMChain(llm=llm, prompt=prompt3)
+        tool_names = [tool.name for tool in tools]
         agent3 = LLMSingleActionAgent(
             llm_chain=llm_chain, 
             output_parser=output_parser,
