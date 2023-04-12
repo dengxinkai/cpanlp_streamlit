@@ -117,11 +117,7 @@ class CustomOutputParser(AgentOutputParser):
         action_input = match.group(2)
         # Return the action and action input
         return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
-
 output_parser = CustomOutputParser()
-
-
-
 st.header("上传")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
@@ -172,7 +168,7 @@ if st.button('问答'):
             Tool(
                 name = "ZGPA",
                 func=中国平安,
-                description="This tool is useful when you need to answer questions about 中国平安的财报信息."
+                description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
             ),
             Tool(
                 name = "Google",
