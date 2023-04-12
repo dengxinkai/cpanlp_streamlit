@@ -173,7 +173,7 @@ if st.button('问答'):
             Tool(
                 name = "Google",
                 func=search.run,
-                description="This tool is useful when you need to answer questions about current financial questions."
+                description="当您需要回答有关当前财经问题时，这个工具非常有用。"
             ),
 #             Tool(
 #                 name="Wiki",
