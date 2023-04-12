@@ -29,7 +29,7 @@ from langchain.utilities import WikipediaAPIWrapper
 from langchain.prompts import StringPromptTemplate
 st.set_page_config(
     page_title="可读GPT",
-    page_icon="🤖️",
+    page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
