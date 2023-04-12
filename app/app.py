@@ -191,7 +191,18 @@ if st.button('问答'):
         tools_getter=get_tools,
         input_variables=["input", "intermediate_steps"])
         llm_chain = LLMChain(llm=llm, prompt=prompt3)
-        tool_names = ["ZGPA","Google"]
+        tools = [
+            Tool(
+                name = "ZGPA",
+                func=中国平安,
+                description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
+            ),
+            Tool(
+                name = "Google",
+                func=search.run,
+                description="当您需要回答有关当前财经问题时，这个工具非常有用。"
+            )]
+        tool_names = [tool.name for tool in tools]
         agent3 = LLMSingleActionAgent(
             llm_chain=llm_chain, 
             output_parser=output_parser,
