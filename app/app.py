@@ -30,29 +30,6 @@ from langchain.prompts import StringPromptTemplate
 from langchain.vectorstores import FAISS
 from langchain.schema import Document
 from typing import Callable
-"""
-streamlit：一个用于构建交互式Web应用程序的Python库。
-numpy：一个用于进行数值计算的Python库。
-pandas：一个用于数据处理和分析的Python库。
-base64：一个用于将二进制数据编码为ASCII字符的Python库。
-json：一个用于处理JSON格式数据的Python库。
-os：一个用于访问操作系统功能的Python库。
-typing：一个用于类型注释的Python模块。
-langchain：一个自然语言处理工具包，其中包括了许多自然语言处理工具和算法，如语言模型、嵌入式向量存储、文本摘要、文本检索等。
-re：一个用于进行正则表达式匹配的Python库。
-tempfile：一个用于创建临时文件和目录的Python库。
-pinecone：一个用于管理和查询向量数据的云服务。
-AgentExecutor：一个用于执行自然语言处理代理的类。
-LLMSingleActionAgent：一个继承自AgentExecutor的类，用于执行语言模型代理。
-AgentOutputParser：一个用于解析代理输出的类。
-StringPromptTemplate：一个用于生成字符串提示的类。
-OpenAI、SerpAPIWrapper、LLMChain、PromptTemplate、MapReduceChain、ChatOpenAI等类，用于实现自然语言处理功能。
-PyPDFLoader、RecursiveCharacterTextSplitter、RetrievalQA等类，用于处理文本和文档。
-AgentType、Tool等类，用于管理代理和工具。
-GoogleSearchAPIWrapper、WikipediaAPIWrapper等类，用于访问网络数据源。
-FAISS、Chroma等类，用于存储和处理向量数据。
-Document、Callable等类型，用于类型注释。
-"""
 
 st.set_page_config(
     page_title="可读GPT",
