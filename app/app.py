@@ -28,14 +28,14 @@ from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import WikipediaAPIWrapper
 from langchain.prompts import StringPromptTemplate
 st.set_page_config(
-    page_title="Ex-stream-ly Cool App",
-    page_icon=logo_url,
+    page_title="可读GPT",
+    page_icon="🤖️",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'Get Help': 'https://www.extremelycoolapp.com/help',
-        'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# This is a header. This is an *extremely* cool app!"
+        '获取帮助': 'https://www.cpanlp.com/',
+        '报告bug': "https://www.cpanlp.com/",
+        '关于': "可读-财报GPT版"
     }
 )
 embeddings = OpenAIEmbeddings()
@@ -157,7 +157,7 @@ def 分析(input_text):
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
 @st.cache(allow_output_mutation=True)
-def 分析1(input_text):
+def 中国平安(input_text):
       
     pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                       environment="us-east4-gcp",  # next to api key in console
@@ -176,7 +176,7 @@ if st.button('问答'):
         tools = [
             Tool(
                 name = "ZGPA",
-                func=分析1,
+                func=中国平安,
                 description="This tool is useful when you need to answer questions about 中国平安的财报信息."
             ),
             Tool(
