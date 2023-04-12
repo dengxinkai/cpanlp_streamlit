@@ -28,7 +28,7 @@ from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import WikipediaAPIWrapper
 from langchain.prompts import StringPromptTemplate
 
-
+embeddings = OpenAIEmbeddings()
 wikipedia = WikipediaAPIWrapper()
 llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
