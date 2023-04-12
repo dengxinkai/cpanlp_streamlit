@@ -192,7 +192,7 @@ if st.button('问答'):
         tools_getter=get_tools,
         input_variables=["input", "intermediate_steps"])
         llm_chain = LLMChain(llm=llm, prompt=prompt3)
-        tool_names = [tool.name for tool in tools]
+        tool_names = ["ZGPA","Google"]
         agent3 = LLMSingleActionAgent(
             llm_chain=llm_chain, 
             output_parser=output_parser,
