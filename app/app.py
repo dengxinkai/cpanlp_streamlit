@@ -133,6 +133,26 @@ class CustomPromptTemplate(StringPromptTemplate):
         # Create a list of tool names for the tools provided
         kwargs["tool_names"] = ", ".join([tool.name for tool in tools])
         return self.template.format(**kwargs)
+class CustomPromptTemplate_Upload(StringPromptTemplate):
+    # The template to use
+    template: str
+    # The list of tools available
+    tools: List[Tool]
+    def format(self, **kwargs) -> str:
+        # Get the intermediate steps (AgentAction, Observation tuples)
+        # Format them in a particular way
+        intermediate_steps = kwargs.pop("intermediate_steps")
+        thoughts = ""
+        for action, observation in intermediate_steps:
+            thoughts += action.log
+            thoughts += f"\nObservation: {observation}\nThought: "
+        # Set the agent_scratchpad variable to that value
+        kwargs["agent_scratchpad"] = thoughts
+        # Create a tools variable from the list of tools provided
+        kwargs["tools"] = "\n".join([f"{tool.name}: {tool.description}" for tool in self.tools])
+        # Create a list of tool names for the tools provided
+        kwargs["tool_names"] = ", ".join([tool.name for tool in self.tools])
+        return self.template.format(**kwargs)
 class CustomOutputParser(AgentOutputParser):
     def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
         # Check if agent should finish
@@ -217,7 +237,7 @@ if st.button('问答'):
         query = input_text1
 #         result = qa.run(query)
         tools = [Tool(
-            name = "Kedu",
+            name = "上传",
             func=qa.run,
             description="This tool is useful when you need to answer questions about company financial reports."
             ),
@@ -235,14 +255,14 @@ if st.button('问答'):
            ]
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
-        prompt3 = CustomPromptTemplate(
+        prompt_Upload = CustomPromptTemplate_Upload(
         template=template3,
         tools=tools,
         # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
         # This includes the `intermediate_steps` variable because that is needed
         input_variables=["input", "intermediate_steps"])
 
-        llm_chain = LLMChain(llm=llm, prompt=prompt3)
+        llm_chain = LLMChain(llm=llm, prompt=prompt_Upload)
         agent3 = LLMSingleActionAgent(
             llm_chain=llm_chain, 
             output_parser=output_parser,
