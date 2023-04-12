@@ -184,33 +184,13 @@ input_text1 = st.text_input('提问','')
 if st.button('问答'):
     if not qa:
         query = input_text1
-        tools = [
-            Tool(
-                name = "ZGPA",
-                func=中国平安,
-                description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
-            ),
-            Tool(
-                name = "Google",
-                func=search.run,
-                description="当您需要回答有关当前财经问题时，这个工具非常有用。"
-            ),
-#             Tool(
-#                 name="Wiki",
-#                 func=wikipedia.run,
-#                 description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
-#             ),
-            
-           ]
+      
 #         result = qa({"query": query})
         tool_names = [tool.name for tool in tools]
         prompt3 = CustomPromptTemplate(
         template=template3,
         tools_getter=get_tools,
-        # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
-        # This includes the `intermediate_steps` variable because that is needed
         input_variables=["input", "intermediate_steps"])
-
         llm_chain = LLMChain(llm=llm, prompt=prompt3)
         tool_names = [tool.name for tool in tools]
         agent3 = LLMSingleActionAgent(
