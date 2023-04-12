@@ -78,16 +78,16 @@ def get_tools(query):
 global qa
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 st.image(logo_url, width=80)
-# prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
-# {context}
+{context}
 
-# Question: {question}
-# Answer in Chinese:"""
-# PROMPT = PromptTemplate(
-#     template=prompt_template, input_variables=["context", "question"]
-# )
-# chain_type_kwargs = {"prompt": PROMPT}
+Question: {question}
+Answer in Chinese:"""
+PROMPT = PromptTemplate(
+    template=prompt_template, input_variables=["context", "question"]
+)
+chain_type_kwargs = {"prompt": PROMPT}
 # prompt_template1 = """Write a concise summary of the following:
 # {text}
 # CONCISE SUMMARY IN CHINESE:"""
@@ -160,9 +160,7 @@ def 分析(input_text):
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(file.read())
             tmp_file.flush()
-
             loader = PyPDFLoader(tmp_file.name)
-
     elif input_text != "":        
         loader = PyPDFLoader(input_text)
     else:
