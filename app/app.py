@@ -23,6 +23,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
 import tempfile
+import pinecone 
 from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.utilities import WikipediaAPIWrapper
 from langchain.prompts import StringPromptTemplate
@@ -145,13 +146,26 @@ def 分析(input_text):
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
-
+@st.cache(allow_output_mutation=True)
+def 分析1():
+      
+    pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
+                      environment="us-east4-gcp",  # next to api key in console
+                      namespace="ZGPA_601318")
+    index = pinecone.Index(index_name="kedu")
+    www=index.query(vector=a, top_k=10, namespace='ZGPA_601318', include_metadata=True)
+    return www["matches"][0]["metadata"]["text"]
 st.header("问答")
 input_text1 = st.text_input('提问','')
 if st.button('问答'):
     if not qa:
         query = input_text1
         tools = [
+            Tool(
+                name = "ZGPA",
+                func=分析1,
+                description="This tool is useful when you need to answer questions about 中国平安的财报信息."
+            ),
             Tool(
                 name = "Google",
                 func=search.run,
