@@ -29,7 +29,7 @@ from langchain.utilities import WikipediaAPIWrapper
 from langchain.prompts import StringPromptTemplate
 st.set_page_config(
     page_title="Ex-stream-ly Cool App",
-    page_icon="🧊",
+    page_icon=logo_url,
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
