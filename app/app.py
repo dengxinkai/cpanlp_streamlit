@@ -77,7 +77,6 @@ def get_tools(query):
     return [ALL_TOOLS[d.metadata["index"]] for d in docs]
 global qa
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
-st.image(logo_url, width=80)
 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
 {context}
@@ -220,7 +219,7 @@ if st.button('问答'):
             Tool(
                 name = "Google",
                 func=search.run,
-                description="当您需要回答有关当前财经问题时，这个工具非常有用。"
+                description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
             )]
         tool_names = [tool.name for tool in tools]
         agent3 = LLMSingleActionAgent(
@@ -239,17 +238,17 @@ if st.button('问答'):
         tools = [Tool(
             name = "上传",
             func=qa.run,
-            description="This tool is useful when you need to answer questions about company financial reports."
+            description="当您需要回答有关上传公司财报信息的问题时，这个工具非常有用。"
             ),
                   Tool(
                 name = "Google",
                 func=search.run,
-                description="This tool is useful when you need to answer questions about current financial questions."
+                description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
             ),
 #                  Tool(
 #                 name="维基",
 #                 func=wikipedia.run,
-#                 description="这个工具适用于当您需要回答有关财经问题的名词解释时，输入转换为英文，输出转换为中文"
+#                 description="这个工具适用于当您需要回答有关财经管理问题的名词解释时，输入转换为英文，输出转换为中文"
 #             ),
            
            ]
