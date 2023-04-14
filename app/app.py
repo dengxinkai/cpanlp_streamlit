@@ -173,6 +173,7 @@ output_parser = CustomOutputParser()
 with st.sidebar:
     st.header(":blue[Openai apikey]")
     apikey=st.text_input('')
+os.environ["OPENAI_API_KEY"] = apikey
 st.header(":blue[上传]")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
