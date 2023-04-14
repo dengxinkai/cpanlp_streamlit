@@ -19,7 +19,6 @@ from typing import List, Union
 from langchain.schema import AgentAction, AgentFinish
 import re
 from langchain.chat_models import ChatOpenAI
-os.environ["OPENAI_API_KEY"] = "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"
 from langchain import OpenAI, PromptTemplate, LLMChain
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.mapreduce import MapReduceChain
