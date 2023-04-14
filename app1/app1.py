@@ -323,4 +323,4 @@ baby_agi = BabyAGI.from_llm(
 )
 if st.button('问答'):
     baby_agi({"objective": OBJECTIVE})
-st.write(显示)
+st.write(显示+"\n"+"你好"+"\n"+"hi")
