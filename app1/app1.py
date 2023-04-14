@@ -41,7 +41,7 @@ from langchain.agents import ZeroShotAgent, Tool, AgentExecutor
 from langchain.utilities import WikipediaAPIWrapper
 from langchain.schema import Document
 global 显示
-显示 = "你好\n朋友"
+显示 = ""
 
 st.set_page_config(
     page_title="cpanlp的机器学习",
