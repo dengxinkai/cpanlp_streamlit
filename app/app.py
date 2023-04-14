@@ -170,7 +170,7 @@ class CustomOutputParser(AgentOutputParser):
         # Return the action and action input
         return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
 output_parser = CustomOutputParser()
-st.header("上传")
+st.header(":blue[上传]")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
 @st.cache(allow_output_mutation=True)
