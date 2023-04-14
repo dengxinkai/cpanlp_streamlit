@@ -63,6 +63,25 @@ This app predicts the **Iris flower** type!
 """)
 
 st.sidebar.header('User Input Parameters')
+def 中国平安(input_text):
+    pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
+                      environment="us-east4-gcp",  # next to api key in console
+                      namespace="ZGPA_601318")
+    index = pinecone.Index(index_name="kedu")
+    a=embeddings.embed_query(input_text)
+    www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
+    c = [x["metadata"]["text"] for x in www["matches"]]
+    return c
+embeddings = OpenAIEmbeddings()
+llm=ChatOpenAI(
+    model_name="gpt-3.5-turbo",
+    temperature=0.5,
+    frequency_penalty=1,
+    presence_penalty=1,
+    top_p=0.5,
+)
+search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
+
 class TaskCreationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
