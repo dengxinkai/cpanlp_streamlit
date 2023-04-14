@@ -198,7 +198,7 @@ def 分析(input_text):
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
 
-st.header("问答", style="color:blue")
+st.header(":blue[问答]")
 input_text1 = st.text_input('提问','')
 if st.button('问答'):
     if not qa:
