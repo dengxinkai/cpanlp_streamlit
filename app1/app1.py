@@ -309,7 +309,7 @@ class BabyAGI(Chain, BaseModel):
             vectorstore=vectorstore,
             **kwargs
         )
-OBJECTIVE = st.text_input('提问','')
+OBJECTIVE = st.text_input('提问','', key="name_input1")
 
 llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
@@ -344,7 +344,7 @@ agent_chain = initialize_agent(
     agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
     verbose=True,
 )
-OBJECTIVE1 = st.text_input('提问','')
+OBJECTIVE1 = st.text_input('提问','', key="name_input")
 
 if st.button('问答1'):
     agent_chain.run(OBJECTIVE1)
