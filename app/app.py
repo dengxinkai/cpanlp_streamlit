@@ -36,7 +36,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-st.title('可读财报_GPT_:blue[中国上市公司智能财报阅读]')
+st.title('可读财报--:blue[中国上市公司智能财报阅读]')
 
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
