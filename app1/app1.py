@@ -293,10 +293,7 @@ class BabyAGI(Chain, BaseModel):
         )
         llm_chain = LLMChain(llm=llm, prompt=prompt)
         tool_names = [tool.name for tool in tools]
-#         agent = ZeroShotAgent(llm_chain=llm_chain, allowed_tools=tool_names)
-        agent = LLMSingleActionAgent(llm_chain=llm_chain, allowed_tools=tool_names)
-
-
+        agent = ZeroShotAgent(llm_chain=llm_chain, allowed_tools=tool_names)
         agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
         return cls(
             task_creation_chain=task_creation_chain,
