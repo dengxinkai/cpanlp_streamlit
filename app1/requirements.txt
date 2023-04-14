@@ -1,3 +1,13 @@
 streamlit
 pandas
 scikit-learn
+numpy
+langchain
+openai
+tiktoken
+chromadb
+pypdf
+wikipedia
+pinecone-client
+google-api-python-client
+faiss-cpu
