@@ -55,7 +55,13 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/)")
-
+# Define your embedding model
+embeddings_model = OpenAIEmbeddings()
+# Initialize the vectorstore as empty
+import faiss
+embedding_size = 1536
+index = faiss.IndexFlatL2(embedding_size)
+vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
 st.write("""
 # Simple Iris Flower Prediction App
 This app predicts the **Iris flower** type!
