@@ -35,6 +35,11 @@ st.set_page_config(
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'https://www.cpanlp.com/',
+        'Report a bug': "https://www.cpanlp.com/",
+        'About': "可读财报GPT"
+    }
 )
 st.title('可读财报--中国上市公司智能财报阅读')
 
@@ -201,7 +206,7 @@ def 分析(input_text):
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
 
-st.header(":blue[问答]")
+st.subheader(":blue[问答]")
 input_text1 = st.text_input('提问','')
 if st.button('问答'):
     if not qa:
