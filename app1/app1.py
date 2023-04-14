@@ -62,7 +62,7 @@ import faiss
 embedding_size = 1536
 index = faiss.IndexFlatL2(embedding_size)
 vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
-st.write("""可读财报-BabyAGI""")
+st.title("""可读财报-BabyAGI""")
 
 # st.sidebar.header('User Input Parameters')
 def 中国平安(input_text):
