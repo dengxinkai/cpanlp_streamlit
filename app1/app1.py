@@ -40,6 +40,13 @@ from langchain.utilities import GoogleSearchAPIWrapper
 from langchain.agents import ZeroShotAgent, Tool, AgentExecutor
 from langchain.utilities import WikipediaAPIWrapper
 from langchain.schema import Document
+import sys
+from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
+from langchain.agents import load_tools, initialize_agent
+from langchain.agents import AgentType
+
+
 global 显示
 显示 = ""
 
@@ -325,3 +332,19 @@ if st.button('问答'):
 text_list = 显示.split('\n')
 for i in text_list:
     st.write(i)
+math_llm = OpenAI(temperature=0.0)
+tools = load_tools(
+    ["human", "llm-math"], 
+    llm=math_llm,
+)
+
+agent_chain = initialize_agent(
+    tools,
+    llm,
+    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    verbose=True,
+)
+OBJECTIVE1 = st.text_input('提问','')
+
+if st.button('问答1'):
+    agent_chain.run(OBJECTIVE1)
