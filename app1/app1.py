@@ -95,7 +95,7 @@ class TaskCreationChain(LLMChain):
             " These are incomplete tasks: {incomplete_tasks}."
             " Based on the result, create new tasks to be completed"
             " by the AI system that do not overlap with incomplete tasks."
-            " Return the tasks as an array in Chinese."
+            " Return the tasks as an array."
             " Be careful,This model's maximum context length is 4097 tokens."
         )
         prompt = PromptTemplate(
@@ -111,7 +111,7 @@ class TaskPrioritizationChain(LLMChain):
             "You are an task prioritization AI tasked with cleaning the formatting of and reprioritizing"
             " the following tasks: {task_names}."
             " Consider the ultimate objective of your team: {objective}."
-            " Do not remove any tasks. Return the result as a numbered list in Chinese, like:"
+            " Do not remove any tasks. Return the result as a numbered list, like:"
             " 1"
             " 2"
             " Start the task list with number {next_task_id}."
