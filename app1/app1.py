@@ -352,7 +352,7 @@ class HumanInputRun(BaseTool):
     def _run(self, query: str) -> str:
         """Use the Human input tool."""
         self.prompt_func(query)
-        return st.text_input('提问','', key="name_input2")
+        return st.text_input('提问','', key="name_input3")
 
     async def _arun(self, query: str) -> str:
         """Use the Human tool asynchronously."""
