@@ -338,35 +338,5 @@ if st.button('问答'):
 text_list = 显示.split('\n')
 for i in text_list:
     st.write(i)
-class HumanInputRun(BaseTool):
-    """Tool that adds the capability to ask user for input."""
 
-    name = "Human"
-    description = (
-        "You can ask a human for guidance when you think you "
-        "got stuck or you are not sure what to do next. "
-        "The input should be a question for the human."
-    )
-    prompt_func: Callable[[str], None] = Field(default_factory=lambda: _print_func)
 
-    def _run(self, query: str) -> str:
-        """Use the Human input tool."""
-        self.prompt_func(query)
-        return st.text_input('提问','', key="name_input3")
-
-    async def _arun(self, query: str) -> str:
-        """Use the Human tool asynchronously."""
-        raise NotImplementedError("Human tool does not support async")
-
-math_llm = OpenAI(temperature=0.0)
-tools = [HumanInputRun()]
-agent_chain = initialize_agent(
-    tools,
-    llm,
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=True,
-)
-OBJECTIVE1 = st.text_input('提问','', key="name_input")
-
-if st.button('问答1'):
-    agent_chain.run(OBJECTIVE1)
