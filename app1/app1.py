@@ -327,4 +327,5 @@ st.write(显示+"\n"+"你好"+"\n"+"hi")
 st.markdown("第一行文本\n第二行文本")
 text = "第一行文本\n第二行文本"
 text_list = text.split('\n')
-st.write(text_list)
+for i in text_list:
+    st.write(text_list)
