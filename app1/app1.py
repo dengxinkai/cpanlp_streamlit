@@ -145,8 +145,15 @@ tools = [
 prefix = """You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}."""
 suffix = """Question: {task}
 {agent_scratchpad}
-Be careful,This model's maximum context length is 4097 tokens.
-最后把输出的Final Answer结果翻译成中文
+Use the following format:
+Question: the input question you must answer
+Thought: you should always think about what to do
+Action: the action to take, should be one of [{tool_names}]
+Action Input: the input to the action
+Observation: the result of the action
+Thought: I now know the final answer
+Final Answer: the final answer to the original input question
+All inputs and output tokens are limited to 3800.最后把输出的Final Answer结果翻译成中文
 """
 prompt = ZeroShotAgent.create_prompt(
     tools, 
