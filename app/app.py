@@ -48,7 +48,7 @@ def 中国平安(input_text):
     c = [x["metadata"]["text"] for x in www["matches"]]
     return c
 
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings(openai_api_key=openaikey)
 wikipedia = WikipediaAPIWrapper()
 llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
@@ -172,8 +172,7 @@ class CustomOutputParser(AgentOutputParser):
 output_parser = CustomOutputParser()
 with st.sidebar:
     st.header(":blue[Openai apikey]")
-    apikey=st.text_input('')
-os.environ["OPENAI_API_KEY"] = apikey
+    openaikey=st.text_input('')
 st.header(":blue[上传]")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
