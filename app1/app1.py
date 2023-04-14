@@ -62,12 +62,9 @@ import faiss
 embedding_size = 1536
 index = faiss.IndexFlatL2(embedding_size)
 vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {})
-st.write("""
-# Simple Iris Flower Prediction App
-This app predicts the **Iris flower** type!
-""")
+st.write("""可读财报-BabyAGI""")
 
-st.sidebar.header('User Input Parameters')
+# st.sidebar.header('User Input Parameters')
 def 中国平安(input_text):
     pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                       environment="us-east4-gcp",  # next to api key in console
