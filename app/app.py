@@ -171,7 +171,8 @@ class CustomOutputParser(AgentOutputParser):
         return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
 output_parser = CustomOutputParser()
 with st.sidebar:
-    st.header(":blue[上传]")
+    st.header(":blue[Openai apikey]")
+    apikey=st.text_input('')
 st.header(":blue[上传]")
 file = st.file_uploader("PDF文件", type="pdf")
 input_text = st.text_input('PDF网址', '')
