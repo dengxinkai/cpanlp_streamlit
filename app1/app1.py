@@ -63,6 +63,76 @@ This app predicts the **Iris flower** type!
 """)
 
 st.sidebar.header('User Input Parameters')
+class TaskCreationChain(LLMChain):
+    @classmethod
+    def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
+        task_creation_template = (
+            "You are an task creation AI that uses the result of an execution agent"
+            " to create 3 new main tasks with the following objective: {objective},"
+            " The last completed task has the result: {result}."
+            " This result was based on this task description: {task_description}."
+            " These are incomplete tasks: {incomplete_tasks}."
+            " Based on the result, create new tasks to be completed"
+            " by the AI system that do not overlap with incomplete tasks."
+            " Return the tasks as an array in Chinese."
+            " Be careful,This model's maximum context length is 4097 tokens."
+        )
+        prompt = PromptTemplate(
+            template=task_creation_template,
+            input_variables=["result", "task_description", "incomplete_tasks", "objective"],
+        )
+        return cls(prompt=prompt, llm=llm, verbose=verbose)
+class TaskPrioritizationChain(LLMChain):
+    @classmethod
+    def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
+        """Get the response parser."""
+        task_prioritization_template = (
+            "You are an task prioritization AI tasked with cleaning the formatting of and reprioritizing"
+            " the following tasks: {task_names}."
+            " Consider the ultimate objective of your team: {objective}."
+            " Do not remove any tasks. Return the result as a numbered list in Chinese, like:"
+            " 1"
+            " 2"
+            " Start the task list with number {next_task_id}."
+            " Be careful,This model's maximum context length is 4097 tokens."
+
+        )
+        prompt = PromptTemplate(
+            template=task_prioritization_template,
+            input_variables=["task_names", "next_task_id", "objective"],
+        )
+        return cls(prompt=prompt, llm=llm, verbose=verbose)
+todo_prompt = PromptTemplate.from_template("Come up with a todo list of 3 most important items for this objective: {objective}.")
+todo_chain = LLMChain(llm=OpenAI(temperature=0), prompt=todo_prompt)
+tools = [
+    Tool(
+        name = "ZGPA",
+        func=中国平安,
+        description="This tool is very useful when you need to answer questions about information of Ping An (601318) in China."
+        ),
+    Tool(
+        name = "Search",
+        func=search.run,
+        description="useful for when you need to answer questions about current events"
+    ),
+    Tool(
+        name = "TODO",
+        func=todo_chain.run,
+        description="useful for when you need to come up with todo lists. Input: an objective to create a todo list for. Output: a todo list of three most important items for that objective. Please be very clear what the objective is!"
+    )
+]
+prefix = """You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}."""
+suffix = """Question: {task}
+{agent_scratchpad}
+Be careful,This model's maximum context length is 4097 tokens.
+最后把输出的Final Answer结果翻译成中文
+"""
+prompt = ZeroShotAgent.create_prompt(
+    tools, 
+    prefix=prefix, 
+    suffix=suffix, 
+    input_variables=["objective", "task", "context","agent_scratchpad"]
+)
 def get_next_task(task_creation_chain: LLMChain, result: Dict, task_description: str, task_list: List[str], objective: str) -> List[Dict]:
     """Get the next task."""
     incomplete_tasks = ", ".join(task_list)
