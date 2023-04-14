@@ -30,7 +30,7 @@ from langchain.prompts import StringPromptTemplate
 from langchain.vectorstores import FAISS
 from langchain.schema import Document
 from typing import Callable
-
+openaikey=""
 st.set_page_config(
     page_title="可读GPT",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
