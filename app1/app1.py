@@ -12,7 +12,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
 from langchain.agents import initialize_agent, Tool
 from langchain.agents import AgentType
-from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent, AgentOutputParser
+from langchain.agents import Tool, AgentExecutor, LLMSingleActionAgent,AgentOutputParser
 from langchain.prompts import StringPromptTemplate
 from langchain import OpenAI, SerpAPIWrapper, LLMChain
 from typing import List, Union
@@ -293,7 +293,10 @@ class BabyAGI(Chain, BaseModel):
         )
         llm_chain = LLMChain(llm=llm, prompt=prompt)
         tool_names = [tool.name for tool in tools]
-        agent = ZeroShotAgent(llm_chain=llm_chain, allowed_tools=tool_names)
+#         agent = ZeroShotAgent(llm_chain=llm_chain, allowed_tools=tool_names)
+        agent = LLMSingleActionAgent(llm_chain=llm_chain, allowed_tools=tool_names)
+
+
         agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools, verbose=True)
         return cls(
             task_creation_chain=task_creation_chain,
