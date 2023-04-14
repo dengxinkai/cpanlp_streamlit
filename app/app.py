@@ -30,14 +30,14 @@ from langchain.prompts import StringPromptTemplate
 from langchain.vectorstores import FAISS
 from langchain.schema import Document
 from typing import Callable
-st.title('可读财报GPT with _italics_ :blue[中国上市公司智能财报阅读]')
-
 st.set_page_config(
     page_title="可读GPT",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+st.title('可读财报_GPT_:blue[中国上市公司智能财报阅读]')
+
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
     pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
