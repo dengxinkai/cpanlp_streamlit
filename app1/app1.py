@@ -46,7 +46,9 @@ from langchain.llms import OpenAI
 from langchain.agents import load_tools, initialize_agent
 from langchain.agents import AgentType
 from langchain.tools import BaseTool
+from typing import Callable
 
+from pydantic import Field
 
 global 显示
 显示 = ""
