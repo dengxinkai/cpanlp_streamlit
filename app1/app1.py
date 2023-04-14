@@ -324,4 +324,4 @@ baby_agi = BabyAGI.from_llm(
 if st.button('问答'):
     baby_agi({"objective": OBJECTIVE})
 st.write(显示+"\n"+"你好"+"\n"+"hi")
-st.write("第一行文本\n第二行文本")
+st.markdown("第一行文本\n第二行文本")
