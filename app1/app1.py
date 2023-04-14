@@ -18,7 +18,7 @@ from langchain import OpenAI, SerpAPIWrapper, LLMChain
 from typing import List, Union
 from langchain.schema import AgentAction, AgentFinish
 import re
-import os
+from langchain.chat_models import ChatOpenAI
 os.environ["OPENAI_API_KEY"] = "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"
 from langchain import OpenAI, PromptTemplate, LLMChain
 from langchain.text_splitter import CharacterTextSplitter
@@ -301,4 +301,24 @@ class BabyAGI(Chain, BaseModel):
             vectorstore=vectorstore,
             **kwargs
         )
+OBJECTIVE = st.text_input('提问','')
 
+llm=ChatOpenAI(
+    model_name="gpt-3.5-turbo",
+    temperature=0.5,
+    frequency_penalty=1,
+    presence_penalty=1,
+    top_p=0.5,
+)# Logging of LLMChains
+verbose=True
+# If None, will keep on going forever
+max_iterations: Optional[int] = 3
+baby_agi = BabyAGI.from_llm(
+    llm=llm,
+    vectorstore=vectorstore,
+    verbose=verbose,
+    max_iterations=max_iterations
+)
+if st.button('问答'):
+    baby_agi({"objective": OBJECTIVE})
+st.write(显示)
