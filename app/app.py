@@ -302,7 +302,7 @@ if st.button('问答'):
         st.write(response["output"])
 input_text3 = st.text_input('提问2','')
 if st.button('问答', key='cninfo财务数据'):
-    ww=agent_df.run(input_text3)
+    ww=agent_df({"input":input_text3})
     st.write(ww)
 # st.header("总结系统")
 # if st.button('总结'):
