@@ -235,8 +235,7 @@ def 分析(input_text):
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 qa = 分析(input_text)
 
-st.subheader(":blue[问答]")
-input_text1 = st.text_input('提问','')
+input_text1 = st.text_input(':blue[提问]','')
 if st.button('回答'):
     if not qa:
         query = input_text1
@@ -308,7 +307,7 @@ if st.button('回答'):
         response = agent_executor({"input":query})
         st.write(response["intermediate_steps"])
         st.write(response["output"])
-input_text3 = st.text_input('市场表现提问','')
+input_text3 = st.text_input(':blue[市场表现提问]','')
 if st.button('回答', key='cninfo财务数据'):
     a=getseccode(input_text3)
     agent_df = cnifo(a)
