@@ -298,7 +298,7 @@ if st.button('问答'):
         st.write(response["output"])
 input_text3 = st.text_input('提问2','')
 if st.button('问答'):
-    agent.run(input_text3)
+    agent_df.run(input_text3)
 # st.header("总结系统")
 # if st.button('总结'):
 #     text_splitter = RecursiveCharacterTextSplitter(
