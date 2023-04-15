@@ -53,11 +53,10 @@ url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode=000002&sdate=201
 requests = TextRequestsWrapper()
 a=requests.get(url)
 data = json.loads(a)
-
-# 将字典转换为数据框
-df1 = pd.json_normalize(data, record_path='records')
-df1=df1.rename(columns={'SECNAME': '证券简称', 'F009N': '涨跌','F008N': '总笔数', 'SECCODE': '证券代码','TRADEDATE': '交易日期', 'F001V': '交易所','F002N': '昨日收盘价', 'F003N': '今日开盘价','F004N': '成交数量', 'F005N': '最高成交价',"F006N":"最低成交价","F007N":"最近成交价","F010N":"涨跌幅","F011N":"成交金额","F012N":"换手率","F013N":"振幅","F020N":"发行总股本","F021N":"流通股本","F026N":"市盈率"})
-df1=df1.drop('F019N', axis=1)
+df = pd.json_normalize(data, record_path='records')
+df=df.rename(columns={'SECNAME': '证券简称', 'F009N': '涨跌','F008N': '总笔数', 'SECCODE': '证券代码','TRADEDATE': '交易日期', 'F001V': '交易所','F002N': '昨日收盘价', 'F003N': '今日开盘价','F004N': '成交数量', 'F005N': '最高成交价',"F006N":"最低成交价","F007N":"最近成交价","F010N":"涨跌幅","F011N":"成交金额","F012N":"换手率","F013N":"振幅","F020N":"发行总股本","F021N":"流通股本","F026N":"市盈率"})
+df=df.drop('F019N', axis=1)
+df['交易日期'] = pd.to_datetime(df['交易日期'])
 
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
