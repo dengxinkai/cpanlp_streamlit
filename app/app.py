@@ -23,7 +23,10 @@ from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.utilities import GoogleSearchAPIWrapper,WikipediaAPIWrapper,TextRequestsWrapper
-
+from langchain.prompts.chat import (
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate,
+)
 st.set_page_config(
     page_title="可读-财报GPT",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -36,6 +39,22 @@ st.set_page_config(
     }
 )
 st.title('中国上市公司智能财报阅读')
+
+@st.cache(allow_output_mutation=True)
+def getseccode(text)
+    human_message_prompt = HumanMessagePromptTemplate(
+            prompt=PromptTemplate(
+                template="从{company}中提取出中国的上市公司实体并显示其股票代码",
+                input_variables=["company"],
+            )
+        )
+    chat_prompt_template = ChatPromptTemplate.from_messages([human_message_prompt])
+    chat = ChatOpenAI(temperature=0.2)
+    chain = LLMChain(llm=chat, prompt=chat_prompt_template)
+
+    pattern = r"\d{6}"
+    a=re.findall(pattern, chain.run(text))[0]
+    return a
 
 def gettoken(client_id,client_secret):
     url='http://webapi.cninfo.com.cn/api-cloud-platform/oauth2/token'
@@ -302,8 +321,8 @@ if st.button('问答'):
         st.write(response["output"])
 input_text3 = st.text_input('提问2','')
 if st.button('问答', key='cninfo财务数据'):
-    
-    agent_df = cnifo()
+    a=getseccode(input_text3)
+    agent_df = cnifo(a)
     ww=agent_df({"input":input_text3})
     st.write(ww)
 # st.header("总结系统")
