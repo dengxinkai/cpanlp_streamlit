@@ -10,3 +10,7 @@ wikipedia
 pinecone-client
 google-api-python-client
 faiss-cpu
+requests
+matplotlib
+chineseize_matplotlib
+scikit-learn
