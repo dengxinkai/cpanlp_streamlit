@@ -49,7 +49,7 @@ def getseccode(text):
             )
         )
     chat_prompt_template = ChatPromptTemplate.from_messages([human_message_prompt])
-    chat = ChatOpenAI(temperature=0.2)
+    chat = ChatOpenAI(temperature=0.4)
     chain = LLMChain(llm=chat, prompt=chat_prompt_template)
     pattern = r"\d{6}"
     a=re.findall(pattern, chain.run(text))[0]
