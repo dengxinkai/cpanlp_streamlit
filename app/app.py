@@ -308,7 +308,7 @@ if st.button('回答'):
         response = agent_executor({"input":query})
         st.write(response["intermediate_steps"])
         st.write(response["output"])
-input_text3 = st.text_input('提问2','')
+input_text3 = st.text_input('市场表现提问','')
 if st.button('回答', key='cninfo财务数据'):
     a=getseccode(input_text3)
     agent_df = cnifo(a)
