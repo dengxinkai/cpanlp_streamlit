@@ -47,18 +47,22 @@ def gettoken(client_id,client_secret):
     req = requests.post(url, data=post_data)
     tokendic = json.loads(req.text)
     return tokendic['access_token']
-token = gettoken('TvUN4uIl2gu4sjPdB4su6DiPNYFMkhA1','Snb5s887ezAWBXIyYyqY5fBQI6ttyySu')
-#上市公司市场数据
-url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode=000002&sdate=20161101&edate=20230415&access_token='+token
-requests = TextRequestsWrapper()
-a=requests.get(url)
-data = json.loads(a)
-df = pd.json_normalize(data, record_path='records')
-df=df.rename(columns={'SECNAME': '证券简称', 'F009N': '涨跌','F008N': '总笔数', 'SECCODE': '证券代码','TRADEDATE': '交易日期', 'F001V': '交易所','F002N': '昨日收盘价', 'F003N': '今日开盘价','F004N': '成交数量', 'F005N': '最高成交价',"F006N":"最低成交价","F007N":"最近成交价","F010N":"涨跌幅","F011N":"成交金额","F012N":"换手率","F013N":"振幅","F020N":"发行总股本","F021N":"流通股本","F026N":"市盈率"})
-df=df.drop('F019N', axis=1)
-df['交易日期'] = pd.to_datetime(df['交易日期'])
-agent_df = create_pandas_dataframe_agent(OpenAI(temperature=0.4), df, verbose=True,return_intermediate_steps=True)
 
+@st.cache(allow_output_mutation=True)
+def cnifo():
+    token = gettoken('TvUN4uIl2gu4sjPdB4su6DiPNYFMkhA1','Snb5s887ezAWBXIyYyqY5fBQI6ttyySu')
+#上市公司市场数据
+    url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode=000002&sdate=20161101&edate=20230415&access_token='+token
+    requests = TextRequestsWrapper()
+    a=requests.get(url)
+    data = json.loads(a)
+    df = pd.json_normalize(data, record_path='records')
+    df=df.rename(columns={'SECNAME': '证券简称', 'F009N': '涨跌','F008N': '总笔数', 'SECCODE': '证券代码','TRADEDATE': '交易日期', 'F001V': '交易所','F002N': '昨日收盘价', 'F003N': '今日开盘价','F004N': '成交数量', 'F005N': '最高成交价',"F006N":"最低成交价","F007N":"最近成交价","F010N":"涨跌幅","F011N":"成交金额","F012N":"换手率","F013N":"振幅","F020N":"发行总股本","F021N":"流通股本","F026N":"市盈率"})
+    df=df.drop('F019N', axis=1)
+    df['交易日期'] = pd.to_datetime(df['交易日期'])
+    agent_df = create_pandas_dataframe_agent(OpenAI(temperature=0.4), df, verbose=True,return_intermediate_steps=True)
+    return agent_df 
+agent_df = cnifo()
 
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
@@ -298,7 +302,8 @@ if st.button('问答'):
         st.write(response["output"])
 input_text3 = st.text_input('提问2','')
 if st.button('问答', key='cninfo财务数据'):
-    agent_df.run(input_text3)
+    ww=agent_df.run(input_text3)
+    st.write(ww)
 # st.header("总结系统")
 # if st.button('总结'):
 #     text_splitter = RecursiveCharacterTextSplitter(
