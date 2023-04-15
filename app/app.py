@@ -313,7 +313,7 @@ if st.button('回答', key='cninfo财务数据'):
     agent_df = cnifo(a)
     response=agent_df({"input":input_text3})
     st.write(response["output"])
-    st.write(response["intermediate_steps"])
+    st.json(response["intermediate_steps"])
 
 # st.header("总结系统")
 # if st.button('总结'):
