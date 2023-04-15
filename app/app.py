@@ -42,22 +42,7 @@ st.title('中国上市公司智能财报阅读')
 
 @st.cache(allow_output_mutation=True)
 def getseccode(text):
-    human_message_prompt = HumanMessagePromptTemplate(
-            prompt=PromptTemplate(
-                template="从{company}中提取出中国的上市公司实体并显示其股票代码",
-                input_variables=["company"],
-            )
-        )
-    chat_prompt_template = ChatPromptTemplate.from_messages([human_message_prompt])
-    chat = ChatOpenAI(
-    model_name="gpt-3.5-turbo",
-    temperature=0.5,
-    frequency_penalty=1,
-    presence_penalty=1,
-    top_p=0.5)
-    chain = LLMChain(llm=chat, prompt=chat_prompt_template)
-    pattern = r"\d{6}"
-    result=re.findall(pattern, chain.run(text))
+    result=re.findall(pattern, text)
     return result[0]
 
 def gettoken(client_id,client_secret):
