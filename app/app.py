@@ -312,8 +312,9 @@ input_text3 = st.text_input('提问2','')
 if st.button('问答', key='cninfo财务数据'):
     a=getseccode(input_text3)
     agent_df = cnifo(a)
-    ww=agent_df({"input":input_text3})
-    st.write(ww)
+    response=agent_df({"input":input_text3})
+    st.write(response["output"])
+
 # st.header("总结系统")
 # if st.button('总结'):
 #     text_splitter = RecursiveCharacterTextSplitter(
