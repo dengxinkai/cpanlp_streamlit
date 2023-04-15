@@ -42,6 +42,7 @@ st.title('中国上市公司智能财报阅读')
 
 @st.cache(allow_output_mutation=True)
 def getseccode(text):
+    pattern = r"\d{6}"
     result=re.findall(pattern, text)
     return result[0]
 
