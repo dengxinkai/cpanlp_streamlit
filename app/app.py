@@ -49,10 +49,10 @@ def gettoken(client_id,client_secret):
     return tokendic['access_token']
 
 @st.cache(allow_output_mutation=True)
-def cnifo():
+def cnifo(scode):
     token = gettoken('TvUN4uIl2gu4sjPdB4su6DiPNYFMkhA1','Snb5s887ezAWBXIyYyqY5fBQI6ttyySu')
 #上市公司市场数据
-    url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode=000002&sdate=20161101&edate=20230415&access_token='+token
+    url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode={}&edate=20230415&access_token='.format(scode)+token
     requests = TextRequestsWrapper()
     a=requests.get(url)
     data = json.loads(a)
@@ -62,7 +62,7 @@ def cnifo():
     df['交易日期'] = pd.to_datetime(df['交易日期'])
     agent_df = create_pandas_dataframe_agent(OpenAI(temperature=0.4), df, verbose=True,return_intermediate_steps=True)
     return agent_df 
-agent_df = cnifo()
+
 
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
@@ -302,6 +302,8 @@ if st.button('问答'):
         st.write(response["output"])
 input_text3 = st.text_input('提问2','')
 if st.button('问答', key='cninfo财务数据'):
+    
+    agent_df = cnifo()
     ww=agent_df({"input":input_text3})
     st.write(ww)
 # st.header("总结系统")
