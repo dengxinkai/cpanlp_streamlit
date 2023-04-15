@@ -237,7 +237,7 @@ qa = 分析(input_text)
 
 st.subheader(":blue[问答]")
 input_text1 = st.text_input('提问','')
-if st.button('问答'):
+if st.button('回答'):
     if not qa:
         query = input_text1
 #         result = qa({"query": query})
@@ -309,12 +309,12 @@ if st.button('问答'):
         st.write(response["intermediate_steps"])
         st.write(response["output"])
 input_text3 = st.text_input('提问2','')
-if st.button('问答', key='cninfo财务数据'):
+if st.button('回答', key='cninfo财务数据'):
     a=getseccode(input_text3)
     agent_df = cnifo(a)
     response=agent_df({"input":input_text3})
     st.write(response["output"])
-    st.write(response)
+    st.write(response["intermediate_steps"])
 
 # st.header("总结系统")
 # if st.button('总结'):
