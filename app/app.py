@@ -4,44 +4,60 @@ import pandas as pd
 import base64
 import json
 import os
-from typing import List, Union
-from langchain.agents import  AgentExecutor, LLMSingleActionAgent, AgentOutputParser
-from langchain.prompts import StringPromptTemplate
-from langchain import OpenAI, SerpAPIWrapper, LLMChain
-from langchain.schema import AgentAction, AgentFinish
+import tempfile
+import pinecone 
+import requests
 import re
+from typing import List, Union,Callable
+from langchain.agents import  AgentExecutor, LLMSingleActionAgent, AgentOutputParser,initialize_agent, Tool,AgentType
+from langchain.prompts import StringPromptTemplate,PromptTemplate
+from langchain import OpenAI, SerpAPIWrapper, LLMChain
+from langchain.schema import AgentAction, AgentFinish,Document
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.prompts import PromptTemplate
+from langchain.vectorstores import Chroma,FAISS
 from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
-from langchain.agents import initialize_agent, Tool
-from langchain.agents import AgentType
-import tempfile
-import pinecone 
-from langchain.utilities import GoogleSearchAPIWrapper
-from langchain.utilities import WikipediaAPIWrapper
-from langchain.prompts import StringPromptTemplate
-from langchain.vectorstores import FAISS
-from langchain.schema import Document
-from typing import Callable
+from langchain.utilities import GoogleSearchAPIWrapper,WikipediaAPIWrapper,TextRequestsWrapper
+
 st.set_page_config(
-    page_title="可读GPT",
+    page_title="可读-财报GPT",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
         'Get Help': 'https://www.cpanlp.com/',
         'Report a bug': "https://www.cpanlp.com/",
-        'About': "可读财报GPT"
+        'About': "可读-财报GPT"
     }
 )
-st.title('可读财报--中国上市公司智能财报阅读')
+st.title('中国上市公司智能财报阅读')
+
+def gettoken(client_id,client_secret):
+    url='http://webapi.cninfo.com.cn/api-cloud-platform/oauth2/token'
+    post_data="grant_type=client_credentials&client_id=%s&client_secret=%s"%(client_id,client_secret)
+    post_data={"grant_type":"client_credentials",
+               "client_id":client_id,
+               "client_secret":client_secret
+               }
+    req = requests.post(url, data=post_data)
+    tokendic = json.loads(req.text)
+    return tokendic['access_token']
+token = gettoken('TvUN4uIl2gu4sjPdB4su6DiPNYFMkhA1','Snb5s887ezAWBXIyYyqY5fBQI6ttyySu')
+#上市公司市场数据
+url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode=000002&sdate=20161101&edate=20230415&access_token='+token
+requests = TextRequestsWrapper()
+a=requests.get(url)
+data = json.loads(a)
+
+# 将字典转换为数据框
+df1 = pd.json_normalize(data, record_path='records')
+df1=df1.rename(columns={'SECNAME': '证券简称', 'F009N': '涨跌','F008N': '总笔数', 'SECCODE': '证券代码','TRADEDATE': '交易日期', 'F001V': '交易所','F002N': '昨日收盘价', 'F003N': '今日开盘价','F004N': '成交数量', 'F005N': '最高成交价',"F006N":"最低成交价","F007N":"最近成交价","F010N":"涨跌幅","F011N":"成交金额","F012N":"换手率","F013N":"振幅","F020N":"发行总股本","F021N":"流通股本","F026N":"市盈率"})
+df1=df1.drop('F019N', axis=1)
 
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
