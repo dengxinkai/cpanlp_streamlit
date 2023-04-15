@@ -52,8 +52,8 @@ def getseccode(text):
     chat = ChatOpenAI(temperature=0.4)
     chain = LLMChain(llm=chat, prompt=chat_prompt_template)
     pattern = r"\d{6}"
-    a=re.findall(pattern, chain.run(text))[0]
-    return a
+    result=re.findall(pattern, chain.run(text))
+    return result[0]
 
 def gettoken(client_id,client_secret):
     url='http://webapi.cninfo.com.cn/api-cloud-platform/oauth2/token'
