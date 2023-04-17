@@ -42,14 +42,14 @@ global input_api
 input_api=""
 with st.sidebar:
     st.header(":blue[Openai_api]")
-    input_api1 = st.text_input('api-key', '')
+    input_api1 = st.text_input('api-key', '', key="input_api")
     if st.button('确认', key='api-key'):
         input_api=input_api1
     st.header(":blue[上传]")
     file = st.file_uploader("PDF文件", type="pdf")
     input_text = st.text_input('PDF网址', '')
 st.title('中国上市公司智能财报阅读')
-if input_api:
+if st.session_state.input_api:
     @st.cache(allow_output_mutation=True)
     def getseccode(text):
         pattern = r"\d{6}"
