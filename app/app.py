@@ -302,8 +302,8 @@ if st.session_state.input_api:
             )
             agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
+            st.header(response["output"])
             st.write(response["intermediate_steps"])
-            st.write(response["output"])
         end_time = time.time()
         elapsed_time = end_time - start_time
         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
