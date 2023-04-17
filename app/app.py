@@ -82,13 +82,24 @@ if st.session_state.input_api:
         agent_df = create_pandas_dataframe_agent(OpenAI(temperature=0,openai_api_key=st.session_state.input_api), df, verbose=True,return_intermediate_steps=True)
         return agent_df 
     @st.cache(allow_output_mutation=True)
-    def 中国平安(input_text):
+    def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                           environment="us-east4-gcp",  # next to api key in console
                           namespace="ZGPA_601318")
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
         www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
+        c = [x["metadata"]["text"] for x in www["matches"]]
+        return c
+    @st.cache(allow_output_mutation=True)
+    def 双汇发展年报查询(input_text):
+        namespace="ShHFZ_000895"
+        pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
+                          environment="us-east4-gcp",  # next to api key in console
+                          namespace=namespace)
+        index = pinecone.Index(index_name="kedu")
+        a=embeddings.embed_query(input_text)
+        www=index.query(vector=a, top_k=3, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
@@ -109,10 +120,15 @@ if st.session_state.input_api:
                 )
     zgpa_tool =  Tool(
                     name = "ZGPA",
-                    func=中国平安,
+                    func=中国平安年报查询,
                     description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
                 )
-    ALL_TOOLS = [search_tool,zgpa_tool]
+    shhfz_tool =  Tool(
+                    name = "ShHFZ",
+                    func=双汇发展年报查询,
+                    description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
+                )
+    ALL_TOOLS = [search_tool,zgpa_tool,shhfz_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
     vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=st.session_state.input_api))
     retriever = vector_store.as_retriever()
@@ -247,14 +263,19 @@ if st.session_state.input_api:
                 tools = [
                     Tool(
                         name = "ZGPA",
-                        func=中国平安,
-                        description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
+                        func=中国平安年报查询,
+                        description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
                     ),
                     Tool(
                         name = "Google",
                         func=search.run,
                         description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
-                    )]
+                    ),
+                 shhfz_tool =  Tool(
+                    name = "ShHFZ",
+                    func=双汇发展年报查询,
+                    description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
+                )]
                 tool_names = [tool.name for tool in tools]
                 agent3 = LLMSingleActionAgent(
                     llm_chain=llm_chain, 
