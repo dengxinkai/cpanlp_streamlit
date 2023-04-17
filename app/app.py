@@ -110,16 +110,16 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """尽量快速的给出Final Answer,以最少的iterations.You have access to the following tools:
+    template3 = """尽量以最少的iterations准确快速给出Final Answer,You have access to the following tools:
     {tools}
     Use the following format:
     Question: the input question you must answer
-    Thought: you should always think about what to do,同时快速给出Final Answer
-    Action: the action to take, should be one of [{tool_names}],同时快速给出Final Answer
-    Action Input: the input to the action,同时快速给出Final Answer
-    Observation: the result of the action,同时快速给出Final Answer
-    Thought: I now know the final answer,同时快速给出Final Answer
-    Final Answer: the final answer to the original input question,快速给出Final Answer
+    Thought: you should always think about what to do,同时准确快速给出Final Answer
+    Action: the action to take, should be one of [{tool_names}],同时准确快速给出Final Answer
+    Action Input: the input to the action,同时准确快速给出Final Answer
+    Observation: the result of the action,同时准确快速给出Final Answer
+    Thought: I now know the final answer,同时准确快速给出Final Answer
+    Final Answer: the final answer to the original input question,准确快速给出Final Answer
     All inputs and output tokens are limited to 3800.
     Question: {input}
     {agent_scratchpad}
