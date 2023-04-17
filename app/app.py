@@ -213,6 +213,7 @@ if st.session_state.input_api:
     file = st.file_uploader("PDF文件", type="pdf")
     input_text = st.text_input('PDF网址', '')
     qa = 分析(input_text)
+    st.divider()
     input_text1 = st.text_input(':blue[提问]','')
     if st.button('确认'):
         start_time = time.time()
