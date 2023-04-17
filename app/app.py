@@ -255,7 +255,7 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True,max_iterations=3, early_stopping_method="generate")
+            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True)
             response = agent({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
