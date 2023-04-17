@@ -53,7 +53,7 @@ if st.session_state.input_api:
                           namespace="ZGPA_601318")
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
+        www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     @st.cache(allow_output_mutation=True)
@@ -64,7 +64,7 @@ if st.session_state.input_api:
                           namespace=namespace)
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=3, namespace=namespace, include_metadata=True)
+        www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
@@ -110,26 +110,21 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """你的问题是基于中文输入的，但是格式按照下面. 你可以使用下列工具:
+    template3 = """Answer the following questions as best you can.You have access to the following tools:
     {tools}
-    用以下格式:
-    Question: 输入的问题.
-    Thought: 你的思考.
-    Action: 你的行动和其中的一个工具 [{tool_names}].
-    Action Input: 行动输入.
-    Observation: 你的观察.
-    Thought:基于观察的思考.
-    Final Answer: 最终答案.
-
-    Note that all input and output tokens are limited to 3800.
-    Here is your input question:
+    Use the following format:
+    Question: the input question you must answer
+    Thought: you should always think about what to do
+    Action: the action to take, should be one of [{tool_names}]
+    Action Input: the input to the action
+    Observation: the result of the action
+    Thought: I now know the final answer
+    Final Answer: the final answer to the original input question
+    All inputs and output tokens are limited to 3800.
     Question: {input}
-    Here is your scratchpad to keep notes:
     {agent_scratchpad}
-
-    Please be careful that tokens from the prompt, question, thought, action, action input, observation, and final answer all together should not exceed the token limit of 3800 tokens.
-
-    Finally, please provide the final answer in English and translate it into Chinese. Please keep the total processing time under 15 seconds.
+    Be careful tokens from the prompt、Question、Thought、Action、Action Input、Thought、Observation and Final Answer all together should not exceed the token limit of 3800 tokens
+    都用中文表示，除了格式中的Question:Thought:Action:Action Input:Observation:Thought:Final Answer:,总共处理时间不要超过15秒
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
@@ -220,18 +215,31 @@ if st.session_state.input_api:
         input_text = st.text_input('PDF网址', '')
         qa = 分析(input_text)
     input_text1 = st.text_input(':blue[查询]','')
-    input_text2 = st.text_input(':blue[公司名]','')
     if st.button('确认'):
         start_time = time.time()
         if not qa:
             query = input_text1
-            query2 = input_text2
             prompt3 = CustomPromptTemplate(
             template=template3,
             tools_getter=get_tools,
             input_variables=["input", "intermediate_steps"])
             llm_chain = LLMChain(llm=llm, prompt=prompt3)
-            tools = get_tools(query2)
+            tools = [
+                Tool(
+                    name = "ZGPA",
+                    func=中国平安年报查询,
+                    description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
+                ),
+                Tool(
+                    name = "Google",
+                    func=search.run,
+                    description="当您需要搜索互联网时，这个工具非常有用。"
+                ),
+                Tool(
+                name = "ShHFZ",
+                func=双汇发展年报查询,
+                description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
+            )]
             tool_names = [tool.name for tool in tools]
             agent3 = LLMSingleActionAgent(
                 llm_chain=llm_chain, 
@@ -239,8 +247,8 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True)
-            response = agent({"input":query})
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+            response = agent_executor({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
                 st.write(response["intermediate_steps"])
