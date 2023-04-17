@@ -72,7 +72,7 @@ if st.session_state.input_api:
     def cnifo(scode):
         token = gettoken('TvUN4uIl2gu4sjPdB4su6DiPNYFMkhA1','Snb5s887ezAWBXIyYyqY5fBQI6ttyySu')
     #上市公司市场数据
-        url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode={}&edate=20230415&access_token='.format(scode)+token
+        url = 'http://webapi.cninfo.com.cn/api/stock/p_stock2402?&scode={}&sdate=20180415&edate=20230415&access_token='.format(scode)+token
         requests = TextRequestsWrapper()
         a=requests.get(url)
         data = json.loads(a)
