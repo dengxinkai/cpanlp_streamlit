@@ -4,7 +4,6 @@ import pandas as pd
 import base64
 import json
 import os
-os.environ['OPENAI_API_KEY'] = ''
 import tempfile
 import pinecone 
 import requests
@@ -39,6 +38,8 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
+global input_api
+input_api=""
 st.title('中国上市公司智能财报阅读')
 
 @st.cache(allow_output_mutation=True)
@@ -84,7 +85,7 @@ def 中国平安(input_text):
     c = [x["metadata"]["text"] for x in www["matches"]]
     return c
 
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings(openai_api_key=input_api)
 wikipedia = WikipediaAPIWrapper()
 llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
