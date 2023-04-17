@@ -123,8 +123,7 @@ if st.session_state.input_api:
     All inputs and output tokens are limited to 3800.
     Question: {input}
     {agent_scratchpad}
-    Be careful tokens from the prompt、Question、Thought、Action、Action Input、Thought、Observation and Final Answer all together should not exceed the token limit of 3800 tokens
-    都用中文表示，除了格式中的Question:Thought:Action:Action Input:Observation:Thought:Final Answer:,总共处理时间不要超过15秒
+    都用中文表示，除了格式中的Question:Thought:Action:Action Input:Observation:Thought:Final Answer:,总共处理时间不要超过15秒，总的context token不超过2000token
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
