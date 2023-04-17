@@ -110,7 +110,7 @@ if st.session_state.input_api:
     zgpa_tool =  Tool(
                     name = "ZGPA",
                     func=中国平安,
-                    description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
+                    description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
                 )
     ALL_TOOLS = [search_tool,zgpa_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
@@ -131,15 +131,7 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    # prompt_template1 = """Write a concise summary of the following:
-    # {text}
-    # CONCISE SUMMARY IN CHINESE:"""
-    # PROMPT1 = PromptTemplate(template=prompt_template1, input_variables=["text"])
-    # result = ""
-    template3 = """Answer the following questions as best you can.When the question is unrelated to financial matters:
-    Final Answer:无法回答，因为与财经无关
-    Don't use any tool。
-    When the question is related to financial matters，You have access to the following tools:
+    template3 = """Answer the following questions as best you can.You have access to the following tools:
     {tools}
     Use the following format:
     Question: the input question you must answer
