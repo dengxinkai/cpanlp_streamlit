@@ -45,6 +45,7 @@ with st.sidebar:
     
 st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
+    col1, col2= st.columns(2)
     @st.cache(allow_output_mutation=True)
     def getseccode(text):
         pattern = r"\d{6}"
@@ -84,7 +85,6 @@ if st.session_state.input_api:
         www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
-
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     wikipedia = WikipediaAPIWrapper()
     llm=ChatOpenAI(
@@ -208,8 +208,6 @@ if st.session_state.input_api:
             # Return the action and action input
             return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
     output_parser = CustomOutputParser()
-
-
     @st.cache(allow_output_mutation=True)
     def 分析(input_text):
         if file is not None:
@@ -233,91 +231,92 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-    st.info('根据上传的财报进行分析')
-    file = st.file_uploader("PDF文件", type="pdf")
-    input_text = st.text_input('PDF网址', '')
-    qa = 分析(input_text)
-    input_text1 = st.text_input(':blue[提问]','')
-    if st.button('确认'):
-        if not qa:
-            query = input_text1
-    #         result = qa({"query": query})
-            prompt3 = CustomPromptTemplate(
-            template=template3,
-            tools_getter=get_tools,
-            input_variables=["input", "intermediate_steps"])
-            llm_chain = LLMChain(llm=llm, prompt=prompt3)
-            tools = [
-                Tool(
-                    name = "ZGPA",
-                    func=中国平安,
-                    description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
-                ),
-                Tool(
-                    name = "Google",
-                    func=search.run,
-                    description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
-                )]
-            tool_names = [tool.name for tool in tools]
-            agent3 = LLMSingleActionAgent(
-                llm_chain=llm_chain, 
-                output_parser=output_parser,
-                stop=["\nObservation:"], 
-                allowed_tools=tool_names
-            )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
-            response = agent_executor({"input":query})
-            st.write(response["intermediate_steps"])
+    with col1:
+        st.info('根据上传的财报进行分析')
+        file = st.file_uploader("PDF文件", type="pdf")
+        input_text = st.text_input('PDF网址', '')
+        qa = 分析(input_text)
+        input_text1 = st.text_input(':blue[提问]','')
+        if st.button('确认'):
+            if not qa:
+                query = input_text1
+        #         result = qa({"query": query})
+                prompt3 = CustomPromptTemplate(
+                template=template3,
+                tools_getter=get_tools,
+                input_variables=["input", "intermediate_steps"])
+                llm_chain = LLMChain(llm=llm, prompt=prompt3)
+                tools = [
+                    Tool(
+                        name = "ZGPA",
+                        func=中国平安,
+                        description="当您需要回答有关中国平安(601318)财报信息的问题时，这个工具非常有用。"
+                    ),
+                    Tool(
+                        name = "Google",
+                        func=search.run,
+                        description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
+                    )]
+                tool_names = [tool.name for tool in tools]
+                agent3 = LLMSingleActionAgent(
+                    llm_chain=llm_chain, 
+                    output_parser=output_parser,
+                    stop=["\nObservation:"], 
+                    allowed_tools=tool_names
+                )
+                agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+                response = agent_executor({"input":query})
+                st.write(response["intermediate_steps"])
+                st.write(response["output"])
+            else:
+                query = input_text1
+        #         result = qa.run(query)
+                tools = [Tool(
+                    name = "上传",
+                    func=qa.run,
+                    description="当您需要回答有关上传公司财报信息的问题时，这个工具非常有用。"
+                    ),
+                          Tool(
+                        name = "Google",
+                        func=search.run,
+                        description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
+                    ),
+        #                  Tool(
+        #                 name="维基",
+        #                 func=wikipedia.run,
+        #                 description="这个工具适用于当您需要回答有关财经管理问题的名词解释时，输入转换为英文，输出转换为中文"
+        #             ),
+
+                   ]
+        #         result = qa({"query": query})
+                tool_names = [tool.name for tool in tools]
+                prompt_Upload = CustomPromptTemplate_Upload(
+                template=template3,
+                tools=tools,
+                # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
+                # This includes the `intermediate_steps` variable because that is needed
+                input_variables=["input", "intermediate_steps"])
+
+                llm_chain = LLMChain(llm=llm, prompt=prompt_Upload)
+                agent3 = LLMSingleActionAgent(
+                    llm_chain=llm_chain, 
+                    output_parser=output_parser,
+                    stop=["\nObservation:"], 
+                    allowed_tools=tool_names
+                )
+                agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+                response = agent_executor({"input":query})
+                st.write(response["intermediate_steps"])
+                st.write(response["output"])
+    with col2:
+        st.info('市场表现问答')
+        input_text3 = st.text_input(':blue[市场表现提问]','')
+        if st.button('确认', key='cninfo财务数据'):
+            a=getseccode(input_text3)
+            agent_df = cnifo(a)
+            response=agent_df({"input":input_text3})
             st.write(response["output"])
-        else:
-            query = input_text1
-    #         result = qa.run(query)
-            tools = [Tool(
-                name = "上传",
-                func=qa.run,
-                description="当您需要回答有关上传公司财报信息的问题时，这个工具非常有用。"
-                ),
-                      Tool(
-                    name = "Google",
-                    func=search.run,
-                    description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
-                ),
-    #                  Tool(
-    #                 name="维基",
-    #                 func=wikipedia.run,
-    #                 description="这个工具适用于当您需要回答有关财经管理问题的名词解释时，输入转换为英文，输出转换为中文"
-    #             ),
-
-               ]
-    #         result = qa({"query": query})
-            tool_names = [tool.name for tool in tools]
-            prompt_Upload = CustomPromptTemplate_Upload(
-            template=template3,
-            tools=tools,
-            # This omits the `agent_scratchpad`, `tools`, and `tool_names` variables because those are generated dynamically
-            # This includes the `intermediate_steps` variable because that is needed
-            input_variables=["input", "intermediate_steps"])
-
-            llm_chain = LLMChain(llm=llm, prompt=prompt_Upload)
-            agent3 = LLMSingleActionAgent(
-                llm_chain=llm_chain, 
-                output_parser=output_parser,
-                stop=["\nObservation:"], 
-                allowed_tools=tool_names
-            )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
-            response = agent_executor({"input":query})
-            st.write(response["intermediate_steps"])
-            st.write(response["output"])
-    st.info('市场表现问答')
-
-    input_text3 = st.text_input(':blue[市场表现提问]','')
-    if st.button('确认', key='cninfo财务数据'):
-        a=getseccode(input_text3)
-        agent_df = cnifo(a)
-        response=agent_df({"input":input_text3})
-        st.write(response["output"])
-        st.json(response["intermediate_steps"])
+            st.json(response["intermediate_steps"])
 
     # st.header("总结系统")
     # if st.button('总结'):
