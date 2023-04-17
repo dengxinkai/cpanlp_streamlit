@@ -102,10 +102,10 @@ if st.session_state.input_api:
         return [ALL_TOOLS[d.metadata["index"]] for d in docs]
     global qa
     logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
-    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    prompt_template = """使用下面的背景信息来回答最后的问题。如果你不知道答案，只需说你不知道，不要试图编造答案。
     {context}
-    Question: {question}
-    Answer in Chinese:"""
+    问题：{question}
+    """
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
@@ -138,7 +138,7 @@ if st.session_state.input_api:
             intermediate_steps = kwargs.pop("intermediate_steps")
             thoughts = ""
             for 操作, 观察 in intermediate_steps:
-                thoughts += action.log
+                thoughts += 操作.log
                 thoughts += f"\n观察: {观察}\n思考: "
             # Set the agent_scratchpad variable to that value
             kwargs["agent_scratchpad"] = thoughts
