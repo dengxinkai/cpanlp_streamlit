@@ -41,7 +41,7 @@ st.set_page_config(
 with st.sidebar:
     st.header(":blue[Openai_api]")
     st.text_input('api-key', '', key="input_api")
-    st.info('This is a purely informational message', icon="ℹ️")
+    st.info('输入您的openai的apikey', icon="😊")
     
 st.title('中国上市公司智能财报阅读')
 if st.session_state.input_api:
