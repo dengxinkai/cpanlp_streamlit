@@ -223,31 +223,18 @@ if st.session_state.input_api:
         input_text = st.text_input('PDF网址', '')
         qa = 分析(input_text)
     input_text1 = st.text_input(':blue[查询]','')
+    input_text2 = st.text_input(':blue[公司名]','')
     if st.button('确认'):
         start_time = time.time()
         if not qa:
             query = input_text1
+            query2 = input_text2
             prompt3 = CustomPromptTemplate(
             template=template3,
             tools_getter=get_tools,
             input_variables=["input", "intermediate_steps"])
             llm_chain = LLMChain(llm=llm, prompt=prompt3)
-            tools = [
-                Tool(
-                    name = "ZGPA",
-                    func=中国平安年报查询,
-                    description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
-                ),
-                Tool(
-                    name = "Google",
-                    func=search.run,
-                    description="当您需要搜索互联网时，这个工具非常有用。"
-                ),
-                Tool(
-                name = "ShHFZ",
-                func=双汇发展年报查询,
-                description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
-            )]
+            tools = get_tools(query2)
             tool_names = [tool.name for tool in tools]
             agent3 = LLMSingleActionAgent(
                 llm_chain=llm_chain, 
