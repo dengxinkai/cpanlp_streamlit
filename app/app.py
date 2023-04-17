@@ -120,12 +120,11 @@ if st.session_state.input_api:
     观察：操作的结果
     思考：现在我知道最终答案了
     最终答案：原始输入问题的最终答案
-    所有输入和输出标记均限制为3800个。
+    所有输入和输出token均限制为3800个。
     问题：{input}
     {agent_scratchpad}
     请注意，提示、问题、思考、操作、操作输入、思考、观察和最终答案的标记总数不得超过3800个。
-
-    最终答案是指您的最终回答，将其翻译成中文即可。请确保总处理时间不超过15秒。
+    最终答案是指您的最终回答。请确保总处理时间不超过15秒。
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
@@ -140,7 +139,7 @@ if st.session_state.input_api:
             thoughts = ""
             for 操作, 观察 in intermediate_steps:
                 thoughts += action.log
-                thoughts += f"\n观察: {observation}\n思考: "
+                thoughts += f"\n观察: {观察}\n思考: "
             # Set the agent_scratchpad variable to that value
             kwargs["agent_scratchpad"] = thoughts
             tools = self.tools_getter(kwargs["input"])
