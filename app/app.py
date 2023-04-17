@@ -241,12 +241,17 @@ if st.session_state.input_api:
                 description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
             )]
             tool_names = [tool.name for tool in tools]
-            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=True,max_iterations=2, early_stopping_method="generate")
-            response = agent({"input":query})
+            agent3 = LLMSingleActionAgent(
+                llm_chain=llm_chain, 
+                output_parser=output_parser,
+                stop=["\nObservation:"], 
+                allowed_tools=tool_names
+            )
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True,max_iterations=2, early_stopping_method="generate")
+            response = agent_executor({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
                 st.write(response["intermediate_steps"])
-     
         else:
             query = input_text1
             tools = [Tool(
@@ -272,7 +277,7 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True,max_iterations=2, early_stopping_method="generate")
             response = agent_executor({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
@@ -280,5 +285,3 @@ if st.session_state.input_api:
         end_time = time.time()
         elapsed_time = end_time - start_time
         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-
-
