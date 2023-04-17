@@ -53,7 +53,7 @@ if st.session_state.input_api:
                           namespace="ZGPA_601318")
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
+        www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     @st.cache(allow_output_mutation=True)
@@ -64,7 +64,7 @@ if st.session_state.input_api:
                           namespace=namespace)
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
+        www=index.query(vector=a, top_k=3, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
