@@ -4,6 +4,7 @@ import pandas as pd
 import base64
 import json
 import os
+os.environ['OPENAI_API_KEY'] = ''
 import tempfile
 import pinecone 
 import requests
