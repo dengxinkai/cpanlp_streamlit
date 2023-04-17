@@ -163,6 +163,7 @@ if st.session_state.input_api:
     {agent_scratchpad}
     Be careful,This model's maximum context length is 4097 tokens.
     最后把Final Answer翻译成中文
+    总共时间不要超过20秒
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
