@@ -271,7 +271,7 @@ if st.session_state.input_api:
                         func=search.run,
                         description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
                     ),
-                 shhfz_tool =  Tool(
+                    Tool(
                     name = "ShHFZ",
                     func=双汇发展年报查询,
                     description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
