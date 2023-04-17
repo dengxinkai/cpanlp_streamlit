@@ -206,6 +206,10 @@ class CustomOutputParser(AgentOutputParser):
         return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
 output_parser = CustomOutputParser()
 with st.sidebar:
+    st.header(":blue[Openai_api]")
+    input_api = st.text_input('api-key', '')
+    if st.button('确认', key='api-key'):
+        os.environ["OPENAI_API_KEY"]=input_api
     st.header(":blue[上传]")
     file = st.file_uploader("PDF文件", type="pdf")
     input_text = st.text_input('PDF网址', '')
