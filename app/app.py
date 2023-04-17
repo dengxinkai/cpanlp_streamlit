@@ -110,7 +110,7 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """Answer the following questions as best you can.You have access to the following tools:
+    template3 = """尽量快速的给出答案，给出Final Answer.You have access to the following tools:
     {tools}
     Use the following format:
     Question: the input question you must answer
