@@ -53,7 +53,7 @@ if st.session_state.input_api:
                           namespace="ZGPA_601318")
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=2, namespace='ZGPA_601318', include_metadata=True)
+        www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     @st.cache(allow_output_mutation=True)
@@ -64,7 +64,7 @@ if st.session_state.input_api:
                           namespace=namespace)
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=2, namespace=namespace, include_metadata=True)
+        www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
@@ -117,7 +117,7 @@ if st.session_state.input_api:
     Thought: you should always think about what to do
     Action: the action to take, should be one of [{tool_names}]
     Action Input: the input to the action
-    Observation: the result of the action,Observation tokens are limited to 400
+    Observation: the result of the action
     Thought: I now know the final answer
     Final Answer: the final answer to the original input question
     All inputs and output tokens are limited to 3800.
