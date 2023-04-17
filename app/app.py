@@ -210,6 +210,7 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     st.info('根据上传的财报进行分析')
+    st.divider()
     file = st.file_uploader("PDF文件", type="pdf")
     input_text = st.text_input('PDF网址', '')
     qa = 分析(input_text)
