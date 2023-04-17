@@ -210,11 +210,10 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     st.info('欢迎使用我们的分析工具！您可以选择直接使用或是上传财报以进行更加深入的分析。无论您选择哪种方式，我们都将为您提供最好的服务。')
-    st.divider()
-    file = st.file_uploader("PDF文件", type="pdf")
-    input_text = st.text_input('PDF网址', '')
-    qa = 分析(input_text)
-    st.divider()
+    with st.expander("上传"):
+        file = st.file_uploader("PDF文件", type="pdf")
+        input_text = st.text_input('PDF网址', '')
+        qa = 分析(input_text)
     input_text1 = st.text_input(':blue[提问]','')
     if st.button('确认'):
         start_time = time.time()
@@ -248,9 +247,11 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True)
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
             st.caption(response["output"])
+            with st.expander("查看过程"):
+                st.write(response["intermediate_steps"])
         else:
             query = input_text1
             tools = [Tool(
@@ -276,9 +277,11 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True)
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
             st.caption(response["output"])
+            with st.expander("查看过程"):
+                st.write(response["intermediate_steps"])
         end_time = time.time()
         elapsed_time = end_time - start_time
         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
