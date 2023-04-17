@@ -233,10 +233,10 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-    qa = 分析(input_text)
     st.header(":blue[上传]")
     file = st.file_uploader("PDF文件", type="pdf")
     input_text = st.text_input('PDF网址', '')
+    qa = 分析(input_text)
     input_text1 = st.text_input(':blue[提问]','')
     if st.button('回答'):
         if not qa:
