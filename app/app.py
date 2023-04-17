@@ -106,7 +106,7 @@ zgpa_tool =  Tool(
             )
 ALL_TOOLS = [search_tool,zgpa_tool]
 docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
-vector_store = FAISS.from_documents(docs, OpenAIEmbeddings())
+vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=input_api))
 retriever = vector_store.as_retriever()
 def get_tools(query):
     docs = retriever.get_relevant_documents(query)
