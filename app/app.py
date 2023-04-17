@@ -223,7 +223,7 @@ if st.session_state.input_api:
             template=template3,
             tools_getter=get_tools,
             input_variables=["input", "intermediate_steps"])
-            llm_chain = LLMChain(llm=llm, prompt=prompt3)
+            llm_chain = LLMChain(llm=llm, prompt=prompt3,chain_type="map_reduce")
             tools = [
                 Tool(
                     name = "ZGPA",
