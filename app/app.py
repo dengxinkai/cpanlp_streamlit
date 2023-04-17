@@ -46,29 +46,6 @@ with st.sidebar:
     
 st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
-    col1, col2= st.columns(2)
-    @st.cache(allow_output_mutation=True)
-    def getseccode(text):
-        pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
-                      environment="us-east4-gcp",  # next to api key in console
-                      namespace="ssq")
-        index = pinecone.Index(index_name="kedu")
-        a=embeddings.embed_query(text)
-        www=index.query(vector=a, top_k=1, namespace='ssq', include_metadata=True)
-        c = [x["metadata"]["text"] for x in www["matches"]][0]
-        pattern = r"\d{6}"
-        result=re.findall(pattern, c)
-        return result[0]
-    def gettoken(client_id,client_secret):
-        url='http://webapi.cninfo.com.cn/api-cloud-platform/oauth2/token'
-        post_data="grant_type=client_credentials&client_id=%s&client_secret=%s"%(client_id,client_secret)
-        post_data={"grant_type":"client_credentials",
-                   "client_id":client_id,
-                   "client_secret":client_secret
-                   }
-        req = requests.post(url, data=post_data)
-        tokendic = json.loads(req.text)
-        return tokendic['access_token']
     @st.cache(allow_output_mutation=True)
     def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
@@ -76,7 +53,7 @@ if st.session_state.input_api:
                           namespace="ZGPA_601318")
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
+        www=index.query(vector=a, top_k=2, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     @st.cache(allow_output_mutation=True)
@@ -87,7 +64,7 @@ if st.session_state.input_api:
                           namespace=namespace)
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=3, namespace=namespace, include_metadata=True)
+        www=index.query(vector=a, top_k=2, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
@@ -126,9 +103,7 @@ if st.session_state.input_api:
     global qa
     logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
     prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
-
     {context}
-
     Question: {question}
     Answer in Chinese:"""
     PROMPT = PromptTemplate(
@@ -257,7 +232,7 @@ if st.session_state.input_api:
                 Tool(
                     name = "Google",
                     func=search.run,
-                    description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
+                    description="当您需要回答有关当前问题时，这个工具非常有用。"
                 ),
                 Tool(
                 name = "ShHFZ",
