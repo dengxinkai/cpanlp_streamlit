@@ -259,11 +259,11 @@ if st.session_state.input_api:
                 func=qa.run,
                 description="当您需要回答有关上传公司财报信息的问题时，这个工具非常有用。"
                 ),
-                      Tool(
-                    name = "Google",
-                    func=search.run,
-                    description="当您需要搜索互联网时，这个工具非常有用。"
-                )
+#                       Tool(
+#                     name = "Google",
+#                     func=search.run,
+#                     description="当您需要搜索互联网时，这个工具非常有用。"
+#                 )
                ]
             tool_names = [tool.name for tool in tools]
             prompt_Upload = CustomPromptTemplate_Upload(
