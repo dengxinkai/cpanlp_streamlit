@@ -110,21 +110,22 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """Answer the following questions as best you can.You have access to the following tools:
+    template3 = """请尽力回答以下问题。您可以使用以下工具：
     {tools}
-    Use the following format:
-    Question: the input question you must answer
-    Thought: you should always think about what to do
-    Action: the action to take, should be one of [{tool_names}]
-    Action Input: the input to the action
-    Observation: the result of the action
-    Thought: I now know the final answer
-    Final Answer: the final answer to the original input question
-    All inputs and output tokens are limited to 3800.
-    Question: {input}
+    使用以下格式：
+    问题：您必须回答的输入问题
+    思考：您应该始终考虑该做什么
+    操作：需要执行的操作，应为以下之一 [{tool_names}]
+    操作输入：操作的输入
+    观察：操作的结果
+    思考：现在我知道最终答案了
+    最终答案：原始输入问题的最终答案
+    所有输入和输出标记均限制为3800个。
+    问题：{input}
     {agent_scratchpad}
-    Be careful tokens from the prompt、Question、Thought、Action、Action Input、Thought、Observation and Final Answer all together should not exceed the token limit of 3800 tokens
-    最后把Final Answer翻译成中文,总共处理时间不要超过15秒
+    请注意，提示、问题、思考、操作、操作输入、思考、观察和最终答案的标记总数不得超过3800个。
+
+    最终答案是指您的最终回答，将其翻译成中文即可。请确保总处理时间不超过15秒。
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
@@ -137,9 +138,9 @@ if st.session_state.input_api:
             # Format them in a particular way
             intermediate_steps = kwargs.pop("intermediate_steps")
             thoughts = ""
-            for action, observation in intermediate_steps:
+            for 操作, 观察 in intermediate_steps:
                 thoughts += action.log
-                thoughts += f"\nObservation: {observation}\nThought: "
+                thoughts += f"\n观察: {observation}\n思考: "
             # Set the agent_scratchpad variable to that value
             kwargs["agent_scratchpad"] = thoughts
             tools = self.tools_getter(kwargs["input"])
@@ -171,19 +172,18 @@ if st.session_state.input_api:
     class CustomOutputParser(AgentOutputParser):
         def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
             # Check if agent should finish
-            if "Final Answer:" in llm_output:
+            if "最终答案:" in llm_output:
                 return AgentFinish(
                     # Return values is generally always a dictionary with a single `output` key
                     # It is not recommended to try anything else at the moment :)
-                    return_values={"output": llm_output.split("Final Answer:")[-1].strip()},
+                    return_values={"output": llm_output.split("最终答案:")[-1].strip()},
                     log=llm_output,
                 )
             # Parse out the action and action input
-            regex = r"Action: (.*?)[\n]*Action Input:[\s]*(.*)"
+            regex = r"操作: (.*?)[\n]*操作输入:[\s]*(.*)"
             match = re.search(regex, llm_output, re.DOTALL)
             action = match.group(1).strip()
             action_input = match.group(2)
-            # Return the action and action input
             return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
     output_parser = CustomOutputParser()
     @st.cache(allow_output_mutation=True)
