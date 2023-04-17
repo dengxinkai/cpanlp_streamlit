@@ -110,7 +110,7 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """回答问题. 你可以使用下列工具:
+    template3 = """你的问题是基于中文输入的，但是格式按照下面. 你可以使用下列工具:
     {tools}
     用以下格式:
     Question: 输入的问题.
