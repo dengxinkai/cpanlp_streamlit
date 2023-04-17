@@ -273,7 +273,7 @@ if st.session_state.input_api:
             )
             agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
-            st.header(response["output"])
+            st.subheader(response["output"])
             st.write(response["intermediate_steps"])
         else:
             query = input_text1
@@ -302,7 +302,7 @@ if st.session_state.input_api:
             )
             agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
-            st.header(response["output"])
+            st.subheader(response["output"])
             st.write(response["intermediate_steps"])
         end_time = time.time()
         elapsed_time = end_time - start_time
