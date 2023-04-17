@@ -8,6 +8,7 @@ import tempfile
 import pinecone 
 import requests
 import re
+import time
 from typing import List, Union,Callable
 from langchain.agents import  AgentExecutor, LLMSingleActionAgent, AgentOutputParser,initialize_agent, Tool,AgentType,create_pandas_dataframe_agent
 from langchain.prompts import StringPromptTemplate,PromptTemplate
@@ -253,6 +254,7 @@ if st.session_state.input_api:
         qa = 分析(input_text)
         input_text1 = st.text_input(':blue[提问]','')
         if st.button('确认'):
+            start_time = time.time()
             if not qa:
                 query = input_text1
         #         result = qa({"query": query})
@@ -328,6 +330,9 @@ if st.session_state.input_api:
                 response = agent_executor({"input":query})
                 st.write(response["intermediate_steps"])
                 st.write(response["output"])
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
     with col2:
         st.info('市场表现问答')
         input_text3 = st.text_input(':blue[市场表现提问]','')
