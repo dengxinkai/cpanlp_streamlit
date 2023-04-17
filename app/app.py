@@ -102,29 +102,37 @@ if st.session_state.input_api:
         return [ALL_TOOLS[d.metadata["index"]] for d in docs]
     global qa
     logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
-    prompt_template = """使用下面的背景信息来回答最后的问题。如果你不知道答案，只需说你不知道，不要试图编造答案。
+    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
     {context}
-    问题：{question}
-    """
+    Question: {question}
+    Answer in Chinese:"""
     PROMPT = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """请尽力回答以下问题。您可以使用以下工具：
+    template3 = """Please answer the following questions to the best of your ability. You may use the following tools:
     {tools}
-    使用以下格式：
-    问题：您必须回答的输入问题
-    思考：您应该始终考虑该做什么
-    操作：需要执行的操作，应为以下之一 [{tool_names}]
-    操作输入：操作的输入
-    观察：操作的结果
-    思考：现在我知道最终答案了
-    最终答案：原始输入问题的最终答案
-    所有输入和输出token均限制为3800个。
-    问题：{input}
+
+    Please use the following format:
+    Question: The input question you must answer.
+    Thought: You should always think about what to do.
+    Action: The action to take, which should be one of [{tool_names}].
+    Action Input: The input to the action.
+    Observation: The result of the action.
+    Thought: You should reflect on the observation to gain insight.
+    Final Answer: The final answer to the original input question.
+
+    Note that all input and output tokens are limited to 3800.
+
+    Here is your input question:
+    Question: {input}
+
+    Here is your scratchpad to keep notes:
     {agent_scratchpad}
-    请注意，提示、问题、思考、操作、操作输入、思考、观察和最终答案的标记总数不得超过3800个。
-    最终答案是指您的最终回答。请确保总处理时间不超过15秒。
+
+    Please be careful that tokens from the prompt, question, thought, action, action input, observation, and final answer all together should not exceed the token limit of 3800 tokens.
+
+    Finally, please provide the final answer in English and translate it into Chinese. Please keep the total processing time under 15 seconds.
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
@@ -137,9 +145,9 @@ if st.session_state.input_api:
             # Format them in a particular way
             intermediate_steps = kwargs.pop("intermediate_steps")
             thoughts = ""
-            for 操作, 观察 in intermediate_steps:
-                thoughts += 操作.log
-                thoughts += f"\n观察: {观察}\n思考: "
+            for action, observation in intermediate_steps:
+                thoughts += action.log
+                thoughts += f"\nObservation: {observation}\nThought: "
             # Set the agent_scratchpad variable to that value
             kwargs["agent_scratchpad"] = thoughts
             tools = self.tools_getter(kwargs["input"])
@@ -171,18 +179,19 @@ if st.session_state.input_api:
     class CustomOutputParser(AgentOutputParser):
         def parse(self, llm_output: str) -> Union[AgentAction, AgentFinish]:
             # Check if agent should finish
-            if "最终答案:" in llm_output:
+            if "Final Answer:" in llm_output:
                 return AgentFinish(
                     # Return values is generally always a dictionary with a single `output` key
                     # It is not recommended to try anything else at the moment :)
-                    return_values={"output": llm_output.split("最终答案:")[-1].strip()},
+                    return_values={"output": llm_output.split("Final Answer:")[-1].strip()},
                     log=llm_output,
                 )
             # Parse out the action and action input
-            regex = r"操作:(.*?)[\n]*操作输入:[\s]*(.*)"
+            regex = r"Action: (.*?)[\n]*Action Input:[\s]*(.*)"
             match = re.search(regex, llm_output, re.DOTALL)
             action = match.group(1).strip()
             action_input = match.group(2)
+            # Return the action and action input
             return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
     output_parser = CustomOutputParser()
     @st.cache(allow_output_mutation=True)
