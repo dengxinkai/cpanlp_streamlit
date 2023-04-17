@@ -88,7 +88,7 @@ def 中国平安(input_text):
     c = [x["metadata"]["text"] for x in www["matches"]]
     return c
 
-embeddings = OpenAIEmbeddings()
+embeddings = OpenAIEmbeddings(openai_api_key="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")
 wikipedia = WikipediaAPIWrapper()
 llm=ChatOpenAI(
     model_name="gpt-3.5-turbo",
