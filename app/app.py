@@ -309,6 +309,8 @@ if st.session_state.input_api:
             response = agent_executor({"input":query})
             st.write(response["intermediate_steps"])
             st.write(response["output"])
+    st.info('根据上传的财报进行分析')
+
     input_text3 = st.text_input(':blue[市场表现提问]','')
     if st.button('确认', key='cninfo财务数据'):
         a=getseccode(input_text3)
@@ -316,6 +318,7 @@ if st.session_state.input_api:
         response=agent_df({"input":input_text3})
         st.write(response["output"])
         st.json(response["intermediate_steps"])
+    st.info('市场表现问答')
 
     # st.header("总结系统")
     # if st.button('总结'):
