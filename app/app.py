@@ -48,10 +48,16 @@ if st.session_state.input_api:
     col1, col2= st.columns(2)
     @st.cache(allow_output_mutation=True)
     def getseccode(text):
+        pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
+                      environment="us-east4-gcp",  # next to api key in console
+                      namespace="ssq")
+        index = pinecone.Index(index_name="kedu")
+        a=embeddings.embed_query(text)
+        www=index.query(vector=a, top_k=1, namespace='ssq', include_metadata=True)
+        c = [x["metadata"]["text"] for x in www["matches"]][0]
         pattern = r"\d{6}"
-        result=re.findall(pattern, text)
+        result=re.findall(pattern, c)
         return result[0]
-
     def gettoken(client_id,client_secret):
         url='http://webapi.cninfo.com.cn/api-cloud-platform/oauth2/token'
         post_data="grant_type=client_credentials&client_id=%s&client_secret=%s"%(client_id,client_secret)
@@ -312,6 +318,7 @@ if st.session_state.input_api:
         st.info('市场表现问答')
         input_text3 = st.text_input(':blue[市场表现提问]','')
         if st.button('确认', key='cninfo财务数据'):
+            
             a=getseccode(input_text3)
             agent_df = cnifo(a)
             response=agent_df({"input":input_text3})
