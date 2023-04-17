@@ -244,7 +244,7 @@ if st.session_state.input_api:
             agent3 = LLMSingleActionAgent(
                 llm_chain=llm_chain, 
                 output_parser=output_parser,
-                stop=["\nAction Input:"], 
+                stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
             agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True,max_iterations=8)
