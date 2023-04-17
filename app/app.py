@@ -78,11 +78,11 @@ if st.session_state.input_api:
         openai_api_key=st.session_state.input_api
     )
     search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
-    search_tool =  Tool(
-                    name = "Google",
-                    func=search.run,
-                    description="当您需要搜索互联网时，这个工具非常有用。"
-                )
+#     search_tool =  Tool(
+#                     name = "Google",
+#                     func=search.run,
+#                     description="当您需要搜索互联网时，这个工具非常有用。"
+#                 )
     zgpa_tool =  Tool(
                     name = "ZGPA",
                     func=中国平安年报查询,
@@ -230,11 +230,11 @@ if st.session_state.input_api:
                     func=中国平安年报查询,
                     description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
                 ),
-                Tool(
-                    name = "Google",
-                    func=search.run,
-                    description="当您需要搜索互联网时，这个工具非常有用。"
-                ),
+#                 Tool(
+#                     name = "Google",
+#                     func=search.run,
+#                     description="当您需要搜索互联网时，这个工具非常有用。"
+#                 ),
                 Tool(
                 name = "ShHFZ",
                 func=双汇发展年报查询,
