@@ -110,23 +110,20 @@ if st.session_state.input_api:
         template=prompt_template, input_variables=["context", "question"]
     )
     chain_type_kwargs = {"prompt": PROMPT}
-    template3 = """Please answer the following questions to the best of your ability. You may use the following tools:
+    template3 = """回答问题. 你可以使用下列工具:
     {tools}
-
-    Please use the following format:
-    Question: The input question you must answer.
-    Thought: You should always think about what to do.
-    Action: The action to take, which should be one of [{tool_names}].
-    Action Input: The input to the action.
-    Observation: The result of the action.
-    Thought: You should reflect on the observation to gain insight.
-    Final Answer: The final answer to the original input question.
+    用以下格式:
+    Question: 输入的问题.
+    Thought: 你的思考.
+    Action: 你的行动和其中的一个工具 [{tool_names}].
+    Action Input: 行动输入.
+    Observation: 你的观察.
+    Thought:基于观察的思考.
+    Final Answer: 最终答案.
 
     Note that all input and output tokens are limited to 3800.
-
     Here is your input question:
     Question: {input}
-
     Here is your scratchpad to keep notes:
     {agent_scratchpad}
 
