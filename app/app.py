@@ -243,9 +243,8 @@ if st.session_state.input_api:
             tool_names = [tool.name for tool in tools]
             agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
             response = agent.run(query)
-            st.caption(response["output"])
-            with st.expander("查看过程"):
-                st.write(response["intermediate_steps"])
+            st.caption(response)
+     
         else:
             query = input_text1
             tools = [Tool(
