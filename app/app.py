@@ -40,12 +40,9 @@ st.set_page_config(
 )
 with st.sidebar:
     st.header(":blue[Openai_api]")
-    input_api1 = st.text_input('api-key', '', key="input_api")
-    if st.button('确认', key='api-key'):
-        input_api=input_api1
-    st.header(":blue[上传]")
-    file = st.file_uploader("PDF文件", type="pdf")
-    input_text = st.text_input('PDF网址', '')
+    st.text_input('api-key', '', key="input_api")
+    st.info('This is a purely informational message', icon="ℹ️")
+    
 st.title('中国上市公司智能财报阅读')
 if st.session_state.input_api:
     @st.cache(allow_output_mutation=True)
@@ -237,7 +234,9 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     qa = 分析(input_text)
-
+    st.header(":blue[上传]")
+    file = st.file_uploader("PDF文件", type="pdf")
+    input_text = st.text_input('PDF网址', '')
     input_text1 = st.text_input(':blue[提问]','')
     if st.button('回答'):
         if not qa:
