@@ -318,7 +318,6 @@ if st.session_state.input_api:
         st.info('市场表现问答')
         input_text3 = st.text_input(':blue[市场表现提问]','')
         if st.button('确认', key='cninfo财务数据'):
-            
             a=getseccode(input_text3)
             agent_df = cnifo(a)
             response=agent_df({"input":input_text3})
