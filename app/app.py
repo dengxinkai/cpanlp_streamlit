@@ -241,9 +241,11 @@ if st.session_state.input_api:
                 description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
             )]
             tool_names = [tool.name for tool in tools]
-            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
-            response = agent.run(query)
-            st.caption(response)
+            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True, return_intermediate_steps=True,max_iterations=2, early_stopping_method="generate")
+            response = agent({"input":query})
+            st.caption(response["output"])
+            with st.expander("查看过程"):
+                st.write(response["intermediate_steps"])
      
         else:
             query = input_text1
