@@ -148,9 +148,8 @@ if st.session_state.input_api:
     All inputs and output tokens are limited to 3800.
     Question: {input}
     {agent_scratchpad}
-    Be careful,This model's maximum context length is 4097 tokens.
     最后把Final Answer翻译成中文
-    总共时间不要超过20秒
+    总共时间不要超过20秒，输出token 少于 3500 tokens
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
