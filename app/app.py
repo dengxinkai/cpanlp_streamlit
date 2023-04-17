@@ -38,8 +38,6 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-global input_api
-input_api=""
 with st.sidebar:
     st.header(":blue[Openai_api]")
     input_api1 = st.text_input('api-key', '', key="input_api")
@@ -90,7 +88,7 @@ if st.session_state.input_api:
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
 
-    embeddings = OpenAIEmbeddings(openai_api_key=input_api)
+    embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     wikipedia = WikipediaAPIWrapper()
     llm=ChatOpenAI(
         model_name="gpt-3.5-turbo",
@@ -98,7 +96,7 @@ if st.session_state.input_api:
         frequency_penalty=1,
         presence_penalty=1,
         top_p=0.5,
-        openai_api_key=input_api
+        openai_api_key=st.session_state.input_api
     )
     search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
     search_tool =  Tool(
@@ -113,7 +111,7 @@ if st.session_state.input_api:
                 )
     ALL_TOOLS = [search_tool,zgpa_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
-    vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=input_api))
+    vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=st.session_state.input_api))
     retriever = vector_store.as_retriever()
     def get_tools(query):
         docs = retriever.get_relevant_documents(query)
@@ -234,7 +232,7 @@ if st.session_state.input_api:
             length_function=len,
         )
         texts = text_splitter.split_documents(documents)
-        embeddings = OpenAIEmbeddings(openai_api_key=input_api)
+        embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
