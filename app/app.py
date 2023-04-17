@@ -148,9 +148,8 @@ if st.session_state.input_api:
     All inputs and output tokens are limited to 3800.
     Question: {input}
     {agent_scratchpad}
-    最后把Final Answer翻译成中文
-    Tokens from the prompt and the completion all together should not exceed the token limit of 3500 tokens
-    总共时间不要超过20秒
+    Be careful tokens from the prompt、Question、Thought、Action、Action Input、Thought、Observation and Final Answer all together should not exceed the token limit of 3800 tokens
+    最后把Final Answer翻译成中文,总共处理时间不要超过15秒
     """
     # Set up a prompt template
     class CustomPromptTemplate(StringPromptTemplate):
