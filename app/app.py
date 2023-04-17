@@ -93,7 +93,7 @@ if st.session_state.input_api:
                     func=双汇发展年报查询,
                     description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
                 )
-    ALL_TOOLS = [search_tool,zgpa_tool,shhfz_tool]
+    ALL_TOOLS = [zgpa_tool,shhfz_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
     vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=st.session_state.input_api))
     retriever = vector_store.as_retriever()
