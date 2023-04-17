@@ -114,12 +114,12 @@ if st.session_state.input_api:
     {tools}
     Use the following format:
     Question: the input question you must answer
-    Thought: you should always think about what to do
-    Action: the action to take, should be one of [{tool_names}]
-    Action Input: the input to the action
-    Observation: the result of the action
-    Thought: I now know the final answer
-    Final Answer: the final answer to the original input question
+    Thought: you should always think about what to do,同时快速给出Final Answer
+    Action: the action to take, should be one of [{tool_names}],同时快速给出Final Answer
+    Action Input: the input to the action,同时快速给出Final Answer
+    Observation: the result of the action,同时快速给出Final Answer
+    Thought: I now know the final answer,同时快速给出Final Answer
+    Final Answer: the final answer to the original input question,快速给出Final Answer
     All inputs and output tokens are limited to 3800.
     Question: {input}
     {agent_scratchpad}
