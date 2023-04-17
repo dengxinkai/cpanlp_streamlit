@@ -66,7 +66,6 @@ if input_api:
         req = requests.post(url, data=post_data)
         tokendic = json.loads(req.text)
         return tokendic['access_token']
-
     @st.cache(allow_output_mutation=True)
     def cnifo(scode):
         token = gettoken('TvUN4uIl2gu4sjPdB4su6DiPNYFMkhA1','Snb5s887ezAWBXIyYyqY5fBQI6ttyySu')
@@ -235,7 +234,7 @@ if input_api:
             length_function=len,
         )
         texts = text_splitter.split_documents(documents)
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(openai_api_key=input_api)
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
