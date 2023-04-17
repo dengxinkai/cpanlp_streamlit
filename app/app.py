@@ -41,7 +41,7 @@ st.set_page_config(
 with st.sidebar:
     st.header(":blue[Openai_api]")
     st.text_input('api-key', '', key="input_api")
-    st.info('为防止bug,请正确输入您的openai的apikey', icon="😊")
+    st.info('为防止bug,请正确输入您的openai的apikey', icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png")
     
 st.title('中国上市公司智能财报阅读')
 if st.session_state.input_api:
