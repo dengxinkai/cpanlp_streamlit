@@ -43,7 +43,7 @@ with st.sidebar:
     st.text_input('api-key', '', key="input_api")
     st.info('为防止bug,请正确输入您的openai的apikey')
     
-st.title('中国上市公司智能财报阅读')
+st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
     @st.cache(allow_output_mutation=True)
     def getseccode(text):
@@ -238,7 +238,7 @@ if st.session_state.input_api:
     input_text = st.text_input('PDF网址', '')
     qa = 分析(input_text)
     input_text1 = st.text_input(':blue[提问]','')
-    if st.button('回答'):
+    if st.button('确认'):
         if not qa:
             query = input_text1
     #         result = qa({"query": query})
@@ -310,7 +310,7 @@ if st.session_state.input_api:
             st.write(response["intermediate_steps"])
             st.write(response["output"])
     input_text3 = st.text_input(':blue[市场表现提问]','')
-    if st.button('回答', key='cninfo财务数据'):
+    if st.button('确认', key='cninfo财务数据'):
         a=getseccode(input_text3)
         agent_df = cnifo(a)
         response=agent_df({"input":input_text3})
