@@ -179,7 +179,7 @@ if st.session_state.input_api:
                     log=llm_output,
                 )
             # Parse out the action and action input
-            regex = r"操作: (.*?)[\n]*操作输入:[\s]*(.*)"
+            regex = r"操作:(.*?)[\n]*操作输入:[\s]*(.*)"
             match = re.search(regex, llm_output, re.DOTALL)
             action = match.group(1).strip()
             action_input = match.group(2)
