@@ -72,8 +72,6 @@ def cnifo(scode):
     df['交易日期'] = pd.to_datetime(df['交易日期'])
     agent_df = create_pandas_dataframe_agent(OpenAI(temperature=0.4), df, verbose=True,return_intermediate_steps=True)
     return agent_df 
-
-
 @st.cache(allow_output_mutation=True)
 def 中国平安(input_text):
     pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
@@ -93,6 +91,7 @@ llm=ChatOpenAI(
     frequency_penalty=1,
     presence_penalty=1,
     top_p=0.5,
+    openai_api_key=input_api
 )
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
 search_tool =  Tool(
