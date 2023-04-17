@@ -81,7 +81,7 @@ if st.session_state.input_api:
     search_tool =  Tool(
                     name = "Google",
                     func=search.run,
-                    description="当您需要回答有关当前财经问题时，这个工具非常有用。"
+                    description="当您需要搜索互联网时，这个工具非常有用。"
                 )
     zgpa_tool =  Tool(
                     name = "ZGPA",
@@ -214,7 +214,7 @@ if st.session_state.input_api:
         file = st.file_uploader("PDF文件", type="pdf")
         input_text = st.text_input('PDF网址', '')
         qa = 分析(input_text)
-    input_text1 = st.text_input(':blue[提问]','')
+    input_text1 = st.text_input(':blue[查询]','')
     if st.button('确认'):
         start_time = time.time()
         if not qa:
@@ -233,7 +233,7 @@ if st.session_state.input_api:
                 Tool(
                     name = "Google",
                     func=search.run,
-                    description="当您需要回答有关当前问题时，这个工具非常有用。"
+                    description="当您需要搜索互联网时，这个工具非常有用。"
                 ),
                 Tool(
                 name = "ShHFZ",
@@ -262,7 +262,7 @@ if st.session_state.input_api:
                       Tool(
                     name = "Google",
                     func=search.run,
-                    description="当您需要回答有关当前财经管理问题时，这个工具非常有用。"
+                    description="当您需要搜索互联网时，这个工具非常有用。"
                 )
                ]
             tool_names = [tool.name for tool in tools]
