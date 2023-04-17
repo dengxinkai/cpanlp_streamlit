@@ -155,7 +155,7 @@ tools = [
         description="useful for when you need to come up with todo lists. Input: an objective to create a todo list for. Output: a todo list of three most important items for that objective. Please be very clear what the objective is!"
     )
 ]
-prefix = """You are an AI who performs one task based on the following objective: {objective}. Take into account these previously completed tasks: {context}."""
+prefix = """尽力给出任务的解答: {objective}. Take into account these previously completed tasks: {context}."""
 suffix = """Question: {task}
 {agent_scratchpad}
 All inputs and output tokens are limited to 3800.最后把输出的Final Answer结果翻译成中文
