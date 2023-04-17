@@ -247,7 +247,7 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True,max_iterations=2)
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
@@ -277,7 +277,7 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True,max_iterations=2)
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
             response = agent_executor({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
