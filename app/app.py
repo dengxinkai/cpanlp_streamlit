@@ -221,7 +221,7 @@ if st.session_state.input_api:
                 Tool(
                     name = "ZGPA",
                     func=中国平安年报查询,
-                    description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。"
+                    description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
                 ),
                 Tool(
                     name = "Google",
@@ -231,12 +231,12 @@ if st.session_state.input_api:
                                   Tool(
                 name="维基",
                 func=wikipedia.run,
-                description="当您需要搜索百科全书时，这个工具非常有用。"
+                description="当您需要搜索百科全书时，这个工具非常有用。输入转换为英文，输出转换为中文"
             ),
                 Tool(
                 name = "ShHFZ",
                 func=双汇发展年报查询,
-                description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。"
+                description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
             )]
           
             agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True, max_iterations=5,early_stopping_method="generate")
