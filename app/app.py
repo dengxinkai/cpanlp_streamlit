@@ -41,7 +41,6 @@ st.set_page_config(
     }
 )
 with st.sidebar:
-    st.header(":blue[Openai_api]")
     st.text_input('api-key', '', key="input_api")
     st.info('ChatOpenAI属性设置')
     temperature = st.slider("`temperature`", 0.01, 0.99, 0.3)
