@@ -203,6 +203,11 @@ if st.session_state.input_api:
         start_time = time.time()
         if not qa:
             query = input_text1
+            prompt3 = CustomPromptTemplate(
+                template=template3,
+                tools_getter=get_tools,
+                input_variables=["input", "intermediate_steps"])
+            llm_chain = LLMChain(llm=llm, prompt=prompt3)
             tools = [
                 Tool(
                     name = "ZGPA",
@@ -224,9 +229,16 @@ if st.session_state.input_api:
                 func=双汇发展年报查询,
                 description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
             )]
+             tool_names = [tool.name for tool in tools]
+             agent3 = LLMSingleActionAgent(
+                    llm_chain=llm_chain, 
+                    output_parser=output_parser,
+                    stop=["\nObservation:"], 
+                    allowed_tools=tool_names
+                )
+            agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+            response = agent_executor({"input":query})
           
-            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True, max_iterations=5,early_stopping_method="generate")
-            response = agent({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
                 st.write(response["intermediate_steps"])
