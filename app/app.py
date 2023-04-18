@@ -86,12 +86,12 @@ if st.session_state.input_api:
     zgpa_tool =  Tool(
                     name = "ZGPA",
                     func=中国平安年报查询,
-                    description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
+                    description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。"
                 )
     shhfz_tool =  Tool(
                     name = "ShHFZ",
                     func=双汇发展年报查询,
-                    description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
+                    description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。"
                 )
     ALL_TOOLS = [zgpa_tool,shhfz_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
@@ -228,7 +228,7 @@ if st.session_state.input_api:
                 Tool(
                     name = "ZGPA",
                     func=中国平安年报查询,
-                    description="当您需要回答有关中国平安(601318)问题时，这个工具非常有用。"
+                    description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。"
                 ),
 #                 Tool(
 #                     name = "Google",
@@ -238,7 +238,7 @@ if st.session_state.input_api:
                 Tool(
                 name = "ShHFZ",
                 func=双汇发展年报查询,
-                description="当您需要回答有关双汇发展(000895)问题时，这个工具非常有用。"
+                description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。"
             )]
             tool_names = [tool.name for tool in tools]
             agent3 = LLMSingleActionAgent(
@@ -247,7 +247,7 @@ if st.session_state.input_api:
                 stop=["\nObservation:"], 
                 allowed_tools=tool_names
             )
-            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True, max_iterations=2,early_stopping_method="generate")
+            agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True,return_intermediate_steps=True, max_iterations=5,early_stopping_method="generate")
             response = agent({"input":query})
             st.caption(response["output"])
             with st.expander("查看过程"):
