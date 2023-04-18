@@ -46,7 +46,7 @@ with st.sidebar:
     
 st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
-    @st.cache(allow_output_mutation=True)
+    st.cache_resource()
     def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                           environment="us-east4-gcp",  # next to api key in console
