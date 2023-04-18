@@ -40,7 +40,6 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-tab1, tab2 = st.tabs(["QA", "BabyAGI"])
 with st.sidebar:
     st.text_input('api-key', '', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
@@ -52,8 +51,9 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-
 st.title('智能财报（中国上市公司）')
+
+tab1, tab2 = st.tabs(["QA", "BabyAGI"])
 
 if st.session_state.input_api:
     llm=ChatOpenAI(
