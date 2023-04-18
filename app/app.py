@@ -52,7 +52,7 @@ if st.session_state.input_api:
                           namespace="ZGPA_601318")
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
+        www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     
@@ -63,7 +63,7 @@ if st.session_state.input_api:
                           namespace=namespace)
         index = pinecone.Index(index_name="kedu")
         a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=3, namespace=namespace, include_metadata=True)
+        www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
@@ -71,10 +71,10 @@ if st.session_state.input_api:
     wikipedia = WikipediaAPIWrapper()
     llm=ChatOpenAI(
         model_name="gpt-3.5-turbo",
-        temperature=0.5,
-        frequency_penalty=1,
-        presence_penalty=1,
-        top_p=0.5,
+        temperature=0.4,
+        frequency_penalty=0.3,
+        presence_penalty=0.3,
+        top_p=0.3,
         openai_api_key=st.session_state.input_api
     )
     search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
