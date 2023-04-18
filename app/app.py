@@ -59,6 +59,7 @@ st.title('智能财报（中国上市公司）')
 tab1, tab2 = st.tabs(["QA", "BabyAGI"])
 wikipedia = WikipediaAPIWrapper()
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
+logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name=model,
@@ -69,7 +70,6 @@ if st.session_state.input_api:
         openai_api_key=st.session_state.input_api
     )
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-
     def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                           environment="us-east4-gcp",  # next to api key in console
@@ -79,7 +79,6 @@ if st.session_state.input_api:
         www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
-    
     def 双汇发展年报查询(input_text):
         namespace="ShHFZ_000895"
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
@@ -89,9 +88,7 @@ if st.session_state.input_api:
         a=embeddings.embed_query(input_text)
         www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
-        return c
-
-    
+        return c  
     wiki_tool = Tool(
                 name="维基",
                 func=wikipedia.run,
@@ -120,7 +117,6 @@ if st.session_state.input_api:
         docs = retriever.get_relevant_documents(query)
         return [ALL_TOOLS[d.metadata["index"]] for d in docs]
     global qa
-    logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
     prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.
     {context}
     Question: {question}
@@ -238,10 +234,10 @@ if st.session_state.input_api:
                         func=search.run,
                         description="当您需要搜索互联网时，这个工具非常有用。"
                     ),
-                                      Tool(
+                    Tool(
                     name="维基",
                     func=wikipedia.run,
-                    description="当您需要搜索百科全书时，这个工具非常有用。输入转换为英文，输出转换为中文"
+                    description="当您需要搜索百科全书时，这个工具非常有用。"
                 ),
                     Tool(
                     name = "ShHFZ",
@@ -257,7 +253,6 @@ if st.session_state.input_api:
                     )
                 agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
                 response = agent_executor({"input":query})
-
                 st.caption(response["output"])
                 with st.expander("查看过程"):
                     st.write(response["intermediate_steps"])
@@ -267,6 +262,11 @@ if st.session_state.input_api:
                     name = "上传",
                     func=qa.run,
                     description="当您需要回答有关上传信息的问题时，这个工具非常有用。"
+                    ),
+                          Tool(
+                    name="维基",
+                    func=wikipedia.run,
+                    description="当您需要搜索百科全书时，这个工具非常有用。"
                     ),
                           Tool(
                         name = "Google",
