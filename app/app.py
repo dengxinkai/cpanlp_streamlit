@@ -291,3 +291,5 @@ if st.session_state.input_api:
             end_time = time.time()
             elapsed_time = end_time - start_time
             st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+    with tab2:
+        st.header("A dog")
