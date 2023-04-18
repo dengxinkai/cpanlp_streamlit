@@ -216,7 +216,7 @@ if st.session_state.input_api:
     if st.button('确认'):
         start_time = time.time()
         if not qa:
-            query = input_text1
+            query = input_text1 + "，结果输出中文"
             prompt3 = CustomPromptTemplate(
             template=template3,
             tools_getter=get_tools,
