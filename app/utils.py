@@ -1,4 +1,5 @@
 import pinecone 
+from langchain.embeddings import OpenAIEmbeddings
 
 def 中国平安年报查询(input_text):
     pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
