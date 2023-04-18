@@ -229,8 +229,8 @@ if st.session_state.input_api:
                 func=双汇发展年报查询,
                 description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
             )]
-             tool_names = [tool.name for tool in tools]
-             agent3 = LLMSingleActionAgent(
+            tool_names = [tool.name for tool in tools]
+            agent3 = LLMSingleActionAgent(
                     llm_chain=llm_chain, 
                     output_parser=output_parser,
                     stop=["\nObservation:"], 
