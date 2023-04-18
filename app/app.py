@@ -88,11 +88,16 @@ if st.session_state.input_api:
     wikipedia = WikipediaAPIWrapper()
     
     search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
-#     search_tool =  Tool(
-#                     name = "Google",
-#                     func=search.run,
-#                     description="当您需要搜索互联网时，这个工具非常有用。"
-#                 )
+    wiki_tool = Tool(
+                name="维基",
+                func=wikipedia.run,
+                description="当您需要搜索百科全书时，这个工具非常有用。输入转换为英文，输出转换为中文"
+                 )
+    search_tool =  Tool(
+                    name = "Google",
+                    func=search.run,
+                    description="当您需要搜索互联网时，这个工具非常有用。"
+                )
     zgpa_tool =  Tool(
                     name = "ZGPA",
                     func=中国平安年报查询,
@@ -103,7 +108,7 @@ if st.session_state.input_api:
                     func=双汇发展年报查询,
                     description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。"
                 )
-    ALL_TOOLS = [zgpa_tool,shhfz_tool]
+    ALL_TOOLS = [zgpa_tool,shhfz_tool,search_tool,wiki_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
     vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=st.session_state.input_api))
     retriever = vector_store.as_retriever()
@@ -256,7 +261,7 @@ if st.session_state.input_api:
             tools = [Tool(
                 name = "上传",
                 func=qa.run,
-                description="当您需要回答有关上传公司财报信息的问题时，这个工具非常有用。"
+                description="当您需要回答有关上传信息的问题时，这个工具非常有用。"
                 ),
                       Tool(
                     name = "Google",
