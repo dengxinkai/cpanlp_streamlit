@@ -45,7 +45,7 @@ with st.sidebar:
     st.text_input('api-key', '', key="input_api")
     st.info('为了确保您的应用程序顺利运行，输入正确的OpenAI的API密钥。如果您还没有API密钥，请访问OpenAI官方网站以获取更多信息。')
     temperature = st.slider("`temperature`", 0.01, 0.99, 0.3)
-    frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3)
+    frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3,help="在OpenAI GPT语言模型中，温度（temperature）是一个用于控制生成文本随机性和多样性的参数。它可以被理解为对下一个词的概率分布进行重新加权的因子，其中较高的温度值将导致更多的随机性和不确定性，而较低的温度值将导致更少的随机性和更高的确定性。通过调整温度值，可以控制生成文本的风格和多样性，以满足特定的应用需求。较高的温度值通常适用于生成较为自由流畅的文本，而较低的温度值则适用于生成更加确定性的文本。")
     presence_penalty = st.slider("`presence_penalty`", 0.01, 0.99, 0.3)
     top_p = st.slider("`top_p`", 0.01, 0.99, 0.3)
 
