@@ -1,5 +1,6 @@
 import streamlit as st
 import wikipedia
+import faiss
 import numpy as np
 import pandas as pd
 import base64
