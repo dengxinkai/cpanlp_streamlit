@@ -54,7 +54,8 @@ with st.sidebar:
 st.title('智能财报（中国上市公司）')
 
 tab1, tab2 = st.tabs(["QA", "BabyAGI"])
-
+wikipedia = WikipediaAPIWrapper()
+search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
 if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name=model,
@@ -64,6 +65,8 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
+    embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+
     def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                           environment="us-east4-gcp",  # next to api key in console
@@ -84,11 +87,8 @@ if st.session_state.input_api:
         www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
-    embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
 
-    wikipedia = WikipediaAPIWrapper()
     
-    search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
     wiki_tool = Tool(
                 name="维基",
                 func=wikipedia.run,
