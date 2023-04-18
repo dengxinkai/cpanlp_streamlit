@@ -45,6 +45,9 @@ with st.sidebar:
     st.text_input('api-key', '', key="input_api")
     st.info('欢迎使用我们的服务！为了确保您的应用程序顺利运行，我们建议您在使用之前输入正确的OpenAI的API密钥。如果您还没有API密钥，请访问OpenAI官方网站以获取更多信息。感谢您选择我们的服务！')
     temperature = st.slider("`temperature`", 0.01, 0.99, 0.3)
+    frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3)
+    presence_penalty = st.slider("`presence_penalty`", 0.01, 0.99, 0.3)
+    top_p = st.slider("`top_p`", 0.01, 0.99, 0.3)
 
 st.title('智能财报（中国上市公司）')
 
@@ -52,9 +55,9 @@ if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name="gpt-3.5-turbo",
         temperature=temperature,
-        frequency_penalty=0.3,
-        presence_penalty=0.3,
-        top_p=0.3,
+        frequency_penalty=frequency_penalty,
+        presence_penalty=presence_penalty,
+        top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
     def 中国平安年报查询(input_text):
