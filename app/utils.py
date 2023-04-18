@@ -1,11 +1,12 @@
 import pinecone 
 from langchain.embeddings import OpenAIEmbeddings
 
-def 中国平安年报查询(input_text):
+def 中国平安年报查询(input_text,openai_api_key):
     pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                       environment="us-east4-gcp",  # next to api key in console
                       namespace="ZGPA_601318")
     index = pinecone.Index(index_name="kedu")
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
     a=embeddings.embed_query(input_text)
     www=index.query(vector=a, top_k=3, namespace='ZGPA_601318', include_metadata=True)
     c = [x["metadata"]["text"] for x in www["matches"]]
