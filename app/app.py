@@ -44,7 +44,7 @@ with st.sidebar:
     st.header(":blue[Openai_api]")
     st.text_input('api-key', '', key="input_api")
     st.info('欢迎使用我们的服务！为了确保您的应用程序顺利运行，我们建议您在使用之前输入正确的OpenAI的API密钥。如果您还没有API密钥，请访问OpenAI官方网站以获取更多信息。感谢您选择我们的服务！')
-    temperature = st.slider("`temperature`", 0.0, 1.0, 0.3)
+    temperature = st.slider("`temperature`", 0.0, 0.99, 0.3)
 
 st.title('智能财报（中国上市公司）')
 llm=ChatOpenAI(
