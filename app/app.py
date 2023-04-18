@@ -1,4 +1,5 @@
 import streamlit as st
+import wikipedia
 import numpy as np
 import pandas as pd
 import base64
@@ -40,6 +41,7 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
+wikipedia.set_lang("zh")
 with st.sidebar:
     st.text_input('api-key', '', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
