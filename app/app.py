@@ -43,28 +43,9 @@ with st.sidebar:
     st.header(":blue[Openai_api]")
     st.text_input('api-key', '', key="input_api")
     st.info('欢迎使用我们的服务！为了确保您的应用程序顺利运行，我们建议您在使用之前输入正确的OpenAI的API密钥。如果您还没有API密钥，请访问OpenAI官方网站以获取更多信息。感谢您选择我们的服务！')
-    
 st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
-    def 中国平安年报查询(input_text):
-        pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
-                          environment="us-east4-gcp",  # next to api key in console
-                          namespace="ZGPA_601318")
-        index = pinecone.Index(index_name="kedu")
-        a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
-        c = [x["metadata"]["text"] for x in www["matches"]]
-        return c
-    def 双汇发展年报查询(input_text):
-        namespace="ShHFZ_000895"
-        pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
-                          environment="us-east4-gcp",  # next to api key in console
-                          namespace=namespace)
-        index = pinecone.Index(index_name="kedu")
-        a=embeddings.embed_query(input_text)
-        www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
-        c = [x["metadata"]["text"] for x in www["matches"]]
-        return c
+    
     embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     wikipedia = WikipediaAPIWrapper()
     llm=ChatOpenAI(
