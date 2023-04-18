@@ -216,7 +216,7 @@ if st.session_state.input_api:
     if st.button('确认'):
         start_time = time.time()
         if not qa:
-            query = input_text1 + "，记住，结果需要输出中文"
+            query = input_text1
             tools = [
                 Tool(
                     name = "ZGPA",
