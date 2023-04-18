@@ -203,8 +203,7 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-    st.text('[可选]')
-    with st.expander("上传"):
+    with st.expander("[可选]上传"):
         file = st.file_uploader("PDF文件", type="pdf")
         input_text = st.text_input('PDF网址', '')
         qa = 分析(input_text)
