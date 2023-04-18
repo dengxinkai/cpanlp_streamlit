@@ -203,7 +203,7 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-    st.info('欢迎使用我们的分析工具！您可以选择直接使用或是上传财报以进行更加深入的分析。无论您选择哪种方式，我们都将为您提供最好的服务。')
+    st.text('[可选]')
     with st.expander("上传"):
         file = st.file_uploader("PDF文件", type="pdf")
         input_text = st.text_input('PDF网址', '')
