@@ -46,7 +46,6 @@ with st.sidebar:
     
 st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
-    st.cache_resource()
     def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                           environment="us-east4-gcp",  # next to api key in console
@@ -56,7 +55,6 @@ if st.session_state.input_api:
         www=index.query(vector=a, top_k=1, namespace='ZGPA_601318', include_metadata=True)
         c = [x["metadata"]["text"] for x in www["matches"]]
         return c
-    @st.cache(allow_output_mutation=True)
     def 双汇发展年报查询(input_text):
         namespace="ShHFZ_000895"
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
@@ -186,7 +184,7 @@ if st.session_state.input_api:
             # Return the action and action input
             return AgentAction(tool=action, tool_input=action_input.strip(" ").strip('"'), log=llm_output)
     output_parser = CustomOutputParser()
-    @st.cache(allow_output_mutation=True)
+    @st.cache_resource
     def 分析(input_text):
         if file is not None:
             with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
