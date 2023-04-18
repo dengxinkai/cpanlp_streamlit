@@ -47,7 +47,6 @@ with st.sidebar:
 st.title('智能财报（中国上市公司）')
 if st.session_state.input_api:
     
-    embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     wikipedia = WikipediaAPIWrapper()
     llm=ChatOpenAI(
         model_name="gpt-3.5-turbo",
