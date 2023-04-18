@@ -47,7 +47,9 @@ with st.sidebar:
     temperature = st.slider("`temperature`", 0.0, 0.99, 0.3)
 
 st.title('智能财报（中国上市公司）')
-llm=ChatOpenAI(
+
+if st.session_state.input_api:
+    llm=ChatOpenAI(
         model_name="gpt-3.5-turbo",
         temperature=temperature,
         frequency_penalty=0.3,
@@ -55,7 +57,6 @@ llm=ChatOpenAI(
         top_p=0.3,
         openai_api_key=st.session_state.input_api
     )
-if st.session_state.input_api:
     def 中国平安年报查询(input_text):
         pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
                           environment="us-east4-gcp",  # next to api key in console
