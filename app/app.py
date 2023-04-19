@@ -25,6 +25,7 @@ from langchain.chains.base import Chain
 from langchain.llms import OpenAI,BaseLLM
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma,FAISS
+from langchain.vectorstores.base import VectorStore
 from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
