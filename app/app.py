@@ -54,14 +54,14 @@ class TaskCreationChain(LLMChain):
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
         task_creation_template = (
             "You are an task creation AI that uses the result of an execution agent"
-            " to create 3 new main tasks with the following objective: {objective},"
+            " to create the main task with the following objective: {objective},"
             " The last completed task has the result: {result}."
             " This result was based on this task description: {task_description}."
             " These are incomplete tasks: {incomplete_tasks}."
             " Based on the result, create new tasks to be completed"
             " by the AI system that do not overlap with incomplete tasks."
             " Return the tasks as an array."
-            " Be careful,This model's maximum context length is 4097 tokens."
+            " Be careful,This model's maximum context length is 3900 tokens."
         )
         prompt = PromptTemplate(
             template=task_creation_template,
@@ -80,7 +80,7 @@ class TaskPrioritizationChain(LLMChain):
             " 1"
             " 2"
             " Start the task list with number {next_task_id}."
-            " Be careful,This model's maximum context length is 4097 tokens."
+            " Be careful,This model's maximum context length is 3800 tokens."
 
         )
         prompt = PromptTemplate(
@@ -125,7 +125,6 @@ def execute_task(vectorstore, execution_chain: LLMChain, objective: str, task: s
     return execution_chain.run(objective=objective, context=context, task=task)
 class BabyAGI(Chain, BaseModel):
     """Controller model for the BabyAGI agent."""
-
     task_list: deque = Field(default_factory=deque)
     task_creation_chain: TaskCreationChain = Field(...)
     task_prioritization_chain: TaskPrioritizationChain = Field(...)
@@ -133,19 +132,15 @@ class BabyAGI(Chain, BaseModel):
     task_id_counter: int = Field(1)
     vectorstore: VectorStore = Field(init=False)
     max_iterations: Optional[int] = None
-        
     class Config:
         """Configuration for this pydantic object."""
         arbitrary_types_allowed = True
-
     def add_task(self, task: Dict):
         self.task_list.append(task)
-
     def print_task_list(self):
         print("\n*****TASK LIST*****\n")
         for t in self.task_list:
             print(str(t["task_id"]) + ": " + t["task_name"])
-
     def print_next_task(self, task: Dict):
         print("\n*****NEXT TASK*****\n")
         print(str(task["task_id"]) + ": " + task["task_name"])
@@ -154,16 +149,12 @@ class BabyAGI(Chain, BaseModel):
         print("\n*****TASK RESULT*****\n")
         print(result)
         显示+=result
-
-        
     @property
     def input_keys(self) -> List[str]:
         return ["objective"]
-    
     @property
     def output_keys(self) -> List[str]:
         return []
-
     def _call(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         """Run the agent."""
         objective = inputs['objective']
@@ -173,18 +164,15 @@ class BabyAGI(Chain, BaseModel):
         while True:
             if self.task_list:
                 self.print_task_list()
-
                 # Step 1: Pull the first task
                 task = self.task_list.popleft()
                 self.print_next_task(task)
-
                 # Step 2: Execute the task
                 result = execute_task(
                     self.vectorstore, self.execution_chain, objective, task["task_name"]
                 )
                 this_task_id = int(task["task_id"])
                 self.print_task_result(result)
-
                 # Step 3: Store the result in Pinecone
                 result_id = f"result_{task['task_id']}"
                 self.vectorstore.add_texts(
@@ -192,7 +180,6 @@ class BabyAGI(Chain, BaseModel):
                     metadatas=[{"task": task["task_name"]}],
                     ids=[result_id],
                 )
-
                 # Step 4: Create new tasks and reprioritize task list
                 new_tasks = get_next_task(
                     self.task_creation_chain, result, task["task_name"], [t["task_name"] for t in self.task_list], objective
@@ -211,7 +198,6 @@ class BabyAGI(Chain, BaseModel):
                 print("\n*****TASK ENDING*****\n")
                 break
         return {}
-
     @classmethod
     def from_llm(
         cls,
@@ -251,7 +237,6 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 st.title('智能财报（中国上市公司）')
-
 tab1, tab2 = st.tabs(["QA", "BabyAGI"])
 wikipedia = WikipediaAPIWrapper()
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
@@ -491,7 +476,7 @@ if st.session_state.input_api:
             st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
     with tab2:
         OBJECTIVE = st.text_input('提问','', key="name_input1_2")
-        todo_prompt = PromptTemplate.from_template("Come up with a todo list of 3 most important items for this objective: {objective}.")
+        todo_prompt = PromptTemplate.from_template("Come up with the most important item for this objective: {objective}.")
         todo_chain = LLMChain(llm=OpenAI(temperature=temperature,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
         tools = [
                Tool(
@@ -523,8 +508,8 @@ if st.session_state.input_api:
         prefix = """尽力给出任务的解答: {objective}. Take into account these previously completed tasks: {context}."""
         suffix = """Question: {task}
         {agent_scratchpad}
-        都用中文表示，除了格式中的Question:Thought:Action:Action Input:Observation:Thought:Final Answer
-        All inputs、output and context tokens in total are limited to 3800.
+        都用中文表示，除了格式中的提取前缀
+        All inputs、output and context tokens are in total limited to 3800.
         """
         prompt = ZeroShotAgent.create_prompt(
             tools, 
