@@ -52,7 +52,6 @@ from pydantic import Field
 def _print_func(text: str) -> None:
     print("\n")
     print(text)
-
 global 显示
 显示 = ""
 
