@@ -472,7 +472,7 @@ if st.session_state.input_api:
             st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
     with tab2:
         OBJECTIVE = st.text_input('提问','', key="name_input1_2")
-        todo_prompt = PromptTemplate.from_template("提出这个目标最重要的待办事项： {objective}.")
+        todo_prompt = PromptTemplate.from_template("尽量以少的token准确快速给出这个目标最重要的待办事项： {objective}.")
         todo_chain = LLMChain(llm=OpenAI(temperature=temperature,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
         tools = [
                Tool(
@@ -501,11 +501,12 @@ if st.session_state.input_api:
                 description="此功能可用于创建待办事项清单。输入：要为其创建待办事项清单的目标。输出：该目标的最重要事项的待办事项。请非常清楚地说明目标是什么。!"
             )
         ]
-        prefix = """尽力给出任务的解答: {objective}. 考虑到先前完成的这些任务：{context}."""
+        prefix = """尽量以少的token准确快速给出任务的解答: {objective}. 考虑到先前完成的这些任务：{context}."""
         suffix = """Question: {task}
         {agent_scratchpad}
         都用中文表示，除了格式中的提取前缀
         All inputs、output and context tokens are in total limited to 3800.
+        最终结果用中文表示.
         """
         prompt = ZeroShotAgent.create_prompt(
             tools, 
