@@ -48,7 +48,6 @@ st.set_page_config(
     }
 )
 显示 = ""
-
 class TaskCreationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
@@ -87,7 +86,6 @@ class TaskPrioritizationChain(LLMChain):
             input_variables=["task_names", "next_task_id", "objective"],
         )
         return cls(prompt=prompt, llm=llm, verbose=verbose)
-
 def get_next_task(task_creation_chain: LLMChain, result: Dict, task_description: str, task_list: List[str], objective: str) -> List[Dict]:
     """Get the next task."""
     incomplete_tasks = ", ".join(task_list)
@@ -236,7 +234,7 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 st.title('智能财报（中国上市公司）')
-tab1, tab2 = st.tabs(["QA", "BabyAGI"])
+tab1, tab2 = st.tabs(["问答模式(QA)", "任务模式（BabyAGI）"])
 wikipedia = WikipediaAPIWrapper()
 search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
