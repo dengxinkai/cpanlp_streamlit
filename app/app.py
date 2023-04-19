@@ -491,7 +491,7 @@ if st.session_state.input_api:
         st.header("A dog")
         OBJECTIVE = st.text_input('提问','', key="name_input1_2")
         todo_prompt = PromptTemplate.from_template("Come up with a todo list of 3 most important items for this objective: {objective}.")
-        todo_chain = LLMChain(llm=OpenAI(temperature=0.2,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
+        todo_chain = LLMChain(llm=OpenAI(temperature=temperature,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
         tools = [
                Tool(
                                 name = "ZGPA",
@@ -530,4 +530,18 @@ if st.session_state.input_api:
             suffix=suffix, 
             input_variables=["objective", "task", "context","agent_scratchpad"]
         )
+        verbose=True
+        # If None, will keep on going forever
+        max_iterations: Optional[int] = 3
+        baby_agi = BabyAGI.from_llm(
+            llm=llm,
+            vectorstore=vectorstore,
+            verbose=verbose,
+            max_iterations=max_iterations
+        )
+        if st.button('问答'):
+            baby_agi({"objective": OBJECTIVE})
+        text_list = 显示.split('\n')
+        for i in text_list:
+            st.write(i)
 
