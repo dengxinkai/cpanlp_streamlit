@@ -11,7 +11,7 @@ import pinecone
 import requests
 import re
 import time
-from typing import List, Union,Callable
+from typing import List, Union,Callable,Dict, Optional, Any
 from langchain.agents import  AgentExecutor, LLMSingleActionAgent, AgentOutputParser,initialize_agent, Tool,AgentType,create_pandas_dataframe_agent
 from langchain.prompts import StringPromptTemplate,PromptTemplate
 from langchain import OpenAI, SerpAPIWrapper, LLMChain
@@ -19,7 +19,7 @@ from langchain.schema import AgentAction, AgentFinish,Document
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
-from langchain.llms import OpenAI
+from langchain.llms import OpenAI,BaseLLM
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma,FAISS
 from langchain.chains.mapreduce import MapReduceChain
