@@ -81,46 +81,7 @@ class TaskPrioritizationChain(LLMChain):
             input_variables=["task_names", "next_task_id", "objective"],
         )
         return cls(prompt=prompt, llm=llm, verbose=verbose)
-todo_prompt = PromptTemplate.from_template("Come up with a todo list of 3 most important items for this objective: {objective}.")
-todo_chain = LLMChain(llm=OpenAI(temperature=0), prompt=todo_prompt)
-tools = [
-       Tool(
-                        name = "ZGPA",
-                        func=中国平安年报查询,
-                        description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
-                    ),
-                    Tool(
-                        name = "Google",
-                        func=search.run,
-                        description="当您需要搜索互联网时，这个工具非常有用。"
-                    ),
-                    Tool(
-                    name="维基",
-                    func=wikipedia.run,
-                    description="当您需要搜索百科全书时，这个工具非常有用。"
-                ),
-                    Tool(
-                    name = "ShHFZ",
-                    func=双汇发展年报查询,
-                    description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
-                ),
-    Tool(
-        name = "TODO",
-        func=todo_chain.run,
-        description="useful for when you need to come up with todo lists. Input: an objective to create a todo list for. Output: a todo list of three most important items for that objective. Please be very clear what the objective is!"
-    )
-]
-prefix = """尽力给出任务的解答: {objective}. Take into account these previously completed tasks: {context}."""
-suffix = """Question: {task}
-{agent_scratchpad}
-All inputs and output tokens are limited to 3800.最后把输出的Final Answer结果翻译成中文
-"""
-prompt = ZeroShotAgent.create_prompt(
-    tools, 
-    prefix=prefix, 
-    suffix=suffix, 
-    input_variables=["objective", "task", "context","agent_scratchpad"]
-)
+
 def get_next_task(task_creation_chain: LLMChain, result: Dict, task_description: str, task_list: List[str], objective: str) -> List[Dict]:
     """Get the next task."""
     incomplete_tasks = ", ".join(task_list)
@@ -525,4 +486,44 @@ if st.session_state.input_api:
     with tab2:
         st.header("A dog")
         OBJECTIVE = st.text_input('提问','', key="name_input1_2")
+        todo_prompt = PromptTemplate.from_template("Come up with a todo list of 3 most important items for this objective: {objective}.")
+        todo_chain = LLMChain(llm=OpenAI(temperature=0.2,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
+        tools = [
+               Tool(
+                                name = "ZGPA",
+                                func=中国平安年报查询,
+                                description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
+                            ),
+                            Tool(
+                                name = "Google",
+                                func=search.run,
+                                description="当您需要搜索互联网时，这个工具非常有用。"
+                            ),
+                            Tool(
+                            name="维基",
+                            func=wikipedia.run,
+                            description="当您需要搜索百科全书时，这个工具非常有用。"
+                        ),
+                            Tool(
+                            name = "ShHFZ",
+                            func=双汇发展年报查询,
+                            description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
+                        ),
+            Tool(
+                name = "TODO",
+                func=todo_chain.run,
+                description="useful for when you need to come up with todo lists. Input: an objective to create a todo list for. Output: a todo list of three most important items for that objective. Please be very clear what the objective is!"
+            )
+        ]
+        prefix = """尽力给出任务的解答: {objective}. Take into account these previously completed tasks: {context}."""
+        suffix = """Question: {task}
+        {agent_scratchpad}
+        All inputs and output tokens are limited to 3800.最后把输出的Final Answer结果翻译成中文
+        """
+        prompt = ZeroShotAgent.create_prompt(
+            tools, 
+            prefix=prefix, 
+            suffix=suffix, 
+            input_variables=["objective", "task", "context","agent_scratchpad"]
+        )
 
