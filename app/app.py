@@ -19,6 +19,7 @@ from langchain.prompts import StringPromptTemplate,PromptTemplate
 from langchain import OpenAI, SerpAPIWrapper, LLMChain
 from langchain.schema import AgentAction, AgentFinish,Document
 from langchain.document_loaders import PyPDFLoader
+from langchain.docstore import InMemoryDocstore
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain.chains.base import Chain
