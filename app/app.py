@@ -490,7 +490,6 @@ if st.session_state.input_api:
             elapsed_time = end_time - start_time
             st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
     with tab2:
-        st.header("A dog")
         OBJECTIVE = st.text_input('提问','', key="name_input1_2")
         todo_prompt = PromptTemplate.from_template("Come up with a todo list of 3 most important items for this objective: {objective}.")
         todo_chain = LLMChain(llm=OpenAI(temperature=temperature,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
