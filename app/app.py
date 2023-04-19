@@ -47,6 +47,8 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
+显示 = ""
+
 class TaskCreationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
