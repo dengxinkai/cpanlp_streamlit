@@ -304,7 +304,7 @@ if st.session_state.input_api:
                 )
     ALL_TOOLS = [zgpa_tool,shhfz_tool,search_tool,wiki_tool]
     docs = [Document(page_content=t.description, metadata={"index": i}) for i, t in enumerate(ALL_TOOLS)]
-    vector_store = FAISS.from_documents(docs, OpenAIEmbeddings(openai_api_key=st.session_state.input_api))
+    vector_store = FAISS.from_documents(docs, embeddings)
     retriever = vector_store.as_retriever()
     def get_tools(query):
         docs = retriever.get_relevant_documents(query)
@@ -397,7 +397,6 @@ if st.session_state.input_api:
             length_function=len,
         )
         texts = text_splitter.split_documents(documents)
-        embeddings = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
@@ -533,6 +532,8 @@ if st.session_state.input_api:
         verbose=True
         # If None, will keep on going forever
         max_iterations: Optional[int] = 3
+        index = faiss.IndexFlatL2(1536)
+        vectorstore = FAISS(embeddings.embed_query, index, InMemoryDocstore({}), {})
         baby_agi = BabyAGI.from_llm(
             llm=llm,
             vectorstore=vectorstore,
