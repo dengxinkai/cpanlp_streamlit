@@ -52,14 +52,16 @@ st.set_page_config(
 class TaskCreationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
-        task_creation_template = ('''您是一款任务创建AI，使用执行代理的结果来创建具有以下目标的主任务：{objective}。
-            上一个已完成的任务结果为：{result}。
-            该结果基于此任务描述：{task_description}。
-            这些是未完成的任务：{incomplete_tasks}。
-            根据结果，创建新的任务，由AI系统完成，且不与未完成的任务重叠。
-            将任务作为数组返回。
-            请注意，此模型的最大上下文长度为3900个标记。
-            '''
+        task_creation_template = (
+            "You are an task creation AI that uses the result of an execution agent"
+            " to create the main task with the following objective: {objective},"
+            " The last completed task has the result: {result}."
+            " This result was based on this task description: {task_description}."
+            " These are incomplete tasks: {incomplete_tasks}."
+            " Based on the result, create new tasks to be completed"
+            " by the AI system that do not overlap with incomplete tasks."
+            " Return the tasks as an array."
+            " Be careful,This model's maximum context length is 3900 tokens."
         )
         prompt = PromptTemplate(
             template=task_creation_template,
@@ -70,14 +72,15 @@ class TaskPrioritizationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
         """Get the response parser."""
-        task_prioritization_template = ('''您是一款任务优先级AI，负责清理以下任务{task_names}的格式并重新排序。
-            请考虑您团队的最终目标：{objective}。
-            请勿删除任何任务。将结果作为编号列表返回，如下所示：
-            1
-            2
-            以{next_task_id}为起始编号。
-            请注意，此模型的最大上下文长度为3800个标记。
-            '''
+        task_prioritization_template = (
+            "You are an task prioritization AI tasked with cleaning the formatting of and reprioritizing"
+            " the following tasks: {task_names}."
+            " Consider the ultimate objective of your team: {objective}."
+            " Do not remove any tasks. Return the result as a numbered list, like:"
+            " 1"
+            " 2"
+            " Start the task list with number {next_task_id}."
+            " Be careful,This model's maximum context length is 3800 tokens."
         )
         prompt = PromptTemplate(
             template=task_prioritization_template,
