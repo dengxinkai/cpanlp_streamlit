@@ -19,6 +19,7 @@ from langchain.schema import AgentAction, AgentFinish,Document
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
+from langchain.chains.base import Chain
 from langchain.llms import OpenAI,BaseLLM
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma,FAISS
