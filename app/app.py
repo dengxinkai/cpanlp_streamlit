@@ -31,11 +31,13 @@ from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.chat_models import ChatOpenAI
 from langchain.utilities import GoogleSearchAPIWrapper,WikipediaAPIWrapper,TextRequestsWrapper
+from langchain.callbacks import get_openai_callback
 from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
 from utils import template3
+
 st.set_page_config(
     page_title="可读-财报GPT",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -387,91 +389,96 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
-        with st.expander("[可选]上传"):
-            file = st.file_uploader("PDF文件", type="pdf")
-            input_text = st.text_input('PDF网址', '')
-            qa = 分析(input_text)
-        input_text1 = st.text_input(':blue[查询]','')
-        if st.button('确认'):
-            start_time = time.time()
-            if not qa:
-                query = input_text1
-                prompt3 = CustomPromptTemplate(
+        with get_openai_callback() as cb:
+            with st.expander("[可选]上传"):
+                file = st.file_uploader("PDF文件", type="pdf")
+                input_text = st.text_input('PDF网址', '')
+                qa = 分析(input_text)
+            input_text1 = st.text_input(':blue[查询]','')
+            if st.button('确认'):
+                start_time = time.time()
+                if not qa:
+                    query = input_text1
+                    prompt3 = CustomPromptTemplate(
+                        template=template3,
+                        tools_getter=get_tools,
+                        input_variables=["input", "intermediate_steps"])
+                    llm_chain = LLMChain(llm=llm, prompt=prompt3)
+                    tools = [
+                        Tool(
+                            name = "ZGPA",
+                            func=中国平安年报查询,
+                            description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
+                        ),
+                        Tool(
+                            name = "Google",
+                            func=search.run,
+                            description="当您需要搜索互联网时，这个工具非常有用。"
+                        ),
+                        Tool(
+                        name="维基",
+                        func=wikipedia.run,
+                        description="当您需要搜索百科全书时，这个工具非常有用。"
+                    ),
+                        Tool(
+                        name = "ShHFZ",
+                        func=双汇发展年报查询,
+                        description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
+                    )]
+                    tool_names = [tool.name for tool in tools]
+                    agent3 = LLMSingleActionAgent(
+                            llm_chain=llm_chain, 
+                            output_parser=output_parser,
+                            stop=["\nObservation:"], 
+                            allowed_tools=tool_names
+                        )
+                    agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+                    response = agent_executor({"input":query})
+                    st.caption(response["output"])
+                    with st.expander("查看过程"):
+                        st.write(response["intermediate_steps"])
+                else:
+                    query = input_text1
+                    tools = [Tool(
+                        name = "上传",
+                        func=qa.run,
+                        description="当您需要回答有关上传信息的问题时，这个工具非常有用。"
+                        ),
+                              Tool(
+                        name="维基",
+                        func=wikipedia.run,
+                        description="当您需要搜索百科全书时，这个工具非常有用。"
+                        ),
+                              Tool(
+                            name = "Google",
+                            func=search.run,
+                            description="当您需要搜索互联网时，这个工具非常有用。"
+                        )
+                       ]
+                    tool_names = [tool.name for tool in tools]
+                    prompt_Upload = CustomPromptTemplate_Upload(
                     template=template3,
-                    tools_getter=get_tools,
+                    tools=tools,
                     input_variables=["input", "intermediate_steps"])
-                llm_chain = LLMChain(llm=llm, prompt=prompt3)
-                tools = [
-                    Tool(
-                        name = "ZGPA",
-                        func=中国平安年报查询,
-                        description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
-                    ),
-                    Tool(
-                        name = "Google",
-                        func=search.run,
-                        description="当您需要搜索互联网时，这个工具非常有用。"
-                    ),
-                    Tool(
-                    name="维基",
-                    func=wikipedia.run,
-                    description="当您需要搜索百科全书时，这个工具非常有用。"
-                ),
-                    Tool(
-                    name = "ShHFZ",
-                    func=双汇发展年报查询,
-                    description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
-                )]
-                tool_names = [tool.name for tool in tools]
-                agent3 = LLMSingleActionAgent(
+                    llm_chain = LLMChain(llm=llm, prompt=prompt_Upload)
+                    agent3 = LLMSingleActionAgent(
                         llm_chain=llm_chain, 
                         output_parser=output_parser,
                         stop=["\nObservation:"], 
                         allowed_tools=tool_names
                     )
-                agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
-                response = agent_executor({"input":query})
-                st.caption(response["output"])
-                with st.expander("查看过程"):
-                    st.write(response["intermediate_steps"])
-            else:
-                query = input_text1
-                tools = [Tool(
-                    name = "上传",
-                    func=qa.run,
-                    description="当您需要回答有关上传信息的问题时，这个工具非常有用。"
-                    ),
-                          Tool(
-                    name="维基",
-                    func=wikipedia.run,
-                    description="当您需要搜索百科全书时，这个工具非常有用。"
-                    ),
-                          Tool(
-                        name = "Google",
-                        func=search.run,
-                        description="当您需要搜索互联网时，这个工具非常有用。"
-                    )
-                   ]
-                tool_names = [tool.name for tool in tools]
-                prompt_Upload = CustomPromptTemplate_Upload(
-                template=template3,
-                tools=tools,
-                input_variables=["input", "intermediate_steps"])
-                llm_chain = LLMChain(llm=llm, prompt=prompt_Upload)
-                agent3 = LLMSingleActionAgent(
-                    llm_chain=llm_chain, 
-                    output_parser=output_parser,
-                    stop=["\nObservation:"], 
-                    allowed_tools=tool_names
-                )
-                agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
-                response = agent_executor({"input":query})
-                st.caption(response["output"])
-                with st.expander("查看过程"):
-                    st.write(response["intermediate_steps"])
-            end_time = time.time()
-            elapsed_time = end_time - start_time
-            st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+                    agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
+                    response = agent_executor({"input":query})
+                    st.caption(response["output"])
+                    with st.expander("查看过程"):
+                        st.write(response["intermediate_steps"])
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+                st.write(f"Total Tokens: {cb.total_tokens}") 
+                st.write(f"Prompt Tokens: {cb.prompt_tokens}") 
+                st.write(f"Completion Tokens: {cb.completion_tokens}") 
+                st.write(f"Total Cost (USD): ${cb.total_cost}") 
     with tab2:
         OBJECTIVE = st.text_input('提问','', key="name_input1_2")
         todo_prompt = PromptTemplate.from_template("尽量以少的token准确快速给出这个目标最重要的待办事项： {objective}.")
