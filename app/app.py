@@ -480,63 +480,72 @@ if st.session_state.input_api:
                 st.write(f"Completion Tokens: {cb.completion_tokens}") 
                 st.write(f"Total Cost (USD): ${cb.total_cost}") 
     with tab2:
-        OBJECTIVE = st.text_input('提问','', key="name_input1_2")
-        todo_prompt = PromptTemplate.from_template("尽量以少的token准确快速给出这个目标最重要的待办事项： {objective}.")
-        todo_chain = LLMChain(llm=OpenAI(temperature=temperature,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
-        tools = [
-               Tool(
-                                name = "ZGPA",
-                                func=中国平安年报查询,
-                                description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
+        with get_openai_callback() as cb:
+            OBJECTIVE = st.text_input('提问','', key="name_input1_2")
+            todo_prompt = PromptTemplate.from_template("尽量以少的token准确快速给出这个目标最重要的待办事项： {objective}.")
+            todo_chain = LLMChain(llm=OpenAI(temperature=temperature,openai_api_key=st.session_state.input_api), prompt=todo_prompt)
+            tools = [
+                   Tool(
+                                    name = "ZGPA",
+                                    func=中国平安年报查询,
+                                    description="当您需要回答有关中国平安(601318)中文问题时，这个工具非常有用。输入是中文"
+                                ),
+                                Tool(
+                                    name = "Google",
+                                    func=search.run,
+                                    description="当您需要搜索互联网时，这个工具非常有用。"
+                                ),
+                                Tool(
+                                name="维基",
+                                func=wikipedia.run,
+                                description="当您需要搜索百科全书时，这个工具非常有用。"
                             ),
-                            Tool(
-                                name = "Google",
-                                func=search.run,
-                                description="当您需要搜索互联网时，这个工具非常有用。"
+                                Tool(
+                                name = "ShHFZ",
+                                func=双汇发展年报查询,
+                                description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
                             ),
-                            Tool(
-                            name="维基",
-                            func=wikipedia.run,
-                            description="当您需要搜索百科全书时，这个工具非常有用。"
-                        ),
-                            Tool(
-                            name = "ShHFZ",
-                            func=双汇发展年报查询,
-                            description="当您需要回答有关双汇发展(000895)中文问题时，这个工具非常有用。输入是中文"
-                        ),
-            Tool(
-                name = "TODO",
-                func=todo_chain.run,
-                description="此功能可用于创建待办事项清单。输入：要为其创建待办事项清单的目标。输出：该目标的最重要事项的待办事项。请非常清楚地说明目标是什么。!"
+                Tool(
+                    name = "TODO",
+                    func=todo_chain.run,
+                    description="此功能可用于创建待办事项清单。输入：要为其创建待办事项清单的目标。输出：该目标的最重要事项的待办事项。请非常清楚地说明目标是什么。!"
+                )
+            ]
+            prefix = """准确快速给出任务的解答: {objective}. 考虑到先前完成的这些任务：{context}."""
+            suffix = """Question: {task}
+            {agent_scratchpad}
+            都用中文表示，除了格式中的提取前缀
+            All inputs、output and context tokens are in total limited to 3800.
+            最终结果用中文表示.
+            """
+            prompt = ZeroShotAgent.create_prompt(
+                tools, 
+                prefix=prefix, 
+                suffix=suffix, 
+                input_variables=["objective", "task", "context","agent_scratchpad"]
             )
-        ]
-        prefix = """准确快速给出任务的解答: {objective}. 考虑到先前完成的这些任务：{context}."""
-        suffix = """Question: {task}
-        {agent_scratchpad}
-        都用中文表示，除了格式中的提取前缀
-        All inputs、output and context tokens are in total limited to 3800.
-        最终结果用中文表示.
-        """
-        prompt = ZeroShotAgent.create_prompt(
-            tools, 
-            prefix=prefix, 
-            suffix=suffix, 
-            input_variables=["objective", "task", "context","agent_scratchpad"]
-        )
-        verbose=True
-        # If None, will keep on going forever
-        max_iterations: Optional[int] = 3
-        index = faiss.IndexFlatL2(1536)
-        vectorstore = FAISS(embeddings.embed_query, index, InMemoryDocstore({}), {})
-        baby_agi = BabyAGI.from_llm(
-            llm=llm,
-            vectorstore=vectorstore,
-            verbose=verbose,
-            max_iterations=max_iterations
-        )
-        if st.button('问答'):
-            baby_agi({"objective": OBJECTIVE})
-        text_list = 显示.split('\n')
-        for i in text_list:
-            st.write(i)
+            verbose=True
+            # If None, will keep on going forever
+            max_iterations: Optional[int] = 3
+            index = faiss.IndexFlatL2(1536)
+            vectorstore = FAISS(embeddings.embed_query, index, InMemoryDocstore({}), {})
+            baby_agi = BabyAGI.from_llm(
+                llm=llm,
+                vectorstore=vectorstore,
+                verbose=verbose,
+                max_iterations=max_iterations
+            )
+            if st.button('问答'):
+                start_time = time.time()
+                baby_agi({"objective": OBJECTIVE})
+                text_list = 显示.split('\n')
+                for i in text_list:
+                    st.write(i)
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+                st.write(f"Total Tokens: {cb.total_tokens}") 
+                st.write(f"Prompt Tokens: {cb.prompt_tokens}") 
+                st.write(f"Completion Tokens: {cb.completion_tokens}") 
+                st.write(f"Total Cost (USD): ${cb.total_cost}") 
 
