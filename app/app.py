@@ -225,8 +225,7 @@ class BabyAGI(Chain, BaseModel):
         )
 wikipedia.set_lang("zh")
 with st.sidebar:
-    if st.session_state.input_api is None:
-        st.info('请先输入正确的openai api-key')
+    st.info('请先输入正确的openai api-key')
     st.text_input('api-key','', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
         temperature = st.slider("`temperature`", 0.01, 0.99, 0.3)
