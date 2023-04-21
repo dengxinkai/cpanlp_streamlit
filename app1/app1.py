@@ -394,6 +394,7 @@ with st.expander("数字人生成"):
            st.session_state[name] = a
 if st.session_state != []:
     for a in st.session_state:
-        st.write("slider", a.name, "checkbox", a.age)
+        if isinstance(a, GenerativeAgent):
+            st.write("slider", a.name, "checkbox", a.age)
 
     
