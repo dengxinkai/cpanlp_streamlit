@@ -370,10 +370,10 @@ def create_new_memory_retriever():
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 with st.expander("数字人生成"):
     with st.form("my_form"):
-       name = st.text_input('姓名','', key="name_input1_6")
+       name = st.text_input('姓名','jack', key="name_input1_6")
        age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1)
-       traits = st.text_input('特征','', key="name_input1_4")
-       status = st.text_input('状态','', key="status_input1_5")
+       traits = st.text_input('特征','乐观', key="name_input1_4")
+       status = st.text_input('状态','考博中', key="status_input1_5")
        reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1)
        # Every form must have a submit button.
        submitted = st.form_submit_button("生成数字人")
