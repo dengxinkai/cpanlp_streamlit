@@ -373,7 +373,7 @@ with st.form("my_form"):
    OBJECTIVE = st.text_input('提问','', key="name_input1_7")
    name = st.text_input('name','', key="name_input1_6")
 
-   age = st.number_input('Insert a number')
+   age = st.number_input('Insert a number',min_value=0, max_value=100, value=20, step=1)
 
    traits = st.text_input('traits','', key="name_input1_4")
    status = st.text_input('status','', key="status_input1_5")
