@@ -379,8 +379,10 @@ with st.expander("数字人生成"):
        # Every form must have a submit button.
        submitted = st.form_submit_button("生成数字人")
        if submitted:
-           global agents        
-           agents.append(GenerativeAgent(name=name, 
+           global agents 
+           
+
+           a=GenerativeAgent(name=name, 
                       age=age, 
                       traits=traits, # You can add more persistent traits here 
                       status=status, # When connected to a virtual world, we can have the characters update their status
@@ -391,8 +393,9 @@ with st.expander("数字人生成"):
                       ],
                         reflection_threshold = reflection_threshold,
                      ))
-if agents != []:
-    for a in agents:
+           st.session_state[name] = a
+if st.session_state != []:
+    for a in st.session_state:
         st.write("slider", a.name, "checkbox", a.age)
 
     
