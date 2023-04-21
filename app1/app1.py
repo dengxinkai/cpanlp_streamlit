@@ -393,7 +393,7 @@ with st.expander("数字人生成"):
            st.session_state[agent_name] = a
 for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
-        st.write("slider", agent.name, "checkbox", agent.age)
+        st.write(agent.name)
      
 
 
