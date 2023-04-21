@@ -394,6 +394,7 @@ with st.expander("数字人生成"):
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
             agents[name] = agent
+            st.session_state[name] = id(agent)
             st.write("当前存在的数字人：", list(agents.keys()))  
 for i in agents.items():
     st.write("11")
