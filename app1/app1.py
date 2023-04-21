@@ -396,17 +396,9 @@ agent_name = f"{name}_{age}"
 st.session_state[agent_name] = a  
 st.write(len(st.session_state))
 for agent_name, agent in st.session_state.items():
-    if isinstance(agent, GenerativeAgent):
-        st.header(agent_name)
+#     if isinstance(agent, GenerativeAgent):
+    st.header(agent_name)
 all_attrs = dir(st.session_state)
-
-# 遍历属性和方法名
-for attr_name in all_attrs:
-    if not attr_name.startswith("_"):
-        # 获取属性值或方法
-        attr_value = getattr(st.session_state, attr_name)
-        # 展示属性名和值
-        st.write(f"{attr_name}: {attr_value}")
 
 
 
