@@ -393,22 +393,12 @@ a=GenerativeAgent(name=name,
                         reflection_threshold = reflection_threshold,
                      )           
 agent_name = f"{name}_{age}"
-st.session_state[agent_name] = a           
+st.session_state[agent_name] = a  
+st.write(len(st.session_state))
 for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
         st.write(agent_name)
      
-agent_names = []
-for key, value in st.session_state.items():
-    if isinstance(value, GenerativeAgent):
-        agent_names.append(value.name)
-
-st.write("当前存在的数字人：")
-if len(agent_names) > 0:
-    for name in agent_names:
-        st.write(name)
-else:
-    st.write("当前不存在数字人。")
 
 
 
