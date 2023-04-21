@@ -383,5 +383,6 @@ with st.expander("数字人生成"):
 agent_name = f"{name}_{age}"
 st.session_state.agent_name = GenerativeAgent(name=name, age=age, traits=traits,status=status,memory_retriever=create_new_memory_retriever(),llm=LLM,daily_summaries = [("杨丹是邓新凯的博士生导师，他是北京外国语大学的校长，平时比较忙")],reflection_threshold = reflection_threshold,)           
 for agent_name, agent in st.session_state.items():
-    st.header(agent_name)
-    st.header(agent.name)
+    if agent_name != "input_api":
+        st.header(agent_name)
+        st.header(agent.name)
