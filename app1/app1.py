@@ -370,13 +370,12 @@ def create_new_memory_retriever():
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)    
 with st.form("my_form"):
    st.write("Inside the form")
-   OBJECTIVE = st.text_input('提问','', key="name_input1_2")
-   name = st.text_input('name','', key="name_input1_2")
+   OBJECTIVE = st.text_input('提问','', key="name_input1_7")
+   name = st.text_input('name','', key="name_input1_6")
 
-   age = st.text_input('age','', key="name_input1_3")
+   age = st.text_input('age','', key="age_input")
    traits = st.text_input('traits','', key="name_input1_4")
-   OBJECTIVE = st.text_input('提问','', key="name_input1_2")
-   status = st.text_input('status','', key="name_input1_5")
+   status = st.text_input('status','', key="status_input1_5")
 
    slider_val = st.slider("Form slider")
    checkbox_val = st.checkbox("Form checkbox")
