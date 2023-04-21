@@ -378,9 +378,6 @@ with st.expander("数字人生成"):
        # Every form must have a submit button.
        submitted = st.form_submit_button("生成数字人")
        if submitted:
-           global agents 
-        
-
            a=GenerativeAgent(name=name, 
                       age=age, 
                       traits=traits, # You can add more persistent traits here 
@@ -392,10 +389,21 @@ with st.expander("数字人生成"):
                       ],
                         reflection_threshold = reflection_threshold,
                      )
-           agents.append(a)
+           agent_name = f"agent_{len(st.session_state)}"
+           st.session_state[agent_name] = a
 if st.session_state != []:
     for a in st.session_state:
         if isinstance(a, GenerativeAgent):
             st.write("slider", a.name, "checkbox", a.age)
+for agent_name, agent in st.session_state.items():
+    if isinstance(agent, GenerativeAgent):
+        st.write("slider", agent.name, "checkbox", agent.age)
+     
+
+
+
+
+
+
 
     
