@@ -385,4 +385,4 @@ st.session_state.agent_name = GenerativeAgent(name=name, age=age, traits=traits,
 for agent_name, agent in st.session_state.items():
     if agent_name != "input_api":
         st.header(agent_name)
-        st.header(agent.name)
+        st.header(agent)
