@@ -384,7 +384,7 @@ with st.form("my_form"):
    submitted = st.form_submit_button("生成数字人")
    if submitted:
        杨丹 = GenerativeAgent(name="杨丹", 
-                  age=age, 
+                  age=2, 
                   traits="富有责任感", # You can add more persistent traits here 
                   status="当好一个校长", # When connected to a virtual world, we can have the characters update their status
                   memory_retriever=create_new_memory_retriever(),
