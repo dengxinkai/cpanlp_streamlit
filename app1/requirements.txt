@@ -2,7 +2,7 @@ streamlit
 pandas
 scikit-learn
 numpy
-langchain -U
+langchain
 openai
 tiktoken
 chromadb
