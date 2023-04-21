@@ -378,7 +378,10 @@ with st.expander("数字人生成"):
        # Every form must have a submit button.
        submitted = st.form_submit_button("生成数字人")
        if submitted:
-           a=GenerativeAgent(name=name, 
+            st.write("当前存在的数字人：")
+
+            
+a=GenerativeAgent(name=name, 
                       age=age, 
                       traits=traits, # You can add more persistent traits here 
                       status=status, # When connected to a virtual world, we can have the characters update their status
@@ -388,7 +391,7 @@ with st.expander("数字人生成"):
                           ("杨丹是邓新凯的博士生导师，他是北京外国语大学的校长，平时比较忙")
                       ],
                         reflection_threshold = reflection_threshold,
-                     )
+                     )           
 agent_name = f"{name}_{age}"
 st.session_state[agent_name] = a           
 for agent_name, agent in st.session_state.items():
