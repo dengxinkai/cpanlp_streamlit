@@ -395,7 +395,17 @@ for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
         st.write(agent.name)
      
+agent_names = []
+for key, value in st.session_state.items():
+    if isinstance(value, GenerativeAgent):
+        agent_names.append(value.name)
 
+st.write("当前存在的数字人：")
+if len(agent_names) > 0:
+    for name in agent_names:
+        st.write(name)
+else:
+    st.write("当前不存在数字人。")
 
 
 
