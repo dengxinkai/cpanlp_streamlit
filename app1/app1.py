@@ -373,7 +373,8 @@ with st.form("my_form"):
    OBJECTIVE = st.text_input('提问','', key="name_input1_7")
    name = st.text_input('name','', key="name_input1_6")
 
-   age = st.text_input('age','', key="age_input")
+   age = st.number_input('Insert a number')
+
    traits = st.text_input('traits','', key="name_input1_4")
    status = st.text_input('status','', key="status_input1_5")
 
@@ -383,10 +384,10 @@ with st.form("my_form"):
    # Every form must have a submit button.
    submitted = st.form_submit_button("生成数字人")
    if submitted:
-       杨丹 = GenerativeAgent(name="杨丹", 
-                  age=2, 
-                  traits="富有责任感", # You can add more persistent traits here 
-                  status="当好一个校长", # When connected to a virtual world, we can have the characters update their status
+       杨丹 = GenerativeAgent(name=name, 
+                  age=age, 
+                  traits=traits, # You can add more persistent traits here 
+                  status=status, # When connected to a virtual world, we can have the characters update their status
                   memory_retriever=create_new_memory_retriever(),
                   llm=LLM,
                   daily_summaries = [
@@ -394,6 +395,6 @@ with st.form("my_form"):
                   ],
                     reflection_threshold = 5,
                  )
-       st.write("slider", slider_val, "checkbox", checkbox_val)
+       st.write("slider", 杨丹.name, "checkbox", 杨丹.age)
 
     
