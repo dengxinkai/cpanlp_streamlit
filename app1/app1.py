@@ -397,7 +397,7 @@ st.session_state[agent_name] = a
 st.write(len(st.session_state))
 for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
-        st.write(agent_name)
+        st.header(agent_name)
      
 
 
