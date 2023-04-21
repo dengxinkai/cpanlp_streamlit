@@ -371,23 +371,30 @@ def create_new_memory_retriever():
 with st.form("my_form"):
    st.write("Inside the form")
    OBJECTIVE = st.text_input('提问','', key="name_input1_2")
+   name = st.text_input('name','', key="name_input1_2")
+
+   age = st.text_input('age','', key="name_input1_3")
+   traits = st.text_input('traits','', key="name_input1_4")
+   OBJECTIVE = st.text_input('提问','', key="name_input1_2")
+   status = st.text_input('status','', key="name_input1_5")
 
    slider_val = st.slider("Form slider")
    checkbox_val = st.checkbox("Form checkbox")
 
    # Every form must have a submit button.
-   submitted = st.form_submit_button("Submit")
+   submitted = st.form_submit_button("生成数字人")
    if submitted:
+       杨丹 = GenerativeAgent(name="杨丹", 
+                  age=age, 
+                  traits="富有责任感", # You can add more persistent traits here 
+                  status="当好一个校长", # When connected to a virtual world, we can have the characters update their status
+                  memory_retriever=create_new_memory_retriever(),
+                  llm=LLM,
+                  daily_summaries = [
+                      ("杨丹是邓新凯的博士生导师，他是北京外国语大学的校长，平时比较忙")
+                  ],
+                    reflection_threshold = 5,
+                 )
        st.write("slider", slider_val, "checkbox", checkbox_val)
 
-# 杨丹 = GenerativeAgent(name="杨丹", 
-#               age=50, 
-#               traits="富有责任感", # You can add more persistent traits here 
-#               status="当好一个校长", # When connected to a virtual world, we can have the characters update their status
-#               memory_retriever=create_new_memory_retriever(),
-#               llm=LLM,
-#               daily_summaries = [
-#                   ("杨丹是邓新凯的博士生导师，他是北京外国语大学的校长，平时比较忙")
-#               ],
-#                 reflection_threshold = 5,
-#              )
+    
