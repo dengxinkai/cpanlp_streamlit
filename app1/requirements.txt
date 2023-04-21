@@ -2,7 +2,7 @@ streamlit
 pandas
 scikit-learn
 numpy
-langchain
+langchain == 0.0.145
 openai
 tiktoken
 chromadb
