@@ -392,7 +392,7 @@ with st.expander("数字人生成"):
                           ("杨丹是邓新凯的博士生导师，他是北京外国语大学的校长，平时比较忙")
                       ],
                         reflection_threshold = reflection_threshold,
-                     ))
+                     )
            st.session_state[name] = a
 if st.session_state != []:
     for a in st.session_state:
