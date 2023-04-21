@@ -391,10 +391,6 @@ with st.expander("数字人生成"):
                      )
            agent_name = f"agent_{len(st.session_state)}"
            st.session_state[agent_name] = a
-if st.session_state != []:
-    for a in st.session_state:
-        if isinstance(a, GenerativeAgent):
-            st.write("slider", a.name, "checkbox", a.age)
 for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
         st.write("slider", agent.name, "checkbox", agent.age)
