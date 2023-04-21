@@ -368,9 +368,6 @@ def create_new_memory_retriever():
     index = faiss.IndexFlatL2(embedding_size)
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
-agents = {}
-
-agents = {}
 
 with st.expander("数字人生成"):
     with st.form("my_form"):
@@ -396,27 +393,7 @@ with st.expander("数字人生成"):
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
             agents[name] = agent
-            st.session_state[name] = {'agent_id': id(agent)}
-            st.write("当前存在的数字人：", list(agents.keys()))
-
-with st.expander("数字人列表"):
-    if len(agents) > 0:
-        for name, state in st.session_state.items():
-            if 'agent_id' in state:
-                agent = GenerativeAgent(name=name, 
-                    age=state['agent_id'].age,
-                    traits=state['agent_id'].traits,
-                    status=state['agent_id'].status,
-                    memory_retriever=create_new_memory_retriever(),
-                    llm=LLM,
-                    daily_summaries = [
-                        "正在为创业找寻合作伙伴",
-                        "正在烦恼如何博士毕业",
-                        "吃饭不规律",
-                    ],
-                    reflection_threshold = state['agent_id'].reflection_threshold
-                )
-                agents[name] = agent
-        st.write("当前存在的数字人：", list(agents.keys()))
-    else:
-        st.write("当前没有数字人。")
+            st.session_state[name] = id(agent)
+            st.write("当前存在的数字人：", list(agents.keys()))  
+for i in agents.items():
+    st.write("11")
