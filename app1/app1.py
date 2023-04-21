@@ -394,7 +394,6 @@ with st.expander("数字人生成"):
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
             agents[name] = agent
-            st.write("当前存在的数字人：", list(agents.keys()))  
             agent1 = GenerativeAgent(name="dd", 
               age=12,
               traits=traits,
