@@ -378,7 +378,7 @@ with st.expander("数字人生成"):
        # Every form must have a submit button.
        submitted = st.form_submit_button("生成数字人")
        if submitted:
-           global agents 
+           global agents = []
 
            a=GenerativeAgent(name=name, 
                       age=age, 
