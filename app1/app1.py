@@ -389,7 +389,7 @@ with st.expander("数字人生成"):
                       ],
                         reflection_threshold = reflection_threshold,
                      )
-           agent_name = f"agent_{len(st.session_state)}"
+           agent_name = f"{name}_{age}"
            st.session_state[agent_name] = a
 for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
