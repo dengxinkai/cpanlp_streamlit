@@ -381,6 +381,18 @@ with st.expander("数字人生成"):
         # Every form must have a submit button.
         submitted = st.form_submit_button("生成数字人")
         if submitted:
-            agent = GenerativeAgent(name=name, age=age, traits=traits, status=status, reflection_threshold=reflection_threshold)
+            agent = GenerativeAgent(name=name, 
+              age=age,
+              traits=traits,
+              status=status,
+              memory_retriever=create_new_memory_retriever(),
+              llm=LLM,
+              daily_summaries = [
+                   "正在为创业找寻合作伙伴",
+                   "正在烦恼如何博士毕业",
+                   "吃饭不规律",
+               ],
+               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+             )
             agents[name] = agent
             st.write("当前存在的数字人：", list(agents.keys()))  
