@@ -393,7 +393,21 @@ with st.expander("数字人生成"):
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
             agents[name] = agent
-            st.session_state[name] = id(agent)
+            st.write("当前存在的数字人：", list(agents.keys()))  
+            agent1 = GenerativeAgent(name="dd", 
+              age=12,
+              traits=traits,
+              status=status,
+              memory_retriever=create_new_memory_retriever(),
+              llm=LLM,
+              daily_summaries = [
+                   "正在为创业找寻合作伙伴",
+                   "正在烦恼如何博士毕业",
+                   "吃饭不规律",
+               ],
+               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+             )
+            agents["dd"] = agent1
             st.write("当前存在的数字人：", list(agents.keys()))  
 for i in agents.items():
     st.write("11")
