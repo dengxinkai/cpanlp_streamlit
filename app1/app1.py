@@ -67,6 +67,7 @@ with st.sidebar:
 st.title('数字人')
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(max_tokens=1500) # Can be any LLM you want.
+agents=[]
 class GenerativeAgent(BaseModel):
     name: str
     age: int
@@ -378,8 +379,7 @@ with st.expander("数字人生成"):
        # Every form must have a submit button.
        submitted = st.form_submit_button("生成数字人")
        if submitted:
-           agents=[]
-        
+           global agents        
            agents.append(GenerativeAgent(name=name, 
                       age=age, 
                       traits=traits, # You can add more persistent traits here 
@@ -391,7 +391,8 @@ with st.expander("数字人生成"):
                       ],
                         reflection_threshold = reflection_threshold,
                      ))
-for a in agents:
-    st.write("slider", a.name, "checkbox", a.age)
+if agents != []:
+    for a in agents:
+        st.write("slider", a.name, "checkbox", a.age)
 
     
