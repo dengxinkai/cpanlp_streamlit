@@ -396,7 +396,7 @@ agent_name = f"{name}_{age}"
 st.session_state[agent_name] = a           
 for agent_name, agent in st.session_state.items():
     if isinstance(agent, GenerativeAgent):
-        st.write(agent.name)
+        st.write(agent_name)
      
 agent_names = []
 for key, value in st.session_state.items():
