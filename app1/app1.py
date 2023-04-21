@@ -368,18 +368,19 @@ def create_new_memory_retriever():
     index = faiss.IndexFlatL2(embedding_size)
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
+
+agents = {}
+
 with st.expander("数字人生成"):
     with st.form("my_form"):
-       name = st.text_input('姓名','jack', key="name_input1_6")
-       age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1)
-       traits = st.text_input('特征','乐观', key="name_input1_4")
-       status = st.text_input('状态','考博中', key="status_input1_5")
-       reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1)
-       # Every form must have a submit button.
-       submitted = st.form_submit_button("生成数字人")
-       if submitted:
-            st.write("当前存在的数字人：")
-  
-agent_name = f"{name}_{age}"
-a = GenerativeAgent(name=name, age=age, traits=traits,status=status,memory_retriever=create_new_memory_retriever(),llm=LLM,daily_summaries = [("杨丹是邓新凯的博士生导师，他是北京外国语大学的校长，平时比较忙")],reflection_threshold = reflection_threshold,)           
-st.header(a.name)
+        name = st.text_input('姓名','jack', key="name_input1_6")
+        age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1)
+        traits = st.text_input('特征','乐观', key="name_input1_4")
+        status = st.text_input('状态','考博中', key="status_input1_5")
+        reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1)
+        # Every form must have a submit button.
+        submitted = st.form_submit_button("生成数字人")
+        if submitted:
+            agent = GenerativeAgent(name=name, age=age, traits=traits, status=status, reflection_threshold=reflection_threshold)
+            agents[name] = agent
+            st.write("当前存在的数字人：", list(agents.keys()))  
