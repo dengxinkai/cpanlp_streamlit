@@ -391,7 +391,7 @@ with st.expander("数字人生成"):
                       ],
                         reflection_threshold = reflection_threshold,
                      )
-           st.session_state[name] = a
+           st.session_state.append(a)
 if st.session_state != []:
     for a in st.session_state:
         if isinstance(a, GenerativeAgent):
