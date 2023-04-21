@@ -368,7 +368,7 @@ def create_new_memory_retriever():
     index = faiss.IndexFlatL2(embedding_size)
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
-
+@st.cache_resource
 agents = {}
 
 with st.expander("数字人生成"):
