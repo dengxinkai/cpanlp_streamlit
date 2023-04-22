@@ -454,6 +454,8 @@ if st.button('创建',help="创建数字人",type="primary"):
     agent2.add_memory(memory2)
     agentss = [agent1,agent2]
     st.session_state["agentss"] = agentss
+if 'agentss' in st.session_state:  
+    st.info("运行：")  
 if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
     st.divider()
     diag = st.text_input('对话','如何发财', key="diag")
