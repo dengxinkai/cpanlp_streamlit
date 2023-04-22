@@ -447,14 +447,14 @@ if st.button('创建',help="创建数字人",type="primary"):
     agentss = [agent1,agent2]
     st.session_state["agentss"] = agentss
 if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
-diag = st.text_input('对话','如何发财', key="diag")
-if st.button('对话',help="对话生成",type="primary"):
-    with get_openai_callback() as cb:
-        run_conversation(st.session_state["agentss"], diag)
-        st.write(f"Total Tokens: {cb.total_tokens}")
-        st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-        st.write(f"Completion Tokens: {cb.completion_tokens}")
-        st.write(f"Total Cost (USD): ${cb.total_cost}")
+    diag = st.text_input('对话','如何发财', key="diag")
+    if st.button('对话',help="对话生成",type="primary"):
+        with get_openai_callback() as cb:
+            run_conversation(st.session_state["agentss"], diag)
+            st.write(f"Total Tokens: {cb.total_tokens}")
+            st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+            st.write(f"Completion Tokens: {cb.completion_tokens}")
+            st.write(f"Total Cost (USD): ${cb.total_cost}")
 if 'agentss' in st.session_state:        
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
