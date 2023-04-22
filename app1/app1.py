@@ -226,15 +226,11 @@ class GenerativeAgent(BaseModel):
             +f"\n内在特质: {self.traits}"
             +f"\n{self.summary}"
         )
-    
     def get_full_header(self, force_refresh: bool = False) -> str:
         """Return a full header of the agent's status, summary, and current time."""
         summary = self.get_summary(force_refresh=force_refresh)
         current_time_str =  datetime.now().strftime("%B %d, %Y, %I:%M %p")
         return f"{summary}\nIt is {current_time_str}.\n{self.name}'s status: {self.status}"
-
-    
-    
     def _get_entity_from_observation(self, observation: str) -> str:
         prompt = PromptTemplate.from_template(
             "What is the observed entity in the following observation? {observation}"
@@ -243,7 +239,6 @@ class GenerativeAgent(BaseModel):
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(observation=observation).strip()
-
     def _get_entity_action(self, observation: str, entity_name: str) -> str:
         prompt = PromptTemplate.from_template(
             "What is the {entity} doing in the following observation? {observation}"
@@ -252,7 +247,6 @@ class GenerativeAgent(BaseModel):
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(entity=entity_name, observation=observation).strip()
-    
     def _format_memories_to_summarize(self, relevant_memories: List[Document]) -> str:
         content_strs = set()
         content = []
@@ -263,7 +257,6 @@ class GenerativeAgent(BaseModel):
             created_time = mem.metadata["created_at"].strftime("%B %d, %Y, %I:%M %p")
             content.append(f"- {created_time}: {mem.page_content.strip()}")
         return "\n".join([f"{mem}" for mem in content])
-    
     def summarize_related_memories(self, observation: str) -> str:
         """Summarize memories that are most relevant to an observation."""
         entity_name = self._get_entity_from_observation(observation)
@@ -409,7 +402,7 @@ with col1:
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
     status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
     reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=5, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-    memory = st.text_input('记忆','博导', key="mery_input1_5")
+    memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5")
 with col2:
     st.markdown("**:blue[数字人2]**")
     name2 = st.text_input('姓名','Graham', key="name_input2_6")
@@ -417,7 +410,7 @@ with col2:
     traits2 = st.text_input('特征','负责，有大局观，有领导力，乐观', key="name_input2_4",help="性格特征，不同特征用逗号分隔")
     status2 = st.text_input('状态','中国的著名会计学者，博导', key="status_input2_5",help="状态，不同状态用逗号分隔")
     reflection_threshold2 = st.slider("反思阈值",min_value=1, max_value=10, value=5, step=1, key="name_input2_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-    memory2 = st.text_input('记忆','博导', key="mery_input2_5")
+    memory2 = st.text_input('记忆','喜欢做饭，平时做做投资', key="mery_input2_5")
 
 if st.button('创建',help="创建数字人",type="primary"):
     global agent1
@@ -436,7 +429,9 @@ if st.button('创建',help="创建数字人",type="primary"):
        ],
        reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
      )
-    agent1.add_memory(memory)
+    memory_list = memory.split(";|；")
+    for memory in memory_list:
+        agent1.add_memory(memory)
     agents[name] = agent1
     agent2 = GenerativeAgent(name=name2, 
      age=age2,
@@ -451,7 +446,9 @@ if st.button('创建',help="创建数字人",type="primary"):
        ],
        reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
      )
-    agent2.add_memory(memory2)
+    memory2_list = memory2.split(";|；")
+    for memory in memory2_list:
+        agent2.add_memory(memory)
     agentss = [agent1,agent2]
     st.session_state["agentss"] = agentss
 if 'agentss' in st.session_state:  
