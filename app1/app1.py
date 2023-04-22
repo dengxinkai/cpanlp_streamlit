@@ -420,7 +420,7 @@ with st.expander("数字人生成"):
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
-if agent1:
+if agent1 is not None:
     memory = st.text_input('记忆','博导', key="memory_input1_5")
     agent1.add_memory(memory)
 with st.expander("记忆输入"):
