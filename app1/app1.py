@@ -407,6 +407,7 @@ with col2:
 if st.button('Say hello'):
     global agent1
     global agent2
+    global agentss
     agent1 = GenerativeAgent(name=name, 
       age=age,
       traits=traits,
