@@ -475,7 +475,7 @@ if 'agentss' in st.session_state:
     st.divider()
     option = st.selectbox(
     "采访人选择?",
-    (name, name1))
+    (st.session_state["agentss"][0], st.session_state["agentss"][1]))
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
         with get_openai_callback() as cb:
