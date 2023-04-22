@@ -67,7 +67,6 @@ with st.sidebar:
 st.title('数字人')
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(max_tokens=1500) # Can be any LLM you want.
-global agents
 agents={}
 class GenerativeAgent(BaseModel):
     name: str
@@ -372,7 +371,6 @@ def create_new_memory_retriever():
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 
 with st.form("my_form"):
-    global agents
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("数字人1")
@@ -390,6 +388,7 @@ with st.form("my_form"):
         reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
     submitted = st.form_submit_button("生成数字人")
     if submitted:
+        global agents
         agent1 = GenerativeAgent(name=name, 
           age=age,
           traits=traits,
