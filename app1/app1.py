@@ -64,7 +64,7 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-st.title('数字人')
+st.title('数字人对话')
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(max_tokens=1500) # Can be any LLM you want.
 agents={}
@@ -385,9 +385,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
-with st.form("my_form"):
-    global agent1
-    col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
     with col1:
         st.subheader("数字人1")
         name = st.text_input('姓名','邓新凯', key="name_input1_6")
@@ -406,48 +404,51 @@ with st.form("my_form"):
         reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
         memory2 = st.text_input('记忆','博导', key="mery_input2_5")
 
+with st.form("my_form"):
+    global agent1
+    
     submitted = st.form_submit_button("生成数字人")
-    if submitted:
-        global agent1
-        global agent2
-        agent1 = GenerativeAgent(name=name, 
-          age=age,
-          traits=traits,
-          status=status,
-          memory_retriever=create_new_memory_retriever(),
-          llm=LLM,
-          daily_summaries = [
-               "正在为创业找寻合作伙伴",
-               "正在烦恼如何博士毕业",
-               "吃饭不规律",
-           ],
-           reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
-         )
-        agent1.add_memory(memory)
-        agents[name] = agent1
-        agent2 = GenerativeAgent(name=name2, 
-         age=age2,
-          traits=traits2,
-          status=status2,
-          memory_retriever=create_new_memory_retriever(),
-          llm=LLM,
-          daily_summaries = [
-               "正在为创业找寻合作伙伴",
-               "正在烦恼如何博士毕业",
-               "吃饭不规律",
-           ],
-           reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
-         )
-        agent2.add_memory(memory2)
-        agentss = [agent1,agent2]
-        with get_openai_callback() as cb:
-            run_conversation(agentss, "邓新凯说: 杨丹老师，如何写论文")
-            st.write(f"Total Tokens: {cb.total_tokens}")
-            st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-            st.write(f"Completion Tokens: {cb.completion_tokens}")
-            st.write(f"Total Cost (USD): ${cb.total_cost}")
+if st.button('Say hello'):
+    global agent1
+    global agent2
+    agent1 = GenerativeAgent(name=name, 
+      age=age,
+      traits=traits,
+      status=status,
+      memory_retriever=create_new_memory_retriever(),
+      llm=LLM,
+      daily_summaries = [
+           "正在为创业找寻合作伙伴",
+           "正在烦恼如何博士毕业",
+           "吃饭不规律",
+       ],
+       reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+     )
+    agent1.add_memory(memory)
+    agents[name] = agent1
+    agent2 = GenerativeAgent(name=name2, 
+     age=age2,
+      traits=traits2,
+      status=status2,
+      memory_retriever=create_new_memory_retriever(),
+      llm=LLM,
+      daily_summaries = [
+           "正在为创业找寻合作伙伴",
+           "正在烦恼如何博士毕业",
+           "吃饭不规律",
+       ],
+       reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
+     )
+    agent2.add_memory(memory2)
+    agentss = [agent1,agent2]
+    with get_openai_callback() as cb:
+        run_conversation(agentss, "邓新凯说: 杨丹老师，如何写论文")
+        st.write(f"Total Tokens: {cb.total_tokens}")
+        st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+        st.write(f"Completion Tokens: {cb.completion_tokens}")
+        st.write(f"Total Cost (USD): ${cb.total_cost}")
 
-        agents[name2] = agent2
+    agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
