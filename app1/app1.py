@@ -421,7 +421,7 @@ for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
 
 col1, col2 = st.columns(2)
-with st.form("my_form"):
+with st.form("my_form1"):
 
     with col1:
         memory = st.text_input('记忆','博导', key="memory_input1_5")
