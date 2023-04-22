@@ -458,10 +458,13 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
             st.write(f"Total Cost (USD): ${cb.total_cost}")
 if 'agentss' in st.session_state:  
     st.divider()
+    option = st.selectbox(
+    "采访人选择?",
+    (0, 1))
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
         with get_openai_callback() as cb:
-            st.write(interview_agent(st.session_state["agentss"][0], interview))
+            st.write(interview_agent(st.session_state["agentss"][option], interview))
             st.write(f"Total Tokens: {cb.total_tokens}")
             st.write(f"Prompt Tokens: {cb.prompt_tokens}")
             st.write(f"Completion Tokens: {cb.completion_tokens}")
