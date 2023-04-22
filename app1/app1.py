@@ -55,7 +55,7 @@ st.set_page_config(
 
 with st.sidebar:
     if 'input_api' in st.session_state:
-        st.text_input('api-key',st.session_state["input_api"], key="input_api")
+        st.text_input(st.session_state["input_api"], key="input_api")
     else:
         st.info('请先输入正确的openai api-key')
         st.text_input('api-key','', key="input_api")
