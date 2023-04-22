@@ -420,6 +420,8 @@ with st.expander("数字人生成"):
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
+agent1 = agents[name]
+agent2 = agents[name2]
 
 with st.expander("记忆输入"):
     with st.form("my_form1"):
