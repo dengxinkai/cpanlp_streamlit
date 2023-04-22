@@ -51,10 +51,7 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-# st.write(
-#     '<style>body { line-height: 0.2; }</style>',
-#     unsafe_allow_html=True
-# )
+
 
 with st.sidebar:
     if 'input_api' in st.session_state:
