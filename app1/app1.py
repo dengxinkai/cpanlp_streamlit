@@ -374,6 +374,7 @@ with st.expander("数字人生成"):
     with st.form("my_form"):
         col1, col2 = st.columns(2)
         with col1:
+            st.subheader("数字人1",help="你好")
             name = st.text_input('姓名','jack', key="name_input1_6")
             age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
             traits = st.text_input('特征','乐观', key="name_input1_4")
