@@ -371,7 +371,7 @@ def create_new_memory_retriever():
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 def run_conversation(agents: List[GenerativeAgent], initial_observation: str) -> None:
     """Runs a conversation between agents."""
-    _, observation = agents[1].generate_reaction(initial_observation)
+    _, observation = agentss[1].generate_reaction(initial_observation)
     print(observation)
     turns = 0
     while True:
