@@ -471,7 +471,7 @@ if 'agentss' in st.session_state:
             st.success(f"Completion Tokens: {cb.completion_tokens}")
             st.success(f"Total Cost (USD): ${cb.total_cost}")
 if 'agentss' in st.session_state:
-    st.write("当前存在的数字人：")  
+    st.info("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
