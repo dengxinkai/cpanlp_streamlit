@@ -453,8 +453,13 @@ if st.button('创建',help="创建数字人",type="primary"):
 if 'agentss' in st.session_state:  
     st.info("运行：") 
     if st.button('总结',help="采访",type="primary"):
-        for i in st.session_state["agentss"]:
-            i.get_summary(force_refresh=True)
+        with get_openai_callback() as cb:
+            for i in st.session_state["agentss"]:
+                i.get_summary(force_refresh=True)
+            st.success(f"Total Tokens: {cb.total_tokens}")
+            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+            st.success(f"Completion Tokens: {cb.completion_tokens}")
+            st.success(f"Total Cost (USD): ${cb.total_cost}")
 
 if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
     st.divider()
