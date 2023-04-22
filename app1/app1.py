@@ -426,6 +426,8 @@ for x,y in agents.items():
 col1, col2 = st.columns(2)
 if "agent1" in globals():
     memory = st.text_input('记忆','博导', key="mery_input1_5")
+    if st.button('Say hello'):
+        agent1.add(memory)
 
 with st.form("my_form1"):
     memory = st.text_input('记忆','博导', key="memory_input1_5")
