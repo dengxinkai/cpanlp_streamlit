@@ -420,3 +420,23 @@ with st.expander("数字人生成"):
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
+with st.expander("记忆输入"):
+    with st.form("my_form1"):
+        col1, col2 = st.columns(2)
+        with col1:
+            memory = st.text_input('记忆','博导', key="memory_input1_5")
+            submitted = st.form_submit_button("输入记忆")
+            if submitted:
+                agent1.add_memory(memory)
+
+        with col2:
+            memory2 = st.text_input('记忆','博导', key="memory_input2_5")
+            submitted = st.form_submit_button("输入记忆")
+            if submitted:
+                agent2.add_memory(memory2)
+
+
+            
+            
+
+    
