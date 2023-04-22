@@ -69,6 +69,13 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 st.title('数字人对话')
+if 'agentss' in st.session_state:
+    st.info("当前存在的数字人：")  
+    for y in st.session_state["agentss"]:
+        st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
+else:
+    st.warning("当前不存在数字人") 
+
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(max_tokens=1500) # Can be any LLM you want.
 agents={}
@@ -470,12 +477,6 @@ if 'agentss' in st.session_state:
             st.success(f"Prompt Tokens: {cb.prompt_tokens}")
             st.success(f"Completion Tokens: {cb.completion_tokens}")
             st.success(f"Total Cost (USD): ${cb.total_cost}")
-if 'agentss' in st.session_state:
-    st.info("当前存在的数字人：")  
-    for y in st.session_state["agentss"]:
-        st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
-else:
-    st.warning("当前不存在数字人") 
 
 
 
