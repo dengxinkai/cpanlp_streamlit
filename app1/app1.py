@@ -388,7 +388,8 @@ with st.form("my_form"):
         reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
     submitted = st.form_submit_button("生成数字人")
     if submitted:
-        global agents
+        global agent1
+        global agent2
         agent1 = GenerativeAgent(name=name, 
           age=age,
           traits=traits,
