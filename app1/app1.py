@@ -424,7 +424,6 @@ for x,y in agents.items():
 
 col1, col2 = st.columns(2)
 with st.form("my_form1"):
-    global agents
     memory = st.text_input('记忆','博导', key="memory_input1_5")
     submitted1 = st.form_submit_button("代理人1输入记忆")
     if submitted1:
