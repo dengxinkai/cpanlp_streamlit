@@ -407,7 +407,7 @@ with col2:
     reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
     memory2 = st.text_input('记忆','博导', key="mery_input2_5")
 
-if st.button('Say hello'):
+if st.button('创建'):
     global agent1
     global agent2
     global agentss
