@@ -455,7 +455,7 @@ if st.button('对话'):
 if 'agentss' in st.session_state:
     st.write("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
-        st.write(y.name,"特征：",y.traits,"状态：",y.status)
+        st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
     st.write("当前不存在数字人") 
 
