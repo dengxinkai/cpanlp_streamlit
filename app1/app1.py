@@ -372,6 +372,10 @@ def create_new_memory_retriever():
     index = faiss.IndexFlatL2(embedding_size)
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
+def interview_agent(agent: GenerativeAgent, message: str) -> str:
+    """Help the notebook user interact with the agent."""
+    new_message = f"{USER_NAME} says {message}"
+    return agent.generate_dialogue_response(new_message)[1]
 def run_conversation(agents: List[GenerativeAgent], initial_observation: str) -> None:
     """Runs a conversation between agents."""
     _, observation = agents[1].generate_reaction(initial_observation)
@@ -443,12 +447,21 @@ if st.button('创建',help="创建数字人",type="primary"):
     agentss = [agent1,agent2]
     st.session_state["agentss"] = agentss
 
-diag = st.text_input('对话','如何发财', key="diag")
 
 if st.button('对话',help="对话生成",type="primary"):
+    diag = st.text_input('对话','如何发财', key="diag")
+
     with get_openai_callback() as cb:
-        st.write(st.session_state[name].name)
         run_conversation(st.session_state["agentss"], diag)
+        st.write(f"Total Tokens: {cb.total_tokens}")
+        st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+        st.write(f"Completion Tokens: {cb.completion_tokens}")
+        st.write(f"Total Cost (USD): ${cb.total_cost}")
+if st.button('采访',help="采访",type="primary"):
+    interview = st.text_input('采访','你怎么看待', key="inter")
+
+    with get_openai_callback() as cb:
+        st.write(interview_agent(st.session_state["agentss"][0], interview))
         st.write(f"Total Tokens: {cb.total_tokens}")
         st.write(f"Prompt Tokens: {cb.prompt_tokens}")
         st.write(f"Completion Tokens: {cb.completion_tokens}")
