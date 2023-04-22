@@ -444,7 +444,7 @@ diag = st.text_input('对话','如何发财', key="diag")
 
 if st.button('Say hello1'):
     with get_openai_callback() as cb:
-        st.write(st.session_state.name.name)
+        st.write(st.session_state[name].name)
 #         run_conversation(agentss, diag)
 #         st.write(f"Total Tokens: {cb.total_tokens}")
 #         st.write(f"Prompt Tokens: {cb.prompt_tokens}")
