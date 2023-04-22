@@ -387,7 +387,7 @@ with st.expander("数字人生成"):
             traits2 = st.text_input('特征','乐观', key="name_input2_4")
             status2 = st.text_input('状态','博导', key="status_input2_5")
             reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
-        submitted = st.form_submit_button("生成数字人", key="1")
+        submitted = st.form_submit_button("生成数字人")
         if submitted:
             agent1 = GenerativeAgent(name=name, 
               age=age,
@@ -425,14 +425,14 @@ with st.expander("记忆输入"):
         col1, col2 = st.columns(2)
         with col1:
             memory = st.text_input('记忆','博导', key="memory_input1_5")
-            submitted = st.form_submit_button("输入记忆", key="2")
-            if submitted:
+            submitted1 = st.form_submit_button("代理人1输入记忆")
+            if submitted1:
                 agent1.add_memory(memory)
 
         with col2:
             memory2 = st.text_input('记忆','博导', key="memory_input2_5")
-            submitted = st.form_submit_button("输入记忆", key="3")
-            if submitted:
+            submitted2 = st.form_submit_button("代理人2输入记忆")
+            if submitted2:
                 agent2.add_memory(memory2)
 
 
