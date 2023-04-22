@@ -417,7 +417,7 @@ with st.expander("数字人生成"):
                ],
                reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
              )
-            agents[name] = agent2
+            agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
