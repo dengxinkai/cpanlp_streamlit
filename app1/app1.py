@@ -52,7 +52,7 @@ st.set_page_config(
     }
 )
 st.write(
-    '<style>body { line-height: 1; }</style>',
+    '<style>body { line-height: 0.2; }</style>',
     unsafe_allow_html=True
 )
 
