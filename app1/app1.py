@@ -370,64 +370,62 @@ def create_new_memory_retriever():
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 
-with st.expander("数字人生成"):
-    with st.form("my_form"):
-        col1, col2 = st.columns(2)
-        with col1:
-            st.subheader("数字人1")
-            name = st.text_input('姓名','邓新凯', key="name_input1_6")
-            age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
-            traits = st.text_input('特征','乐观', key="name_input1_4")
-            status = st.text_input('状态','考博中', key="status_input1_5")
-            reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input1_9")
-        with col2:
-            st.subheader("数字人2")
-            name2 = st.text_input('姓名','Graham', key="name_input2_6")
-            age2 = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input2_8")
-            traits2 = st.text_input('特征','乐观', key="name_input2_4")
-            status2 = st.text_input('状态','博导', key="status_input2_5")
-            reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
-        submitted = st.form_submit_button("生成数字人")
-        if submitted:
-            agent1 = GenerativeAgent(name=name, 
-              age=age,
-              traits=traits,
-              status=status,
-              memory_retriever=create_new_memory_retriever(),
-              llm=LLM,
-              daily_summaries = [
-                   "正在为创业找寻合作伙伴",
-                   "正在烦恼如何博士毕业",
-                   "吃饭不规律",
-               ],
-               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
-             )
-            agents[name] = agent1
-            agent2 = GenerativeAgent(name=name2, 
-             age=age2,
-              traits=traits2,
-              status=status2,
-              memory_retriever=create_new_memory_retriever(),
-              llm=LLM,
-              daily_summaries = [
-                   "正在为创业找寻合作伙伴",
-                   "正在烦恼如何博士毕业",
-                   "吃饭不规律",
-               ],
-               reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
-             )
-            agents[name2] = agent2
+with st.form("my_form"):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("数字人1")
+        name = st.text_input('姓名','邓新凯', key="name_input1_6")
+        age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
+        traits = st.text_input('特征','乐观', key="name_input1_4")
+        status = st.text_input('状态','考博中', key="status_input1_5")
+        reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input1_9")
+    with col2:
+        st.subheader("数字人2")
+        name2 = st.text_input('姓名','Graham', key="name_input2_6")
+        age2 = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input2_8")
+        traits2 = st.text_input('特征','乐观', key="name_input2_4")
+        status2 = st.text_input('状态','博导', key="status_input2_5")
+        reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
+    submitted = st.form_submit_button("生成数字人")
+    if submitted:
+        agent1 = GenerativeAgent(name=name, 
+          age=age,
+          traits=traits,
+          status=status,
+          memory_retriever=create_new_memory_retriever(),
+          llm=LLM,
+          daily_summaries = [
+               "正在为创业找寻合作伙伴",
+               "正在烦恼如何博士毕业",
+               "吃饭不规律",
+           ],
+           reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+         )
+        agents[name] = agent1
+        agent2 = GenerativeAgent(name=name2, 
+         age=age2,
+          traits=traits2,
+          status=status2,
+          memory_retriever=create_new_memory_retriever(),
+          llm=LLM,
+          daily_summaries = [
+               "正在为创业找寻合作伙伴",
+               "正在烦恼如何博士毕业",
+               "吃饭不规律",
+           ],
+           reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
+         )
+        agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
 
-with st.form("my_form1"):
-    col1, col2 = st.columns(2)
-    with col1:
-        memory = st.text_input('记忆','博导', key="memory_input1_5")
-        submitted1 = st.form_submit_button("代理人1输入记忆")
-        if submitted1:
-            agents[name2].add_memory(memory)
+col1, col2 = st.columns(2)
+with col1:
+    memory = st.text_input('记忆','博导', key="memory_input1_5")
+    submitted1 = st.form_submit_button("代理人1输入记忆")
+    if submitted1:
+        agents[name2].add_memory(memory)
 
 #         with col2:
 #             memory2 = st.text_input('记忆','博导', key="memory_input2_5")
