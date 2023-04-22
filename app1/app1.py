@@ -378,7 +378,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         break_dialogue = False
         for agent in agents:
             stay_in_dialogue, observation = agent.generate_dialogue_response(observation)
-            print(observation)
+            st.write(observation)
             # observation = f"{agent.name} said {reaction}"
             if not stay_in_dialogue:
                 break_dialogue = True   
