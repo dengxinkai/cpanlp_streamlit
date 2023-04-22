@@ -451,7 +451,6 @@ if st.button('Say hello1'):
 #         st.write(f"Completion Tokens: {cb.completion_tokens}")
 #         st.write(f"Total Cost (USD): ${cb.total_cost}")
 
-    agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
