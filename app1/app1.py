@@ -407,7 +407,7 @@ with col2:
     reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
     memory2 = st.text_input('记忆','博导', key="mery_input2_5")
 
-if st.button('创建'):
+if st.button('创建',help="创建数字人",type="primary"):
     global agent1
     global agent2
     global agentss
@@ -445,7 +445,7 @@ if st.button('创建'):
 
 diag = st.text_input('对话','如何发财', key="diag")
 
-if st.button('对话'):
+if st.button('对话',help="对话生成",type="primary"):
     with get_openai_callback() as cb:
         st.write(st.session_state[name].name)
         run_conversation(st.session_state["agentss"], diag)
