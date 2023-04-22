@@ -72,6 +72,7 @@ st.title('数字人对话')
 if 'agentss' in st.session_state:
     st.info("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
+        y.get_summary(force_refresh=True)
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
     st.warning("当前不存在数字人") 
@@ -222,9 +223,9 @@ class GenerativeAgent(BaseModel):
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
         return (
-            f"姓名: {self.name} (age: {self.age})"
-            +f"\n内在特质: {self.traits}"
-            +f"\n{self.summary}"
+            st.write(f"姓名: {self.name} (age: {self.age})")
+            st.write(f"\n内在特质: {self.traits}")
+            st.write(f"\n{self.summary}")
         )
     def get_full_header(self, force_refresh: bool = False) -> str:
         """Return a full header of the agent's status, summary, and current time."""
