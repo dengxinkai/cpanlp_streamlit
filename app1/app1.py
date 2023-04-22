@@ -395,7 +395,6 @@ with col1:
     status = st.text_input('状态','考博中', key="status_input1_5")
     reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input1_9")
     memory = st.text_input('记忆','博导', key="mery_input1_5")
-
 with col2:
     st.subheader("数字人2")
     name2 = st.text_input('姓名','Graham', key="name_input2_6")
@@ -443,7 +442,7 @@ if st.button('Say hello'):
 
 diag = st.text_input('对话','如何发财', key="diag")
 
-if st.button('Say hello1'):
+if st.button('对话'):
     with get_openai_callback() as cb:
         st.write(st.session_state[name].name)
         run_conversation(st.session_state["agentss"], diag)
@@ -453,7 +452,7 @@ if st.button('Say hello1'):
         st.write(f"Total Cost (USD): ${cb.total_cost}")
 
 st.write("当前存在的数字人：")  
-for x,y in agents.items():
+for y in st.session_state["agentss"]:
     st.write(y.name,"特征：",y.traits)
 
 
