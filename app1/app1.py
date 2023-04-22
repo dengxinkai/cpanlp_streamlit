@@ -424,6 +424,14 @@ with st.form("my_form"):
            reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
          )
         agent2.add_memory(memory2)
+        agentss = [agent1,agent2]
+        with get_openai_callback() as cb:
+            run_conversation(agents, "邓新凯说: 杨丹老师，如何写论文")
+            st.write(f"Total Tokens: {cb.total_tokens}")
+            st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+            st.write(f"Completion Tokens: {cb.completion_tokens}")
+            st.write(f"Total Cost (USD): ${cb.total_cost}")
+
         agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
