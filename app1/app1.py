@@ -451,9 +451,13 @@ if st.button('对话'):
         st.write(f"Completion Tokens: {cb.completion_tokens}")
         st.write(f"Total Cost (USD): ${cb.total_cost}")
 
-st.write("当前存在的数字人：")  
-for y in st.session_state["agentss"]:
-    st.write(y.name,"特征：",y.traits)
+
+if 'agentss' in st.session_state:
+    st.write("当前存在的数字人：")  
+    for y in st.session_state["agentss"]:
+        st.write(y.name,"特征：",y.traits)
+else:
+    st.write("当前不存在数字人") 
 
 
 
