@@ -51,6 +51,10 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
+st.write(
+    '<style>body { line-height: 1; }</style>',
+    unsafe_allow_html=True
+)
 
 with st.sidebar:
     if 'input_api' in st.session_state:
@@ -469,8 +473,6 @@ if 'agentss' in st.session_state:
             st.success(f"Prompt Tokens: {cb.prompt_tokens}")
             st.success(f"Completion Tokens: {cb.completion_tokens}")
             st.success(f"Total Cost (USD): ${cb.total_cost}")
-
-
 if 'agentss' in st.session_state:
     st.write("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
