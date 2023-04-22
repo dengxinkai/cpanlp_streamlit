@@ -444,11 +444,12 @@ diag = st.text_input('对话','如何发财', key="diag")
 
 if st.button('Say hello1'):
     with get_openai_callback() as cb:
-        run_conversation(agentss, diag)
-        st.write(f"Total Tokens: {cb.total_tokens}")
-        st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-        st.write(f"Completion Tokens: {cb.completion_tokens}")
-        st.write(f"Total Cost (USD): ${cb.total_cost}")
+        st.write(st.session_state.name.name)
+#         run_conversation(agentss, diag)
+#         st.write(f"Total Tokens: {cb.total_tokens}")
+#         st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+#         st.write(f"Completion Tokens: {cb.completion_tokens}")
+#         st.write(f"Total Cost (USD): ${cb.total_cost}")
 
     agents[name2] = agent2
 st.write("当前存在的数字人：")  
