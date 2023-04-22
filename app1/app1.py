@@ -222,11 +222,10 @@ class GenerativeAgent(BaseModel):
         if not self.summary or since_refresh >= self.summary_refresh_seconds or force_refresh:
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
-        return (
-            st.write(f"姓名: {self.name} (age: {self.age})")
-            st.write(f"\n内在特质: {self.traits}")
-            st.write(f"\n{self.summary}")
-        )
+        
+        st.write(f"姓名: {self.name} (age: {self.age})")
+        st.write(f"\n内在特质: {self.traits}")
+        st.write(f"\n{self.summary}")
     def get_full_header(self, force_refresh: bool = False) -> str:
         """Return a full header of the agent's status, summary, and current time."""
         summary = self.get_summary(force_refresh=force_refresh)
