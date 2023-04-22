@@ -422,7 +422,6 @@ if st.button('Say hello'):
        ],
        reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
      )
-    st.session_state[name] = agent1
     agent1.add_memory(memory)
     agents[name] = agent1
     agent2 = GenerativeAgent(name=name2, 
@@ -440,16 +439,18 @@ if st.button('Say hello'):
      )
     agent2.add_memory(memory2)
     agentss = [agent1,agent2]
+    st.session_state["agentss"] = agentss
+
 diag = st.text_input('对话','如何发财', key="diag")
 
 if st.button('Say hello1'):
     with get_openai_callback() as cb:
         st.write(st.session_state[name].name)
-#         run_conversation(agentss, diag)
-#         st.write(f"Total Tokens: {cb.total_tokens}")
-#         st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-#         st.write(f"Completion Tokens: {cb.completion_tokens}")
-#         st.write(f"Total Cost (USD): ${cb.total_cost}")
+        run_conversation(st.session_state["agentss"], diag)
+        st.write(f"Total Tokens: {cb.total_tokens}")
+        st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+        st.write(f"Completion Tokens: {cb.completion_tokens}")
+        st.write(f"Total Cost (USD): ${cb.total_cost}")
 
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
