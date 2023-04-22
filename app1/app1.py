@@ -409,5 +409,5 @@ with st.expander("数字人生成"):
              )
             agents["dd"] = agent1
             st.write("当前存在的数字人：", list(agents.keys()))  
-for i in agents.items():
-    st.write("11")
+for x,y in agents.items():
+    st.write(y.name)
