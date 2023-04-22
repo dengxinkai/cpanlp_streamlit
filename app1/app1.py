@@ -221,10 +221,11 @@ class GenerativeAgent(BaseModel):
         if not self.summary or since_refresh >= self.summary_refresh_seconds or force_refresh:
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
-        
-        st.write(f"姓名: {self.name} (age: {self.age})")
-        st.write(f"\n内在特质: {self.traits}")
-        st.write(f"\n{self.summary}")
+        return (
+            f"姓名: {self.name} (age: {self.age})"
+            +f"\n内在特质: {self.traits}"
+            +f"\n{self.summary}"
+        )
     def get_full_header(self, force_refresh: bool = False) -> str:
         """Return a full header of the agent's status, summary, and current time."""
         summary = self.get_summary(force_refresh=force_refresh)
@@ -455,7 +456,7 @@ if 'agentss' in st.session_state:
     if st.button('总结',help="采访",type="primary"):
         with get_openai_callback() as cb:
             for i in st.session_state["agentss"]:
-                i.get_summary(force_refresh=True)
+                st.write(i.get_summary(force_refresh=True))
             st.success(f"Total Tokens: {cb.total_tokens}")
             st.success(f"Prompt Tokens: {cb.prompt_tokens}")
             st.success(f"Completion Tokens: {cb.completion_tokens}")
