@@ -419,4 +419,4 @@ with st.expander("数字人生成"):
             agents["dd"] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
-    st.write(y.name,y.traits)
+    st.write(y.name,"特征：",y.traits)
