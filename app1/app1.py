@@ -380,6 +380,8 @@ with st.form("my_form"):
         traits = st.text_input('特征','乐观', key="name_input1_4")
         status = st.text_input('状态','考博中', key="status_input1_5")
         reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input1_9")
+        memory = st.text_input('记忆','博导', key="mery_input1_5")
+
     with col2:
         st.subheader("数字人2")
         name2 = st.text_input('姓名','Graham', key="name_input2_6")
@@ -387,6 +389,8 @@ with st.form("my_form"):
         traits2 = st.text_input('特征','乐观', key="name_input2_4")
         status2 = st.text_input('状态','博导', key="status_input2_5")
         reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
+        memory2 = st.text_input('记忆','博导', key="mery_input2_5")
+
     submitted = st.form_submit_button("生成数字人")
     if submitted:
         global agent1
@@ -404,6 +408,7 @@ with st.form("my_form"):
            ],
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
          )
+        agent1.add_memory(memory)
         agents[name] = agent1
         agent2 = GenerativeAgent(name=name2, 
          age=age2,
@@ -418,6 +423,7 @@ with st.form("my_form"):
            ],
            reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
          )
+        agent2.add_memory(memory2)
         agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
