@@ -452,10 +452,10 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
     if st.button('对话',help="对话生成",type="primary"):
         with get_openai_callback() as cb:
             run_conversation(st.session_state["agentss"], diag)
-            st.write(f"Total Tokens: {cb.total_tokens}")
-            st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-            st.write(f"Completion Tokens: {cb.completion_tokens}")
-            st.write(f"Total Cost (USD): ${cb.total_cost}")
+            st.success(f"Total Tokens: {cb.total_tokens}")
+            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+            st.success(f"Completion Tokens: {cb.completion_tokens}")
+            st.success(f"Total Cost (USD): ${cb.total_cost}")
 if 'agentss' in st.session_state:  
     st.divider()
     option = st.selectbox(
@@ -465,18 +465,18 @@ if 'agentss' in st.session_state:
     if st.button('采访',help="采访",type="primary"):
         with get_openai_callback() as cb:
             st.write(interview_agent(st.session_state["agentss"][option], interview))
-            st.write(f"Total Tokens: {cb.total_tokens}")
-            st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-            st.write(f"Completion Tokens: {cb.completion_tokens}")
-            st.write(f"Total Cost (USD): ${cb.total_cost}")
+            st.success(f"Total Tokens: {cb.total_tokens}")
+            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+            st.success(f"Completion Tokens: {cb.completion_tokens}")
+            st.success(f"Total Cost (USD): ${cb.total_cost}")
 
 
 if 'agentss' in st.session_state:
     st.write("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
-        st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
+        st.info("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
-    st.write("当前不存在数字人") 
+    st.warning("当前不存在数字人") 
 
 
 
