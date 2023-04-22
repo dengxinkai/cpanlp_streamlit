@@ -375,16 +375,16 @@ with st.expander("数字人生成"):
         col1, col2 = st.columns(2)
         with col1:
             name = st.text_input('姓名','jack', key="name_input1_6")
-            age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1)
+            age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
             traits = st.text_input('特征','乐观', key="name_input1_4")
             status = st.text_input('状态','考博中', key="status_input1_5")
-            reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1)
+            reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input1_9")
         with col2:
             name2 = st.text_input('姓名','jack', key="name_input2_6")
-            age2 = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1)
+            age2 = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input2_8")
             traits2 = st.text_input('特征','乐观', key="name_input2_4")
             status2 = st.text_input('状态','考博中', key="status_input2_5")
-            reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1)
+            reflection_threshold2 = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input2_9")
         submitted = st.form_submit_button("生成数字人")
         if submitted:
             agent1 = GenerativeAgent(name=name, 
