@@ -441,7 +441,7 @@ with st.form("my_form"):
         agent2.add_memory(memory2)
         agentss = [agent1,agent2]
         with get_openai_callback() as cb:
-            run_conversation(agents, "邓新凯说: 杨丹老师，如何写论文")
+            run_conversation(agentss, "邓新凯说: 杨丹老师，如何写论文")
             st.write(f"Total Tokens: {cb.total_tokens}")
             st.write(f"Prompt Tokens: {cb.prompt_tokens}")
             st.write(f"Completion Tokens: {cb.completion_tokens}")
