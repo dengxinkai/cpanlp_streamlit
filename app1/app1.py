@@ -381,7 +381,8 @@ with st.expander("数字人生成"):
             status = st.text_input('状态','考博中', key="status_input1_5")
             reflection_threshold = st.slider("reflection_threshold",min_value=1, max_value=10, value=5, step=1, key="name_input1_9")
         with col2:
-            name2 = st.text_input('姓名','jack', key="name_input2_6")
+            st.subheader("数字人1",help="你好")
+            name2 = st.text_input('姓名','jack', key="name_input2_6",help="你好")
             age2 = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input2_8")
             traits2 = st.text_input('特征','乐观', key="name_input2_4")
             status2 = st.text_input('状态','考博中', key="status_input2_5")
