@@ -428,7 +428,7 @@ with st.expander("记忆输入"):
             memory = st.text_input('记忆','博导', key="memory_input1_5")
             submitted1 = st.form_submit_button("代理人1输入记忆")
             if submitted1:
-                agent1 = agents[name1]
+                agent1 = agents[name]
                 agent1.add_memory(memory)
 
         with col2:
