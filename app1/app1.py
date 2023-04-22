@@ -371,6 +371,7 @@ def create_new_memory_retriever():
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 
 with st.form("my_form"):
+    global agent1
     col1, col2 = st.columns(2)
     with col1:
         st.subheader("数字人1")
