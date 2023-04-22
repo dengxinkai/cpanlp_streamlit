@@ -400,7 +400,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
-
+st.info("数字人创建：")  
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("**:blue[数字人1]**")
