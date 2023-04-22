@@ -419,7 +419,7 @@ with st.expander("数字人生成"):
             agents[name2] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
-    memory = st.text_input('记忆','博导', key="memory_input1_5")
+    memory = st.text_input('记忆','博导', key="memory_input4_5")
     y.add_memory(memory)
     st.write(y.name,"特征：",y.traits)
 
