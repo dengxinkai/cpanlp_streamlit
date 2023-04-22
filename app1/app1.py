@@ -39,6 +39,7 @@ from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
+from collections import OrderedDict
 
 st.set_page_config(
     page_title="可读-财报GPT",
@@ -67,7 +68,7 @@ with st.sidebar:
 st.title('数字人')
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(max_tokens=1500) # Can be any LLM you want.
-agents={}
+agents=OrderedDict()
 class GenerativeAgent(BaseModel):
     name: str
     age: int
@@ -416,7 +417,7 @@ with st.expander("数字人生成"):
                ],
                reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
              )
-            agents["dd"] = agent2
+            agents[name] = agent2
 st.write("当前存在的数字人：")  
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
@@ -427,12 +428,16 @@ with st.expander("记忆输入"):
             memory = st.text_input('记忆','博导', key="memory_input1_5")
             submitted1 = st.form_submit_button("代理人1输入记忆")
             if submitted1:
+                first_key = list(agents.keys())[0]
+                agent1 = agents[first_key]
                 agent1.add_memory(memory)
 
         with col2:
             memory2 = st.text_input('记忆','博导', key="memory_input2_5")
             submitted2 = st.form_submit_button("代理人2输入记忆")
             if submitted2:
+                second_key = list(agents.keys())[1]
+                agent2 = agents[second_key]
                 agent2.add_memory(memory2)
 
 
