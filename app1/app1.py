@@ -72,7 +72,6 @@ st.title('数字人对话')
 if 'agentss' in st.session_state:
     st.info("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
-        y.get_summary(force_refresh=True)
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
     st.warning("当前不存在数字人") 
@@ -452,7 +451,11 @@ if st.button('创建',help="创建数字人",type="primary"):
     agentss = [agent1,agent2]
     st.session_state["agentss"] = agentss
 if 'agentss' in st.session_state:  
-    st.info("运行：")  
+    st.info("运行：") 
+    if st.button('总结',help="采访",type="primary"):
+        for i in st.session_state["agentss"]:
+            i.get_summary(force_refresh=True)
+
 if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
     st.divider()
     diag = st.text_input('对话','如何发财', key="diag")
