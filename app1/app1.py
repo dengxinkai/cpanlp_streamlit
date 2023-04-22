@@ -385,6 +385,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
+
 col1, col2 = st.columns(2)
 with col1:
     st.subheader("数字人1")
@@ -421,6 +422,7 @@ if st.button('Say hello'):
        ],
        reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
      )
+    st.session_state[name] = agent1
     agent1.add_memory(memory)
     agents[name] = agent1
     agent2 = GenerativeAgent(name=name2, 
