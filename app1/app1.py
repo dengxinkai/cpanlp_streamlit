@@ -429,27 +429,8 @@ st.write("当前存在的数字人：")
 for x,y in agents.items():
     st.write(y.name,"特征：",y.traits)
 
-col1, col2 = st.columns(2)
-if "agent1" in globals():
-    memory = st.text_input('记忆','博导', key="mery_input1_5")
-    if st.button('Say hello'):
-        agent1.add(memory)
-
-with st.form("my_form1"):
-    memory = st.text_input('记忆','博导', key="memory_input1_5")
-    submitted1 = st.form_submit_button("代理人1输入记忆")
-    if submitted1:
-        agent1.add_memory(memory)
-
-#         with col2:
-#             memory2 = st.text_input('记忆','博导', key="memory_input2_5")
-#             submitted2 = st.form_submit_button("代理人2输入记忆")
-#             if submitted2:
-#                 second_key = list(agents.keys())[1]
-#                 agent2.add_memory(memory2)
 
 
-            
             
 
     
