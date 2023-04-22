@@ -406,7 +406,7 @@ with col1:
 with col2:
     st.markdown("**:blue[数字人2]**")
     name2 = st.text_input('姓名','Graham', key="name_input2_6")
-    age2 = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input2_8")
+    age2 = st.number_input('年龄',min_value=0, max_value=100, value=40, step=1, key="name_input2_8")
     traits2 = st.text_input('特征','负责，有大局观，有领导力，乐观', key="name_input2_4",help="性格特征，不同特征用逗号分隔")
     status2 = st.text_input('状态','中国的著名会计学者，博导', key="status_input2_5",help="状态，不同状态用逗号分隔")
     reflection_threshold2 = st.slider("反思阈值",min_value=1, max_value=10, value=5, step=1, key="name_input2_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
