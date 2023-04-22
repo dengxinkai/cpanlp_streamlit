@@ -446,7 +446,7 @@ if st.button('创建',help="创建数字人",type="primary"):
     agent2.add_memory(memory2)
     agentss = [agent1,agent2]
     st.session_state["agentss"] = agentss
-
+if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
 diag = st.text_input('对话','如何发财', key="diag")
 if st.button('对话',help="对话生成",type="primary"):
     with get_openai_callback() as cb:
@@ -455,15 +455,15 @@ if st.button('对话',help="对话生成",type="primary"):
         st.write(f"Prompt Tokens: {cb.prompt_tokens}")
         st.write(f"Completion Tokens: {cb.completion_tokens}")
         st.write(f"Total Cost (USD): ${cb.total_cost}")
-        
-interview = st.text_input('采访','你怎么看待', key="inter")
-if st.button('采访',help="采访",type="primary"):
-    with get_openai_callback() as cb:
-        st.write(interview_agent(st.session_state["agentss"][0], interview))
-        st.write(f"Total Tokens: {cb.total_tokens}")
-        st.write(f"Prompt Tokens: {cb.prompt_tokens}")
-        st.write(f"Completion Tokens: {cb.completion_tokens}")
-        st.write(f"Total Cost (USD): ${cb.total_cost}")
+if 'agentss' in st.session_state:        
+    interview = st.text_input('采访','你怎么看待', key="inter")
+    if st.button('采访',help="采访",type="primary"):
+        with get_openai_callback() as cb:
+            st.write(interview_agent(st.session_state["agentss"][0], interview))
+            st.write(f"Total Tokens: {cb.total_tokens}")
+            st.write(f"Prompt Tokens: {cb.prompt_tokens}")
+            st.write(f"Completion Tokens: {cb.completion_tokens}")
+            st.write(f"Total Cost (USD): ${cb.total_cost}")
 
 
 if 'agentss' in st.session_state:
