@@ -75,6 +75,8 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
+filenamelst_abspathname = os.path.abspath('filenamelst.pickle')
+st.write(filenamelst_abspathname)        
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button("从本地文件中恢复会话状态"):
     st.session_state = load_session_state()
