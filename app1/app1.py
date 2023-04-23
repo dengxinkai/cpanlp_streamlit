@@ -101,13 +101,13 @@ filenamelst_abspathname = os.path.abspath('filenamelst.pickle')
 st.write(filenamelst_abspathname)        
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button("从本地文件中恢复会话状态"):
-    st.session = load_session('session.json')
+    st.session_state = load_session('session.json')
 
     st.write("已从本地文件中恢复会话状态")
 
 # 如果点击了保存按钮，则将会话状态保存到本地文件
 if st.button("保存会话状态到本地文件"):
-    save_session(st.session, 'session.json')
+    save_session(st.session_state, 'session.json')
     st.write("已将会话状态保存到本地文件")
 if st.button('刷新页面'):
     st.experimental_rerun()
