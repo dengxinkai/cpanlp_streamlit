@@ -78,7 +78,6 @@ if agent_keys:
     do_age=[]
     do_traits=[]
     do_status=[]
-    do_memory=[]
     do_reflection_threshold=[]
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
@@ -90,14 +89,12 @@ if agent_keys:
             do_age.append(y.age)
             do_traits.append(y.traits)
             do_status.append(y.status)
-            do_memory.append(y.memory)
             do_reflection_threshold.append(y.reflection_threshold)
             df = pd.DataFrame({
                     '姓名': do_name,
                     '年龄': do_age,
                     '特征': do_traits,
                     '状态': do_status,
-                    '记忆': do_memory,
                     '反思阈值': do_reflection_threshold
                 })
             st.dataframe(df)
