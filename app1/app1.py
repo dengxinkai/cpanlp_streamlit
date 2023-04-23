@@ -70,7 +70,7 @@ if 'agentss' in st.session_state:
     st.info("当前数字人：")  
     for y in st.session_state["agentss"]:
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
-    if st.button('总结',help="采访",type="primary"):
+    if st.button('总结',help="总结"):
         start_time = time.time()
         with get_openai_callback() as cb:
             for i in st.session_state["agentss"]:
