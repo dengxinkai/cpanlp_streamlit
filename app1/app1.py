@@ -67,6 +67,14 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
+if st.button("从本地文件中恢复会话状态"):
+    st.session_state = load_session_state()
+    st.write("已从本地文件中恢复会话状态")
+
+# 如果点击了保存按钮，则将会话状态保存到本地文件
+if st.button("保存会话状态到本地文件"):
+    save_session_state(st.session_state)
+    st.write("已将会话状态保存到本地文件")
 if st.button('刷新页面'):
     st.experimental_rerun()
 if agent_keys:
@@ -417,6 +425,15 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
+# 从本地文件中读取会话状态
+def load_session_state():
+    with open("session_state.pickle", "rb") as f:
+        return pickle.load(f)
+
+# 将会话状态保存到本地文件
+def save_session_state(session_state):
+    with open("session_state.pickle", "wb") as f:
+        pickle.dump(session_state, f)
 with tab1:
     global agentss
     name = st.text_input('姓名','邓新凯', key="name_input1_6")
