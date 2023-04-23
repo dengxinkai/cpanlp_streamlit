@@ -450,8 +450,7 @@ with tab2:
         for key in agent_keys:
             updates.append(st.session_state[key].name)
         option = st.selectbox(
-        "采访人选择?",
-        (updates), key="update")
+        (updates), key="update",label_visibility="collapsed")
        
 with tab4:
     if len(agent_keys) > 1: 
