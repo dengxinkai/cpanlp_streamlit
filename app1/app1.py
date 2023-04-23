@@ -51,30 +51,13 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-# 从本地文件中读取会话状态
-def load_session_state():
-    with open("filenamelst.pickle", "rb") as f:
-        return pickle.load(f)
-    
-
-# 将会话状态保存到本地文件
-def save_session_state(session_state):
-    with open("filenamelst.pickle", "wb") as f:
-        pickle.dump(session_state, f)
-if 'input_api' not in st.session_state:
-    st.session_state.input_api = ''
-
-input_api = st.text_input('Enter API key', value=st.session_state.input_api)
-st.session_state.input_api = input_api
 
 with st.sidebar:
     if 'input_api' in st.session_state:
-#         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
-        pass
+        st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
-        pass
-#         st.info('请先输入正确的openai api-key')
-#         st.text_input('api-key','', key="input_api")
+        st.info('请先输入正确的openai api-key')
+        st.text_input('api-key','', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
         temperature = st.slider("`temperature`", 0.01, 0.99, 0.3,help="用于控制生成文本随机性和多样性的参数。较高的温度值通常适用于生成较为自由流畅的文本，而较低的温度值则适用于生成更加确定性的文本。")
         frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3,help="用于控制生成文本中单词重复频率的技术。数值越大，模型对单词重复使用的惩罚就越严格，生成文本中出现相同单词的概率就越低；数值越小，生成文本中出现相同单词的概率就越高。")
@@ -87,20 +70,6 @@ with st.sidebar:
 filenamelst_abspathname = os.path.abspath('filenamelst.pickle')
 st.write(filenamelst_abspathname)        
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
-if st.button("从本地文件中恢复会话状态"):
-    with open('session_state.pkl', 'rb') as f:
-        session_state = pickle.load(f)
-        st.session_state.update(session_state)
-
-
-    st.write("已从本地文件中恢复会话状态")
-
-# 如果点击了保存按钮，则将会话状态保存到本地文件
-if st.button("保存会话状态到本地文件"):
-    with open('/Users/dengxinkaiacca163.com/Desktop/语言学理论/react1/session_state.pkl', 'wb') as f:
-        pickle.dump(st.session_state, f)
-
-    st.write("已将会话状态保存到本地文件")
 if st.button('刷新页面'):
     st.experimental_rerun()
 if agent_keys:
