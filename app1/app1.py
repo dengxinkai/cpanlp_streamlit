@@ -90,14 +90,6 @@ if agent_keys:
             do_traits.append(y.traits)
             do_status.append(y.status)
             do_reflection_threshold.append(y.reflection_threshold)
-            df = pd.DataFrame({
-                    '姓名': do_name,
-                    '年龄': do_age,
-                    '特征': do_traits,
-                    '状态': do_status,
-                    '反思阈值': do_reflection_threshold
-                })
-            st.dataframe(df)
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
@@ -112,6 +104,14 @@ if agent_keys:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+    df = pd.DataFrame({
+                    '姓名': do_name,
+                    '年龄': do_age,
+                    '特征': do_traits,
+                    '状态': do_status,
+                    '反思阈值': do_reflection_threshold
+                })
+    st.dataframe(df)
 else:
     st.write("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新的观察与记忆", "数字人访问","数字人对话"])
