@@ -78,7 +78,7 @@ if agent_keys:
     do_age=[]
     do_traits=[]
     do_status=[]
-    do_memory=[])
+    do_memory=[]
     do_reflection_threshold=[]
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
