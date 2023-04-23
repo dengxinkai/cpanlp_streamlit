@@ -479,9 +479,9 @@ with tab4:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab3:            
     if agent_keys:  
-        interws = ""
+        interws = []
         for key in agent_keys:
-            interws = interws + st.session_state[key].name
+            interws.append(st.session_state[key].name)
         option = st.selectbox(
         "采访人选择?",
         (interws), key="intero")
