@@ -74,7 +74,7 @@ if agent_keys:
     for key in agent_keys:
         y=st.session_state[key]
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
-        if st.button('删除'):
+        if st.button('删除',key=f"del_{key}"):
             del st.session_state[key]
     if st.button('总结',help="总结"):
         start_time = time.time()
