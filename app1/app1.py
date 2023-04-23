@@ -66,9 +66,7 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]
-for key in agent_keys:
-    st.write(key)        
+agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]     
 if agent_keys:
     st.info("当前数字人：")  
     for key in agent_keys:
@@ -77,8 +75,9 @@ if agent_keys:
     if st.button('总结',help="总结"):
         start_time = time.time()
         with get_openai_callback() as cb:
-            for i in st.session_state["agentss"]:
-                st.write(i.get_summary(force_refresh=True))
+            for key in agent_keys:
+                y=st.session_state[key]
+                st.write(y.get_summary(force_refresh=True))
             with st.expander("费用"):
                 st.success(f"Total Tokens: {cb.total_tokens}")
                 st.success(f"Prompt Tokens: {cb.prompt_tokens}")
