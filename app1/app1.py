@@ -490,7 +490,6 @@ with tab4:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab3:            
     if 'agentss' in st.session_state:  
-        st.divider()
         option = st.selectbox(
         "采访人选择?",
         (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
