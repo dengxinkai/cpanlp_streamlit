@@ -483,7 +483,7 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
                 st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                 st.success(f"Total Cost (USD): ${cb.total_cost}")
-jishi = False
+st.session_state.timer = False
 if 'agentss' in st.session_state:  
     st.divider()
     option = st.selectbox(
@@ -491,14 +491,13 @@ if 'agentss' in st.session_state:
     (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
-        global jishi
-        jishi= True
+        st.session_state.timer = True
         start_time = time.time()
         with get_openai_callback() as cb:
             for obj in st.session_state["agentss"]:
                 if getattr(obj, 'name') == option:
                     st.write(interview_agent(obj, interview))
-                    jishi=false
+                    st.session_state.timer=false
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -506,7 +505,7 @@ if 'agentss' in st.session_state:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
         end_time = time.time()
         st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-While jishi:
+while st.session_state.timer:
     start_time = time.time()
     elapsed_time = time.time() - start_time
         st.write(f"已经运行了 {elapsed_time:.2f} 秒")
