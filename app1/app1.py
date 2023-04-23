@@ -422,7 +422,6 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         turns += 1
 with tab1:
     global agentss
-
     name = st.text_input('姓名','邓新凯', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
@@ -450,7 +449,7 @@ with tab1:
             agent1.add_memory(memory)      
         st.session_state[f"agent_{name}"] = agent1
 with tab2:   
-    if 'agentss' in st.session_state:  
+    if agent_keys:  
         st.info("运行：") 
        
 with tab4:
@@ -469,7 +468,7 @@ with tab4:
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab3:            
-    if 'agentss' in st.session_state:  
+    if agent_keys:  
         option = st.selectbox(
         "采访人选择?",
         (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name), key="intero")
