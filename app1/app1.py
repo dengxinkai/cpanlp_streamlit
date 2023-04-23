@@ -11,8 +11,6 @@ import pinecone
 import requests
 import re
 import time
-import threading
-
 import math
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
@@ -492,22 +490,18 @@ if 'agentss' in st.session_state:
     (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
+        start_time = time.time()
         with get_openai_callback() as cb:
-            start_time = time.time()
             for obj in st.session_state["agentss"]:
                 if getattr(obj, 'name') == option:
-                    timer_result_area = st.empty()
-                    timer_thread = threading.Thread(target=run_timer, args=(start_time, timer_result_area))
-                    timer_thread.start()
-
                     st.write(interview_agent(obj, interview))
-                    timer_thread.join()
-                    timer_result_area.write("")
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
+       end_time = time.time()
+       st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 
 
 
