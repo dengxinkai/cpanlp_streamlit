@@ -536,7 +536,7 @@ def convert_df(df):
 csv = convert_df(df)
 
 st.download_button(
-   "Press to Download",
+   "下载数字人",
    csv,
    "file.csv",
    "text/csv",
