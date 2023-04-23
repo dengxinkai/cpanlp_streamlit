@@ -321,6 +321,7 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
+                +"输出用中文"
         )
         agent_summary_description = self.get_summary()
         relevant_memories_str = self.summarize_related_memories(observation)
@@ -423,7 +424,7 @@ with tab1:
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
     status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
     reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-    memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5",help="记忆，不同记忆用逗号分隔")
+    memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5",help="记忆，不同记忆用分号分隔")
     if st.button('创建',help="创建数字人",type="primary"):
         global agent1
         global agentss
@@ -440,7 +441,7 @@ with tab1:
            ],
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
          )
-        memory_list = memory.split(",|，")
+        memory_list = memory.split(";|；")
         for memory in memory_list:
             agent1.add_memory(memory)      
         st.session_state[f"agent_{name}"] = agent1
@@ -451,17 +452,17 @@ with tab2:
             updates.append(st.session_state[key].name)
         option = st.selectbox("更新人选择",
         (updates), key="update")
-        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用逗号分隔")
+        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用分号分隔")
         if st.button('确认',help="记忆更新",type="primary"):
-            memory_list = memory.split(",|，")
+            memory_list = memory.split(";|；")
             for key in agent_keys:
                 if getattr(st.session_state[key], 'name') == option:
                     for memory in memory_list:
                         st.session_state[key].add_memory(memory)   
-        observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用逗号分隔")
+        observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用分号分隔")
         if st.button('确认',help="观察更新",type="primary"):
             start_time = time.time()
-            observ_list = observ.split(",|，")
+            observ_list = observ.split("；|;")
             with get_openai_callback() as cb:
                 for key in agent_keys:
                     if getattr(st.session_state[key], 'name') == option:
