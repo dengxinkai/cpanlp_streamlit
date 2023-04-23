@@ -70,7 +70,7 @@ agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]
 if st.button('刷新页面'):
     st.experimental_rerun()
 if agent_keys:
-    st.info("当前数字人：")  
+    st.write("当前数字人：")  
     for key in agent_keys:
         y=st.session_state[key]
         col1, col2 = st.columns([5, 1])
@@ -91,7 +91,7 @@ if agent_keys:
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 else:
-    st.warning("当前不存在数字人") 
+    st.write("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
 
 
