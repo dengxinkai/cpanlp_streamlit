@@ -58,7 +58,7 @@ def load_session_state():
 
 # 将会话状态保存到本地文件
 def save_session_state(session_state):
-    with open("/Users/dengxinkaiacca163.com/Desktop/语言学理论/react1/session_state.pickle", "wb") as f:
+    with open(str(filenamelst_abspathname), "wb") as f:
         pickle.dump(session_state, f)
 with st.sidebar:
     if 'input_api' in st.session_state:
