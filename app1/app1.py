@@ -498,6 +498,7 @@ if 'agentss' in st.session_state:
                 if getattr(obj, 'name') == option:
                     st.write(interview_agent(obj, interview))
                     st.session_state.timer=false
+                    st.session_state.elapsed_time=0
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -507,9 +508,9 @@ if 'agentss' in st.session_state:
         st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 while st.session_state.timer:
     start_time = time.time()
-    elapsed_time = time.time() - start_time
-        st.write(f"已经运行了 {elapsed_time:.2f} 秒")
-        time.sleep(1)
+    st.session_state.elapsed_time = time.time() - start_time
+    st.write(f"已经运行了 {st.session_state.elapsed_time:.2f} 秒")
+    time.sleep(1)
 
 
 
