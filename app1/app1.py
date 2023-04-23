@@ -471,7 +471,7 @@ with tab3:
     if agent_keys:  
         interws = ""
         for key in agent_keys:
-            interws = interws + st.session_state[key].name + ","
+            interws = interws + st.session_state[key].name
         option = st.selectbox(
         "采访人选择?",
         (interws), key="intero")
