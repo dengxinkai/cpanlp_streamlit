@@ -531,7 +531,7 @@ if st.button('创建d', help="创建数字人", type="primary",key="ddd"):
         '记忆': [memory],
         '反思阈值': [reflection_threshold]
     })
-    df.to_csv('generated_agents.csv', mode='a', header=not os.path.exists('generated_agents.csv'), index=False)
+    df.to_csv('/Users/dengxinkaiacca163.com/Desktop/chenggong/generated_agents.csv')
              
 
     
