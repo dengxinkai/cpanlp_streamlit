@@ -521,12 +521,12 @@ with tab3:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 
 df = pd.DataFrame({
-    '姓名': [name],
-    '年龄': [age],
-    '特征': [traits],
-    '状态': [status],
-    '记忆': [memory],
-    '反思阈值': [reflection_threshold]
+    '姓名': [name,"22"],
+    '年龄': [age,12],
+    '特征': [traits,"ee"],
+    '状态': [status,"ee"],
+    '记忆': [memory,"ee"],
+    '反思阈值': [reflection_threshold,3]
 })
 @st.experimental_memo
 def convert_df(df):
