@@ -479,9 +479,9 @@ with tab3:
         if st.button('采访',help="采访",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
-                for obj in st.session_state["agentss"]:
-                    if getattr(obj, 'name') == option:
-                        st.write(interview_agent(obj, interview))
+                for key in agent_keys:
+                    if getattr(st.session_state[key], 'name') == option:
+                        st.write(interview_agent(st.session_state[key], interview))
                         with st.expander("费用"):
                             st.success(f"Total Tokens: {cb.total_tokens}")
                             st.success(f"Prompt Tokens: {cb.prompt_tokens}")
