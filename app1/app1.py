@@ -113,6 +113,18 @@ if agent_keys:
                     '反思阈值': do_reflection_threshold
                 })
     st.dataframe(df)
+    @st.experimental_memo
+    def convert_df(df):
+       return df.to_csv(index=False).encode('utf-8')
+    csv = convert_df(df)
+    st.download_button(
+       "下载数字人",
+       csv,
+       "file.csv",
+       "text/csv",
+       key='download-csv'
+    )
+             
 else:
     st.write("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新的观察与记忆", "数字人访问","数字人对话"])
@@ -542,20 +554,6 @@ with tab3:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 
 
-@st.experimental_memo
-def convert_df(df):
-   return df.to_csv(index=False).encode('utf-8')
 
-
-csv = convert_df(df)
-
-st.download_button(
-   "下载数字人",
-   csv,
-   "file.csv",
-   "text/csv",
-   key='download-csv'
-)
-             
 
     
