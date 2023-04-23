@@ -454,18 +454,17 @@ with tab2:
        
 with tab4:
     if len(agent_keys) > 1: 
-        diags = ""
+        diags = []
         for key in agent_keys:
-            diags = diags + st.session_state[key].name
+            diags.append(st.session_state[key].name)
         diag1 = st.selectbox(
-        "采访人选择?",
+        "第一对话人选择?",
         (diags), key="diag1")
         diag2 = st.selectbox(
-        "采访人选择?",
+        "第二对话人选择?",
         (diags), key="diag2")
-        interview = st.text_input('采访','你怎么看待', key="inter")
-#         st.write(st.session_state["agentss"][0].name, "询问",st.session_state["agentss"][1].name)
-        diag = st.text_input('', key="diag",label_visibility="collapsed")
+        st.write(diag1, "询问",diag2)
+        diag = st.text_input('', key="diaglogue",label_visibility="collapsed")
         if st.button('对话',help="对话生成",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
