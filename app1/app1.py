@@ -39,7 +39,6 @@ from langchain.prompts.chat import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
 )
-
 st.set_page_config(
     page_title="可读-财报数字人",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -70,12 +69,12 @@ agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]
 if st.button('刷新页面'):
     st.experimental_rerun()
 if agent_keys:
-    st.write("当前数字人：")  
-    for key in agent_keys:
+    st.write("当前数字人：")
+    for i,key in enumerate(agent_keys):
         y=st.session_state[key]
         col1, col2 = st.columns([5, 1])
         with col1:
-            st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
+            st.write(f"第{i}、姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
@@ -93,8 +92,6 @@ if agent_keys:
 else:
     st.write("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
-
-
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(
         model_name=model,
@@ -401,7 +398,7 @@ def create_new_memory_retriever():
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 def interview_agent(agent: GenerativeAgent, message: str) -> str:
     """Help the notebook user interact with the agent."""
-    new_message = f"{USER_NAME} says {message}"
+    new_message = f"{USER_NAME} 说 {message}"
     return agent.generate_dialogue_response(new_message)[1]
 def run_conversation(agents: List[GenerativeAgent], initial_observation: str) -> None:
     """Runs a conversation between agents."""
