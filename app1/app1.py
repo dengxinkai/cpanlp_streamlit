@@ -397,7 +397,6 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
-st.info("数字人创建：")  
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("**:blue[数字人1]**")
@@ -461,10 +460,11 @@ if 'agentss' in st.session_state:
         with get_openai_callback() as cb:
             for i in st.session_state["agentss"]:
                 st.write(i.get_summary(force_refresh=True))
-            st.success(f"Total Tokens: {cb.total_tokens}")
-            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-            st.success(f"Completion Tokens: {cb.completion_tokens}")
-            st.success(f"Total Cost (USD): ${cb.total_cost}")
+            with st.expander("费用"):
+                st.success(f"Total Tokens: {cb.total_tokens}")
+                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                st.success(f"Completion Tokens: {cb.completion_tokens}")
+                st.success(f"Total Cost (USD): ${cb.total_cost}")
 
 if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
     st.divider()
@@ -472,10 +472,11 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
     if st.button('对话',help="对话生成",type="primary"):
         with get_openai_callback() as cb:
             run_conversation(st.session_state["agentss"], diag)
-            st.success(f"Total Tokens: {cb.total_tokens}")
-            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-            st.success(f"Completion Tokens: {cb.completion_tokens}")
-            st.success(f"Total Cost (USD): ${cb.total_cost}")
+            with st.expander("费用"):
+                st.success(f"Total Tokens: {cb.total_tokens}")
+                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                st.success(f"Completion Tokens: {cb.completion_tokens}")
+                st.success(f"Total Cost (USD): ${cb.total_cost}")
 if 'agentss' in st.session_state:  
     st.divider()
     option = st.selectbox(
