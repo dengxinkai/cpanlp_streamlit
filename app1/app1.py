@@ -67,7 +67,7 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 if 'agentss' in st.session_state:
-    st.info("当前存在的数字人：")  
+    st.info("当前数字人：")  
     for y in st.session_state["agentss"]:
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
