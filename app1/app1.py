@@ -97,7 +97,7 @@ if st.button("从本地文件中恢复会话状态"):
 
 # 如果点击了保存按钮，则将会话状态保存到本地文件
 if st.button("保存会话状态到本地文件"):
-    with open('session_state.pkl', 'wb') as f:
+    with open('/Users/dengxinkaiacca163.com/Desktop/语言学理论/react1/session_state.pkl', 'wb') as f:
         pickle.dump(st.session_state, f)
 
     st.write("已将会话状态保存到本地文件")
