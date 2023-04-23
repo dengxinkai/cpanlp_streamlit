@@ -71,7 +71,8 @@ for key in agent_keys:
     st.write(key)        
 if agent_keys:
     st.info("当前数字人：")  
-    for x,y in st.session_state["agentss"].items():
+    for key in agent_keys:
+        y=st.session_state[key]
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
     if st.button('总结',help="总结"):
         start_time = time.time()
