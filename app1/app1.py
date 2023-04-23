@@ -510,9 +510,8 @@ if 'agentss' in st.session_state:
 st.write(f"已经运行了 {st.session_state.elapsed_time:.2f} 秒")
 
 while st.session_state.timer:
-    start_time = time.time()
-    st.session_state.elapsed_time = time.time() - start_time
     time.sleep(1)
+    st.session_state.elapsed_time +=1
 
 
 
