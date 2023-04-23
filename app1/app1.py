@@ -70,20 +70,7 @@ with st.sidebar:
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
     st.experimental_rerun()
-if st.button('创建', help="创建数字人", type="primary"):
-    # rest of your code here
-    
-    # add this code to write the data to CSV using Pandas
-    df = pd.DataFrame({
-        '姓名': [name],
-        '年龄': [age],
-        '特征': [traits],
-        '状态': [status],
-        '记忆': [memory],
-        '反思阈值': [reflection_threshold]
-    })
-    df.to_csv('generated_agents.csv', mode='a', header=not os.path.exists('generated_agents.csv'), index=False)
-    
+
 if agent_keys:
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
@@ -532,7 +519,19 @@ with tab3:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-
-            
+if st.button('创建', help="创建数字人", type="primary"):
+    # rest of your code here
+    
+    # add this code to write the data to CSV using Pandas
+    df = pd.DataFrame({
+        '姓名': [name],
+        '年龄': [age],
+        '特征': [traits],
+        '状态': [status],
+        '记忆': [memory],
+        '反思阈值': [reflection_threshold]
+    })
+    df.to_csv('generated_agents.csv', mode='a', header=not os.path.exists('generated_agents.csv'), index=False)
+             
 
     
