@@ -74,6 +74,12 @@ if st.button('刷新页面'):
     st.experimental_rerun()
 
 if agent_keys:
+    do_name=[]
+    do_age=[]
+    do_traits=[]
+    do_status=[]
+    do_memory=[])
+    do_reflection_threshold=[]
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
         y=st.session_state[key]
@@ -87,12 +93,12 @@ if agent_keys:
             do_memory.append(y.memory)
             do_reflection_threshold.append(y.reflection_threshold)
             df = pd.DataFrame({
-                    '姓名': [name,"22"],
-                    '年龄': [age,12],
-                    '特征': [traits,"ee"],
-                    '状态': [status,"ee"],
-                    '记忆': [memory,"ee"],
-                    '反思阈值': [reflection_threshold,3]
+                    '姓名': do_name,
+                    '年龄': do_age,
+                    '特征': do_traits,
+                    '状态': do_status,
+                    '记忆': do_memory,
+                    '反思阈值': do_reflection_threshold
                 })
             st.dataframe(df)
         with col2:
