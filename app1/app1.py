@@ -61,26 +61,7 @@ def load_session_state():
 def save_session_state(session_state):
     with open("filenamelst.pickle", "wb") as f:
         pickle.dump(session_state, f)
-# 将 st.session 对象转换为 JSON 格式的文本数据
-def serialize_session(session):
-    return json.dumps(session)
 
-# 将 JSON 格式的文本数据转换为 st.session 对象
-def deserialize_session(text):
-    return json.loads(text)
-
-# 将 st.session 对象持久化到磁盘上
-def save_session(session, file_path):
-    with open(file_path, 'w') as f:
-        f.write(serialize_session(session))
-
-# 从磁盘上加载 st.session 对象
-def load_session(file_path):
-    with open(file_path, 'r') as f:
-        text = f.read()
-    return deserialize_session(text)
-
-# 保存 st.session 对象到文件中
 
 with st.sidebar:
     if 'input_api' in st.session_state:
@@ -101,13 +82,18 @@ filenamelst_abspathname = os.path.abspath('filenamelst.pickle')
 st.write(filenamelst_abspathname)        
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button("从本地文件中恢复会话状态"):
-    st.session_state = load_session('session.json')
+    with open('session_state.pkl', 'rb') as f:
+        session_state = pickle.load(f)
+        st.session_state.update(session_state)
+
 
     st.write("已从本地文件中恢复会话状态")
 
 # 如果点击了保存按钮，则将会话状态保存到本地文件
 if st.button("保存会话状态到本地文件"):
-    save_session(st.session_state, 'session.json')
+    with open('session_state.pkl', 'wb') as f:
+        pickle.dump(st.session_state, f)
+
     st.write("已将会话状态保存到本地文件")
 if st.button('刷新页面'):
     st.experimental_rerun()
