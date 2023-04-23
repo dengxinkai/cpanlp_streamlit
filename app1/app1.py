@@ -454,6 +454,16 @@ with tab2:
        
 with tab4:
     if len(agent_keys) > 1: 
+        diags = ""
+        for key in agent_keys:
+            diags = diags + st.session_state[key].name
+        diag1 = st.selectbox(
+        "采访人选择?",
+        (diags), key="diag1")
+        diag2 = st.selectbox(
+        "采访人选择?",
+        (diags), key="diag2")
+        interview = st.text_input('采访','你怎么看待', key="inter")
         st.write(st.session_state["agentss"][0].name, "询问",st.session_state["agentss"][1].name)
         diag = st.text_input('', key="diag",label_visibility="collapsed")
         if st.button('对话',help="对话生成",type="primary"):
