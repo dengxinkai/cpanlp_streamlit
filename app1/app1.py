@@ -439,7 +439,7 @@ with tab1:
         memory_list = memory.split(";|；")
         for memory in memory_list:
             agent1.add_memory(memory)      
-        st.session_state[name] = agent1
+        st.session_state[f"agent_{name}"] = agent1
 with tab2:   
     if 'agentss' in st.session_state:  
         st.info("运行：") 
