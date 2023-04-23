@@ -559,20 +559,14 @@ with tab3:
 uploaded_file = st.file_uploader("选择一个CSV文件", type=["csv"])
 
 if uploaded_file is not None:
-    # 如果文件已上传，使用 Pandas 将 CSV 数据读入一个 DataFrame
     data = pd.read_csv(uploaded_file)
     st.dataframe(data)
     for index, row in data.iterrows():
-        st.write(f"Agent {index + 1}")
         name = row['姓名']
         age = row['年龄']
         traits = row['特征']
         status = row['状态']
         reflection_threshold = row['反思阈值']
-        st.write("---")
-
-
-        # Create a new GenerativeAgent instance from the user inputs
         st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
               age=age,
               traits=traits,
@@ -586,5 +580,6 @@ if uploaded_file is not None:
                ],
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
-        st.write(f"Agent {index + 1} created:")
+    st.experimental_rerun()
+
     
