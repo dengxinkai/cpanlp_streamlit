@@ -68,6 +68,8 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
+
+
 if st.button('刷新页面'):
     st.experimental_rerun()
 
@@ -78,6 +80,21 @@ if agent_keys:
         col1, col2 = st.columns([5, 1])
         with col1:
             st.write(f"{i+1}、姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
+            do_name.append(y.name)
+            do_age.append(y.age)
+            do_traits.append(y.traits)
+            do_status.append(y.status)
+            do_memory.append(y.memory)
+            do_reflection_threshold.append(y.reflection_threshold)
+            df = pd.DataFrame({
+                    '姓名': [name,"22"],
+                    '年龄': [age,12],
+                    '特征': [traits,"ee"],
+                    '状态': [status,"ee"],
+                    '记忆': [memory,"ee"],
+                    '反思阈值': [reflection_threshold,3]
+                })
+            st.dataframe(df)
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
@@ -520,14 +537,7 @@ with tab3:
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 
-df = pd.DataFrame({
-    '姓名': [name,"22"],
-    '年龄': [age,12],
-    '特征': [traits,"ee"],
-    '状态': [status,"ee"],
-    '记忆': [memory,"ee"],
-    '反思阈值': [reflection_threshold,3]
-})
+
 @st.experimental_memo
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
