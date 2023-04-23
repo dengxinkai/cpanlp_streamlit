@@ -397,6 +397,12 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
+def run_timer(start_time, result_area):
+    # 每秒更新一次输出区域，显示已经运行的时间
+    while True:
+        elapsed_time = time.time() - start_time
+        result_area.write(f"已经运行了 {elapsed_time:.2f} 秒")
+        time.sleep(1)
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("**:blue[数字人1]**")
@@ -485,9 +491,16 @@ if 'agentss' in st.session_state:
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
         with get_openai_callback() as cb:
+            start_time = time.time()
             for obj in st.session_state["agentss"]:
                 if getattr(obj, 'name') == option:
+                    timer_result_area = st.empty()
+                    timer_thread = threading.Thread(target=run_timer, args=(start_time, timer_result_area))
+                    timer_thread.start()
+
                     st.write(interview_agent(obj, interview))
+                    timer_thread.join()
+                    timer_result_area.write("")
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
