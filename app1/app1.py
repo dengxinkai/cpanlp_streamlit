@@ -463,7 +463,10 @@ with tab4:
         diag2 = st.selectbox(
         "第二对话人选择?",
         (diags), key="diag2")
-        st.write(diag1, "询问",diag2)
+        if diag2 == diag1:
+            st.write(diag1,"自问自答道：", key="diagself")
+        else:
+            st.write(diag1, "询问",diag2, key="diag2")
         diag = st.text_input('', key="diaglogue",label_visibility="collapsed")
         if st.button('对话',help="对话生成",type="primary"):
             start_time = time.time()
