@@ -413,6 +413,8 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         turns += 1
 with tab1:
 
+    col1, col2 = st.columns(2)
+   
     st.markdown("**:blue[数字人1]**")
     name = st.text_input('姓名','邓新凯', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
@@ -421,9 +423,9 @@ with tab1:
     reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
     memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5")
    
-
     if st.button('创建',help="创建数字人",type="primary"):
         global agent1
+        global agentss
         agent1 = GenerativeAgent(name=name, 
           age=age,
           traits=traits,
@@ -439,8 +441,9 @@ with tab1:
          )
         memory_list = memory.split(";|；")
         for memory in memory_list:
-            agent1.add_memory(memory)
-        st.session_state[name] = agent1
+            agent1.add_memory(memory)      
+        agentss[name] = agent1
+        st.session_state["agentss"] = agentss
 with tab2:   
     if 'agentss' in st.session_state:  
         st.info("运行：") 
