@@ -91,7 +91,7 @@ if agent_keys:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 else:
     st.write("当前不存在数字人") 
-tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
+tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新的观察与记忆", "数字人访问","数字人对话"])
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(
         model_name=model,
@@ -446,7 +446,6 @@ with tab1:
         st.session_state[f"agent_{name}"] = agent1
 with tab2:   
     if agent_keys:  
-        st.info("运行：") 
         updates = []
         for key in agent_keys:
             updates.append(st.session_state[key].name)
