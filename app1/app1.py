@@ -451,7 +451,14 @@ with tab2:
             updates.append(st.session_state[key].name)
         option = st.selectbox("更新人选择",
         (updates), key="update")
-       
+        memory = st.text_input('记忆更新','', key="update_memo")
+        if st.button('确认',help="记忆更新",type="primary"):
+            memory_list = memory.split(";|；")
+            with get_openai_callback() as cb:
+                for key in agent_keys:
+                    if getattr(st.session_state[key], 'name') == option:
+                        for memory in memory_list:
+                            st.session_state[key].add_memory(memory)              
 with tab4:
     if len(agent_keys) > 1: 
         diags = []
