@@ -93,6 +93,7 @@ if agent_keys:
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
+                st.experimental_rerun()
         with col3:        
             if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
                 start_time = time.time()
