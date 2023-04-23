@@ -485,7 +485,7 @@ with tab3:
         option = st.selectbox(
         "采访人选择?",
         (interws), key="intero")
-        interview = st.text_input('采访','你怎么看待', key="inter")
+        interview = st.text_input('采访','你怎么看待', key="interview")
         if st.button('采访',help="采访",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
