@@ -519,19 +519,29 @@ with tab3:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-if st.button('创建d', help="创建数字人", type="primary",key="ddd"):
-    # rest of your code here
-    
-    # add this code to write the data to CSV using Pandas
-    df = pd.DataFrame({
-        '姓名': [name],
-        '年龄': [age],
-        '特征': [traits],
-        '状态': [status],
-        '记忆': [memory],
-        '反思阈值': [reflection_threshold]
-    })
-    df.to_csv('/Users/dengxinkaiacca163.com/Desktop/chenggong/generated_agents.csv')
+
+df = pd.DataFrame({
+    '姓名': [name],
+    '年龄': [age],
+    '特征': [traits],
+    '状态': [status],
+    '记忆': [memory],
+    '反思阈值': [reflection_threshold]
+})
+@st.experimental_memo
+def convert_df(df):
+   return df.to_csv(index=False).encode('utf-8')
+
+
+csv = convert_df(df)
+
+st.download_button(
+   "Press to Download",
+   csv,
+   "file.csv",
+   "text/csv",
+   key='download-csv'
+)
              
 
     
