@@ -440,7 +440,7 @@ with tab1:
            ],
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
          )
-        memory_list = memory.split(";|；")
+        memory_list = memory.split(",|，")
         for memory in memory_list:
             agent1.add_memory(memory)      
         st.session_state[f"agent_{name}"] = agent1
@@ -453,7 +453,7 @@ with tab2:
         (updates), key="update")
         memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用逗号分隔")
         if st.button('确认',help="记忆更新",type="primary"):
-            memory_list = memory.split(";|；")
+            memory_list = memory.split(",|，")
             for key in agent_keys:
                 if getattr(st.session_state[key], 'name') == option:
                     for memory in memory_list:
@@ -461,7 +461,7 @@ with tab2:
         observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用逗号分隔")
         if st.button('确认',help="观察更新",type="primary"):
             start_time = time.time()
-            observ_list = observ.split(";|；")
+            observ_list = observ.split(",|，")
             with get_openai_callback() as cb:
                 for key in agent_keys:
                     if getattr(st.session_state[key], 'name') == option:
