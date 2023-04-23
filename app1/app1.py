@@ -475,7 +475,6 @@ with tab2:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab4:
     if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
-        st.divider()
         diag = st.text_input('对话','如何发财', key="diag")
         if st.button('对话',help="对话生成",type="primary"):
             start_time = time.time()
