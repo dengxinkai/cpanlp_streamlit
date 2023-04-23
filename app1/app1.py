@@ -321,7 +321,6 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
-                +"输出用中文"
         )
         agent_summary_description = self.get_summary()
         relevant_memories_str = self.summarize_related_memories(observation)
@@ -346,7 +345,7 @@ class GenerativeAgent(BaseModel):
             +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
-                        +"输出用中文，除了SAY、REACT等标志词"
+                        +"输出用中文，除了SAY:、REACT:等标志词"
 
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
@@ -354,7 +353,7 @@ class GenerativeAgent(BaseModel):
         self.add_memory(f"{self.name} 观察到 {observation} 同时反应了 {result}")
         if "REACT:" in result:
             reaction = result.split("REACT:")[-1].strip()
-            return False, f"{self.name} {reaction}"
+            return False, f"{reaction}"
         if "SAY:" in result:
             said_value = result.split("SAY:")[-1].strip()
             return True, f"{self.name} 说 {said_value}"
