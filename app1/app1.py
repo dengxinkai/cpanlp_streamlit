@@ -66,7 +66,7 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-tab1, tab2, tab3 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
+tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
 if 'agentss' in st.session_state:
     st.info("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
@@ -471,39 +471,41 @@ if 'agentss' in st.session_state:
                 st.success(f"Total Cost (USD): ${cb.total_cost}")
         end_time = time.time()
         st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
-    st.divider()
-    diag = st.text_input('对话','如何发财', key="diag")
-    if st.button('对话',help="对话生成",type="primary"):
-        start_time = time.time()
-        with get_openai_callback() as cb:
-            run_conversation(st.session_state["agentss"], diag)
-            with st.expander("费用"):
-                st.success(f"Total Tokens: {cb.total_tokens}")
-                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                st.success(f"Completion Tokens: {cb.completion_tokens}")
-                st.success(f"Total Cost (USD): ${cb.total_cost}")
-        end_time = time.time()
-        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-if 'agentss' in st.session_state:  
-    st.divider()
-    option = st.selectbox(
-    "采访人选择?",
-    (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
-    interview = st.text_input('采访','你怎么看待', key="inter")
-    if st.button('采访',help="采访",type="primary"):
-        start_time = time.time()
-        with get_openai_callback() as cb:
-            for obj in st.session_state["agentss"]:
-                if getattr(obj, 'name') == option:
-                    st.write(interview_agent(obj, interview))
-                    with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-        end_time = time.time()
-        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+with tab4:
+    if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
+        st.divider()
+        diag = st.text_input('对话','如何发财', key="diag")
+        if st.button('对话',help="对话生成",type="primary"):
+            start_time = time.time()
+            with get_openai_callback() as cb:
+                run_conversation(st.session_state["agentss"], diag)
+                with st.expander("费用"):
+                    st.success(f"Total Tokens: {cb.total_tokens}")
+                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                    st.success(f"Completion Tokens: {cb.completion_tokens}")
+                    st.success(f"Total Cost (USD): ${cb.total_cost}")
+            end_time = time.time()
+            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+with tab3:            
+    if 'agentss' in st.session_state:  
+        st.divider()
+        option = st.selectbox(
+        "采访人选择?",
+        (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
+        interview = st.text_input('采访','你怎么看待', key="inter")
+        if st.button('采访',help="采访",type="primary"):
+            start_time = time.time()
+            with get_openai_callback() as cb:
+                for obj in st.session_state["agentss"]:
+                    if getattr(obj, 'name') == option:
+                        st.write(interview_agent(obj, interview))
+                        with st.expander("费用"):
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+            end_time = time.time()
+            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 
             
 
