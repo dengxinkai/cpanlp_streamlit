@@ -91,7 +91,7 @@ if agent_keys:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    if st.button('总结',help="总结"):
+    if st.button('总结',help="总结",type="primary"):
         start_time = time.time()
         with get_openai_callback() as cb:
             for key in agent_keys:
