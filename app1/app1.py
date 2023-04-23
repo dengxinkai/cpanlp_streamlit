@@ -73,7 +73,7 @@ if agent_keys:
     st.info("当前数字人：")  
     for key in agent_keys:
         y=st.session_state[key]
-        col1, col2 = st.columns([3, 1])
+        col1, col2 = st.columns([5, 1])
         with col1:
             st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
         with col2:
