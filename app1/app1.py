@@ -127,6 +127,12 @@ if agent_keys:
              
 else:
     st.write("当前不存在数字人") 
+uploaded_file = st.file_uploader("选择一个CSV文件", type=["csv"])
+
+if uploaded_file is not None:
+    # 如果文件已上传，使用 Pandas 将 CSV 数据读入一个 DataFrame
+    data = pd.read_csv(uploaded_file)
+    st.dataframe(data)
 tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新的观察与记忆", "数字人访问","数字人对话"])
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(
