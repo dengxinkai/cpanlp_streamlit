@@ -488,10 +488,11 @@ if 'agentss' in st.session_state:
             for obj in st.session_state["agentss"]:
                 if getattr(obj, 'name') == option:
                     st.write(interview_agent(obj, interview))
-                    st.success(f"Total Tokens: {cb.total_tokens}")
-                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                    st.success(f"Completion Tokens: {cb.completion_tokens}")
-                    st.success(f"Total Cost (USD): ${cb.total_cost}")
+                    with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
 
 
 
