@@ -66,7 +66,9 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]     
+agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
+if st.button('刷新页面'):
+    st.experimental_rerun()
 if agent_keys:
     st.info("当前数字人：")  
     for key in agent_keys:
