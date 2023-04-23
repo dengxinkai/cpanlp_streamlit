@@ -133,6 +133,31 @@ if uploaded_file is not None:
     # 如果文件已上传，使用 Pandas 将 CSV 数据读入一个 DataFrame
     data = pd.read_csv(uploaded_file)
     st.dataframe(data)
+    for index, row in data.iterrows():
+        st.write(f"Agent {index + 1}")
+        name = row['姓名']
+        age = row['年龄']
+        traits = row['特征']
+        status = row['状态']
+        reflection_threshold = row['反思阈值']
+        st.write("---")
+
+
+        # Create a new GenerativeAgent instance from the user inputs
+        st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
+              age=age,
+              traits=traits,
+              status=status,
+              memory_retriever=create_new_memory_retriever(),
+              llm=LLM,
+              daily_summaries = [
+                   "正在为创业找寻合作伙伴",
+                   "正在烦恼如何博士毕业",
+                   "吃饭不规律",
+               ],
+               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+             )
+        st.write(f"Agent {index + 1} created:")
 tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新的观察与记忆", "数字人访问","数字人对话"])
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(
