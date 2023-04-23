@@ -215,18 +215,12 @@ class GenerativeAgent(BaseModel):
             return (float(score[0]) / 10) * weight
         else:
             return 0.0
-
-
     def add_memory(self, memory_content: str) -> List[str]:
         """Add an observation or memory to the agent's memory."""
         importance_score = self._score_memory_importance(memory_content)
         self.memory_importance += importance_score
         document = Document(page_content=memory_content, metadata={"importance": importance_score})
         result = self.memory_retriever.add_documents([document])
-
-        # After an agent has processed a certain amount of memories (as measured by
-        # aggregate importance), it is time to reflect on recent events to add
-        # more synthesized memories to the agent's memory stream.
         if (self.reflection_threshold is not None 
             and self.memory_importance > self.reflection_threshold
             and self.status != "Reflecting"):
@@ -252,7 +246,6 @@ class GenerativeAgent(BaseModel):
             +f"\n{self.summary}"
         )
     def get_full_header(self, force_refresh: bool = False) -> str:
-        """Return a full header of the agent's status, summary, and current time."""
         summary = self.get_summary(force_refresh=force_refresh)
         current_time_str =  datetime.now().strftime("%B %d, %Y, %I:%M %p")
         return f"{summary}\nIt is {current_time_str}.\n{self.name}'s status: {self.status}"
@@ -307,7 +300,6 @@ class GenerativeAgent(BaseModel):
             if consumed_tokens < self.max_tokens_limit:
                 result.append(doc.page_content) 
         return "; ".join(result[::-1])
-    
     def _generate_reaction(
         self,
         observation: str,
@@ -338,7 +330,6 @@ class GenerativeAgent(BaseModel):
         action_prediction_chain = LLMChain(llm=self.llm, prompt=prompt)
         result = action_prediction_chain.run(**kwargs)
         return result.strip()
-    
     def generate_reaction(self, observation: str) -> Tuple[bool, str]:
         """React to a given observation."""
         call_to_action_template = (
@@ -348,7 +339,6 @@ class GenerativeAgent(BaseModel):
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
                         +"输出用中文，除了SAY:、REACT:等标志词"
-
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
@@ -361,7 +351,6 @@ class GenerativeAgent(BaseModel):
             return True, f"{self.name} 说 {said_value}"
         else:
             return False, result
-
     def generate_dialogue_response(self, observation: str) -> Tuple[bool, str]:
         call_to_action_template = (
             '{agent_name} 会说什么？结束对话，请写：GOODBYE:"要说的话"。否则，要继续对话，请写：SAY:"接下来要说的话"\n\n'
@@ -381,12 +370,6 @@ class GenerativeAgent(BaseModel):
             return False, result
 def relevance_score_fn(score: float) -> float:
     """Return a similarity score on a scale [0, 1]."""
-    # This will differ depending on a few things:
-    # - the distance / similarity metric used by the VectorStore
-    # - the scale of your embeddings (OpenAI's are unit norm. Many others are not!)
-    # This function converts the euclidean norm of normalized embeddings
-    # (0 is most similar, sqrt(2) most dissimilar)
-    # to a similarity function (0 to 1)
     return 1.0 - score / math.sqrt(2)
 
 def create_new_memory_retriever():
@@ -420,7 +403,6 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         turns += 1
 
 with tab1:
-    global agentss
     name = st.text_input('姓名','邓新凯', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
