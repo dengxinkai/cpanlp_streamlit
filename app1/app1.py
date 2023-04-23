@@ -66,6 +66,9 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
+agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]
+for key in agent_keys:
+    st.write(key)        
 if 'agentss' in st.session_state:
     st.info("当前数字人：")  
     for x,y in st.session_state["agentss"].items():
