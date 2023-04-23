@@ -73,12 +73,24 @@ if agent_keys:
     st.info("当前数字人：")  
     for key in agent_keys:
         y=st.session_state[key]
-        col1, col2 = st.columns([6, 1])
+        col1, col2 = st.columns([5, 1])
         with col1:
             st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
+        if st.button('总结',help="总结",key=f"sum_{key}"):
+            start_time = time.time()
+            with get_openai_callback() as cb:
+
+                st.write(st.session_state[key].get_summary(force_refresh=True))
+                with st.expander("费用"):
+                    st.success(f"Total Tokens: {cb.total_tokens}")
+                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                    st.success(f"Completion Tokens: {cb.completion_tokens}")
+                    st.success(f"Total Cost (USD): ${cb.total_cost}")
+            end_time = time.time()
+            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
     if st.button('总结',help="总结"):
         start_time = time.time()
         with get_openai_callback() as cb:
