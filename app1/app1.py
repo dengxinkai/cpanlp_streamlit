@@ -397,12 +397,6 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
-def run_timer(start_time, result_area):
-    # 每秒更新一次输出区域，显示已经运行的时间
-    while True:
-        elapsed_time = time.time() - start_time
-        result_area.write(f"已经运行了 {elapsed_time:.2f} 秒")
-        time.sleep(1)
 col1, col2 = st.columns(2)
 with col1:
     st.markdown("**:blue[数字人1]**")
@@ -463,6 +457,7 @@ if st.button('创建',help="创建数字人",type="primary"):
 if 'agentss' in st.session_state:  
     st.info("运行：") 
     if st.button('总结',help="采访",type="primary"):
+        start_time = time.time()
         with get_openai_callback() as cb:
             for i in st.session_state["agentss"]:
                 st.write(i.get_summary(force_refresh=True))
@@ -471,11 +466,13 @@ if 'agentss' in st.session_state:
                 st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                 st.success(f"Total Cost (USD): ${cb.total_cost}")
-
+        end_time = time.time()
+        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
     st.divider()
     diag = st.text_input('对话','如何发财', key="diag")
     if st.button('对话',help="对话生成",type="primary"):
+        start_time = time.time()
         with get_openai_callback() as cb:
             run_conversation(st.session_state["agentss"], diag)
             with st.expander("费用"):
@@ -483,6 +480,8 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
                 st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                 st.success(f"Total Cost (USD): ${cb.total_cost}")
+        end_time = time.time()
+        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 if 'agentss' in st.session_state:  
     st.divider()
     option = st.selectbox(
@@ -490,16 +489,11 @@ if 'agentss' in st.session_state:
     (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
     interview = st.text_input('采访','你怎么看待', key="inter")
     if st.button('采访',help="采访",type="primary"):
-        global timer1
-        global elapsed_time1
-        timer1 = True
         start_time = time.time()
         with get_openai_callback() as cb:
             for obj in st.session_state["agentss"]:
                 if getattr(obj, 'name') == option:
                     st.write(interview_agent(obj, interview))
-                    timer1 = False
-                    elapsed_time1=0.00
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -507,14 +501,6 @@ if 'agentss' in st.session_state:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
         end_time = time.time()
         st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-st.write(f"已经运行了 {elapsed_time1:.2f} 秒")
-
-while timer:
-    global elapsed_time1
-    time.sleep(1)
-    elapsed_time1 +=1
-
-
 
             
 
