@@ -580,6 +580,5 @@ if uploaded_file is not None:
                ],
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
-    st.experimental_rerun()
 
     
