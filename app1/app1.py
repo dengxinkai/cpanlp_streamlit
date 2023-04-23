@@ -62,7 +62,8 @@ def save_session_state(session_state):
     with open("filenamelst.pickle", "wb") as f:
         pickle.dump(session_state, f)
 
-
+if 'input_api' not in st.session_state:
+    st.session_state.input_api = ''
 with st.sidebar:
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
