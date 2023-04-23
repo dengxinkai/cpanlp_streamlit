@@ -483,8 +483,6 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
                 st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                 st.success(f"Total Cost (USD): ${cb.total_cost}")
-timer1 = False
-elapsed_time=0.00
 if 'agentss' in st.session_state:  
     st.divider()
     option = st.selectbox(
@@ -511,7 +509,7 @@ if 'agentss' in st.session_state:
         st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 st.write(f"已经运行了 {elapsed_time:.2f} 秒")
 
-while st.session_state.timer:
+while timer:
     global elapsed_time
     time.sleep(1)
     elapsed_time +=1
