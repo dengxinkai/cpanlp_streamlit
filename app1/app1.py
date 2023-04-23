@@ -74,7 +74,14 @@ else:
     st.warning("当前不存在数字人") 
 
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
-LLM = ChatOpenAI(max_tokens=1500) # Can be any LLM you want.
+LLM = ChatOpenAI(
+        model_name=model,
+        temperature=temperature,
+        frequency_penalty=frequency_penalty,
+        presence_penalty=presence_penalty,
+        top_p=top_p,
+        openai_api_key=st.session_state.input_api
+    ) 
 agents={}
 class GenerativeAgent(BaseModel):
     name: str
