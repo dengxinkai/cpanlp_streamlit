@@ -476,7 +476,7 @@ with tab2:
 with tab4:
     if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
         st.write(st.session_state["agentss"][0].name, "询问",st.session_state["agentss"][1].name)
-        diag = st.text_input('如何发财', key="diag")
+        diag = st.text_input('', key="diag")
         if st.button('对话',help="对话生成",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
