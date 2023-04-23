@@ -508,7 +508,7 @@ if 'agentss' in st.session_state:
 While jishi:
     start_time = time.time()
     elapsed_time = time.time() - start_time
-        result_area.write(f"已经运行了 {elapsed_time:.2f} 秒")
+        st.write(f"已经运行了 {elapsed_time:.2f} 秒")
         time.sleep(1)
 
 
