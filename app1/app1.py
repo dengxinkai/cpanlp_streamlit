@@ -483,6 +483,7 @@ if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1):
                 st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                 st.success(f"Total Cost (USD): ${cb.total_cost}")
+jishi = False
 if 'agentss' in st.session_state:  
     st.divider()
     option = st.selectbox(
