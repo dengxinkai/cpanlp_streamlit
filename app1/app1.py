@@ -62,11 +62,11 @@ def save_session_state(session_state):
     with open("filenamelst.pickle", "wb") as f:
         pickle.dump(session_state, f)
 
-if 'input_api' not in st.session_state:
-    st.session_state.input_api = ''
+
 with st.sidebar:
     if 'input_api' in st.session_state:
-        st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
+#         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
+        pass
     else:
         st.info('请先输入正确的openai api-key')
         st.text_input('api-key','', key="input_api")
