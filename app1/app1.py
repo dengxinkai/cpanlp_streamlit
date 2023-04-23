@@ -53,7 +53,7 @@ st.set_page_config(
 )
 with st.sidebar:
     if 'input_api' in st.session_state:
-        st.text_input(st.session_state["input_api"], key="input_api")
+        st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
         st.info('请先输入正确的openai api-key')
         st.text_input('api-key','', key="input_api")
@@ -470,8 +470,15 @@ with tab4:
         diag = st.text_input('', key="diaglogue",label_visibility="collapsed")
         if st.button('对话',help="对话生成",type="primary"):
             start_time = time.time()
+            diagagents=[]
             with get_openai_callback() as cb:
-#                 run_conversation(st.session_state["agentss"], diag)
+                for key in agent_keys:
+                    if getattr(st.session_state[key], 'name') == diag1
+                    diagagents.append(st.session_state[key])
+                for key in agent_keys:
+                    if getattr(st.session_state[key], 'name') == diag2 
+                    diagagents.append(st.session_state[key])
+                run_conversation(diagagents, diag)
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
