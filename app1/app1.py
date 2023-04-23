@@ -66,13 +66,14 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
 if 'agentss' in st.session_state:
     st.info("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
 else:
     st.warning("当前不存在数字人") 
+tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
+
 
 USER_NAME = "Person A" # The name you want to use when interviewing the agent.
 LLM = ChatOpenAI(
@@ -457,20 +458,21 @@ with tab1:
             agent2.add_memory(memory)
         agentss = [agent1,agent2]
         st.session_state["agentss"] = agentss
-if 'agentss' in st.session_state:  
-    st.info("运行：") 
-    if st.button('总结',help="采访",type="primary"):
-        start_time = time.time()
-        with get_openai_callback() as cb:
-            for i in st.session_state["agentss"]:
-                st.write(i.get_summary(force_refresh=True))
-            with st.expander("费用"):
-                st.success(f"Total Tokens: {cb.total_tokens}")
-                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                st.success(f"Completion Tokens: {cb.completion_tokens}")
-                st.success(f"Total Cost (USD): ${cb.total_cost}")
-        end_time = time.time()
-        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+with tab2:   
+    if 'agentss' in st.session_state:  
+        st.info("运行：") 
+        if st.button('总结',help="采访",type="primary"):
+            start_time = time.time()
+            with get_openai_callback() as cb:
+                for i in st.session_state["agentss"]:
+                    st.write(i.get_summary(force_refresh=True))
+                with st.expander("费用"):
+                    st.success(f"Total Tokens: {cb.total_tokens}")
+                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                    st.success(f"Completion Tokens: {cb.completion_tokens}")
+                    st.success(f"Total Cost (USD): ${cb.total_cost}")
+            end_time = time.time()
+            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab4:
     if 'agentss' in st.session_state and (len(st.session_state["agentss"]) > 1): 
         st.divider()
