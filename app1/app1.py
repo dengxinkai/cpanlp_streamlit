@@ -73,9 +73,12 @@ if agent_keys:
     st.info("当前数字人：")  
     for key in agent_keys:
         y=st.session_state[key]
-        st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
-        if st.button('删除',key=f"del_{key}"):
-            del st.session_state[key]
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
+        with col2:
+            if st.button('删除',key=f"del_{key}"):
+                del st.session_state[key]
     if st.button('总结',help="总结"):
         start_time = time.time()
         with get_openai_callback() as cb:
