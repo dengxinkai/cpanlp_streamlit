@@ -61,7 +61,11 @@ def load_session_state():
 def save_session_state(session_state):
     with open("filenamelst.pickle", "wb") as f:
         pickle.dump(session_state, f)
+if 'input_api' not in st.session_state:
+    st.session_state.input_api = ''
 
+input_api = st.text_input('Enter API key', value=st.session_state.input_api)
+st.session_state.input_api = input_api
 
 with st.sidebar:
     if 'input_api' in st.session_state:
