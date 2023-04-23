@@ -74,7 +74,7 @@ if agent_keys:
         y=st.session_state[key]
         col1, col2 = st.columns([5, 1])
         with col1:
-            st.write(f"第{i}、姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
+            st.write(f"{i+1}、姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
