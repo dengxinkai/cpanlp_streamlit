@@ -447,6 +447,7 @@ with tab1:
         for memory in memory_list:
             agent1.add_memory(memory)      
         st.session_state[f"agent_{name}"] = agent1
+        st.experimental_rerun()
 with tab2:   
     if agent_keys:  
         updates = []
