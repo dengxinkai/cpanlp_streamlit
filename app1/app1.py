@@ -11,6 +11,8 @@ import pinecone
 import requests
 import re
 import time
+import threading
+
 import math
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
