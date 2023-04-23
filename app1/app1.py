@@ -413,28 +413,17 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         turns += 1
 with tab1:
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**:blue[数字人1]**")
-        name = st.text_input('姓名','邓新凯', key="name_input1_6")
-        age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
-        traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
-        status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
-        reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-        memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5")
-    with col2:
-        st.markdown("**:blue[数字人2]**")
-        name2 = st.text_input('姓名','Graham', key="name_input2_6")
-        age2 = st.number_input('年龄',min_value=0, max_value=100, value=40, step=1, key="name_input2_8")
-        traits2 = st.text_input('特征','负责，有大局观，有领导力，乐观', key="name_input2_4",help="性格特征，不同特征用逗号分隔")
-        status2 = st.text_input('状态','中国的著名会计学者，博导', key="status_input2_5",help="状态，不同状态用逗号分隔")
-        reflection_threshold2 = st.slider("反思阈值",min_value=1, max_value=10, value=5, step=1, key="name_input2_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-        memory2 = st.text_input('记忆','喜欢做饭，平时做做投资', key="mery_input2_5")
+    st.markdown("**:blue[数字人1]**")
+    name = st.text_input('姓名','邓新凯', key="name_input1_6")
+    age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
+    traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
+    status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
+    reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
+    memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5")
+   
 
     if st.button('创建',help="创建数字人",type="primary"):
         global agent1
-        global agent2
-        global agentss
         agent1 = GenerativeAgent(name=name, 
           age=age,
           traits=traits,
@@ -451,25 +440,7 @@ with tab1:
         memory_list = memory.split(";|；")
         for memory in memory_list:
             agent1.add_memory(memory)
-        agents[name] = agent1
-        agent2 = GenerativeAgent(name=name2, 
-         age=age2,
-          traits=traits2,
-          status=status2,
-          memory_retriever=create_new_memory_retriever(),
-          llm=LLM,
-          daily_summaries = [
-               "正在为创业找寻合作伙伴",
-               "正在烦恼如何博士毕业",
-               "吃饭不规律",
-           ],
-           reflection_threshold = reflection_threshold2, # we will give this a relatively low number to show how reflection works
-         )
-        memory2_list = memory2.split(";|；")
-        for memory in memory2_list:
-            agent2.add_memory(memory)
-        agentss = [agent1,agent2]
-        st.session_state["agentss"] = agentss
+        st.session_state[name] = agent1
 with tab2:   
     if 'agentss' in st.session_state:  
         st.info("运行：") 
