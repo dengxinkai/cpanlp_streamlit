@@ -500,8 +500,8 @@ if 'agentss' in st.session_state:
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
-       end_time = time.time()
-       st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+        end_time = time.time()
+        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 
 
 
