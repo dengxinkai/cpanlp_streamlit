@@ -12,6 +12,7 @@ import requests
 import re
 import time
 import math
+import pickle
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
 from collections import deque
@@ -40,7 +41,7 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
 )
 st.set_page_config(
-    page_title="可读-财报数字人",
+    page_title="数字人",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
