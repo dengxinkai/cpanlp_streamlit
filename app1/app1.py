@@ -497,7 +497,7 @@ if 'agentss' in st.session_state:
             for obj in st.session_state["agentss"]:
                 if getattr(obj, 'name') == option:
                     st.write(interview_agent(obj, interview))
-                    st.session_state.timer=false
+                    st.session_state.timer = False
                     st.session_state.elapsed_time=0
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
