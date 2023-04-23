@@ -447,6 +447,12 @@ with tab1:
 with tab2:   
     if agent_keys:  
         st.info("运行：") 
+        updates = []
+        for key in agent_keys:
+            updates.append(st.session_state[key].name)
+        option = st.selectbox(
+        "采访人选择?",
+        (updates), key="update")
        
 with tab4:
     if len(agent_keys) > 1: 
