@@ -82,8 +82,7 @@ if agent_keys:
         if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
-
-                st.write(st.session_state[key].get_summary(force_refresh=True))
+                st.success(st.session_state[key].get_summary(force_refresh=True))
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -413,7 +412,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         break_dialogue = False
         for agent in agents:
             stay_in_dialogue, observation = agent.generate_dialogue_response(observation)
-            st.write(observation)
+            st.success(observation)
             # observation = f"{agent.name} said {reaction}"
             if not stay_in_dialogue:
                 break_dialogue = True   
@@ -500,7 +499,7 @@ with tab3:
             with get_openai_callback() as cb:
                 for key in agent_keys:
                     if getattr(st.session_state[key], 'name') == option:
-                        st.write(interview_agent(st.session_state[key], interview))
+                        st.success(interview_agent(st.session_state[key], interview))
                         with st.expander("费用"):
                             st.success(f"Total Tokens: {cb.total_tokens}")
                             st.success(f"Prompt Tokens: {cb.prompt_tokens}")
