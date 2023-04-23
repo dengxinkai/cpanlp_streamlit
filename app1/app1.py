@@ -41,7 +41,7 @@ from langchain.prompts.chat import (
 )
 
 st.set_page_config(
-    page_title="可读-财报GPT",
+    page_title="可读-财报数字人",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -51,8 +51,6 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-
-
 with st.sidebar:
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api")
@@ -68,7 +66,6 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-st.title('数字人对话')
 if 'agentss' in st.session_state:
     st.info("当前存在的数字人：")  
     for y in st.session_state["agentss"]:
