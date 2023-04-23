@@ -465,6 +465,29 @@ with tab1:
             agent1.add_memory(memory)      
         st.session_state[f"agent_{name}"] = agent1
         st.experimental_rerun()
+    uploaded_file = st.file_uploader("选择一个CSV文件", type=["csv"])
+    if uploaded_file is not None:
+        data = pd.read_csv(uploaded_file)
+        st.dataframe(data)
+        for index, row in data.iterrows():
+            name = row['姓名']
+            age = row['年龄']
+            traits = row['特征']
+            status = row['状态']
+            reflection_threshold = row['反思阈值']
+            st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
+                  age=age,
+                  traits=traits,
+                  status=status,
+                  memory_retriever=create_new_memory_retriever(),
+                  llm=LLM,
+                  daily_summaries = [
+                       "正在为创业找寻合作伙伴",
+                       "正在烦恼如何博士毕业",
+                       "吃饭不规律",
+                   ],
+                   reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+                 )
 with tab2:   
     if agent_keys:  
         updates = []
@@ -556,29 +579,4 @@ with tab3:
 
 
 
-uploaded_file = st.file_uploader("选择一个CSV文件", type=["csv"])
 
-if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
-    st.dataframe(data)
-    for index, row in data.iterrows():
-        name = row['姓名']
-        age = row['年龄']
-        traits = row['特征']
-        status = row['状态']
-        reflection_threshold = row['反思阈值']
-        st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
-              age=age,
-              traits=traits,
-              status=status,
-              memory_retriever=create_new_memory_retriever(),
-              llm=LLM,
-              daily_summaries = [
-                   "正在为创业找寻合作伙伴",
-                   "正在烦恼如何博士毕业",
-                   "吃饭不规律",
-               ],
-               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
-             )
-
-    
