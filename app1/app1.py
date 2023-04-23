@@ -473,11 +473,11 @@ with tab4:
             diagagents=[]
             with get_openai_callback() as cb:
                 for key in agent_keys:
-                    if getattr(st.session_state[key], 'name') == diag1
-                    diagagents.append(st.session_state[key])
+                    if getattr(st.session_state[key], 'name') == diag1:
+                        diagagents.append(st.session_state[key])
                 for key in agent_keys:
-                    if getattr(st.session_state[key], 'name') == diag2 
-                    diagagents.append(st.session_state[key])
+                    if getattr(st.session_state[key], 'name') == diag2: 
+                        diagagents.append(st.session_state[key])
                 run_conversation(diagagents, diag)
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
