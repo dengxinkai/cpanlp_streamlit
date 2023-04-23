@@ -464,12 +464,12 @@ with tab4:
         "采访人选择?",
         (diags), key="diag2")
         interview = st.text_input('采访','你怎么看待', key="inter")
-        st.write(st.session_state["agentss"][0].name, "询问",st.session_state["agentss"][1].name)
+#         st.write(st.session_state["agentss"][0].name, "询问",st.session_state["agentss"][1].name)
         diag = st.text_input('', key="diag",label_visibility="collapsed")
         if st.button('对话',help="对话生成",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
-                run_conversation(st.session_state["agentss"], diag)
+#                 run_conversation(st.session_state["agentss"], diag)
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
