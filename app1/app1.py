@@ -492,7 +492,7 @@ with tab3:
     if 'agentss' in st.session_state:  
         option = st.selectbox(
         "采访人选择?",
-        (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name))
+        (st.session_state["agentss"][0].name, st.session_state["agentss"][1].name), key="intero")
         interview = st.text_input('采访','你怎么看待', key="inter")
         if st.button('采访',help="采访",type="primary"):
             start_time = time.time()
