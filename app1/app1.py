@@ -79,7 +79,7 @@ if agent_keys:
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
-        if st.button('总结',help="总结",key=f"sum_{key}"):
+        if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
             start_time = time.time()
             with get_openai_callback() as cb:
 
@@ -91,19 +91,6 @@ if agent_keys:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    if st.button('总结',help="总结",type="primary"):
-        start_time = time.time()
-        with get_openai_callback() as cb:
-            for key in agent_keys:
-                y=st.session_state[key]
-                st.write(y.get_summary(force_refresh=True))
-            with st.expander("费用"):
-                st.success(f"Total Tokens: {cb.total_tokens}")
-                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                st.success(f"Completion Tokens: {cb.completion_tokens}")
-                st.success(f"Total Cost (USD): ${cb.total_cost}")
-        end_time = time.time()
-        st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 else:
     st.warning("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["创建数字人", "导入观察", "访问","数字人对话"])
