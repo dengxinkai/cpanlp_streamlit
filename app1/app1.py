@@ -68,7 +68,7 @@ with st.sidebar:
                                 index=0)
 if 'agentss' in st.session_state:
     st.info("当前数字人：")  
-    for y in st.session_state["agentss"]:
+    for x,y in st.session_state["agentss"].items():
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
     if st.button('总结',help="总结"):
         start_time = time.time()
