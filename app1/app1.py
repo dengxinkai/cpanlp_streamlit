@@ -69,7 +69,7 @@ with st.sidebar:
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]
 for key in agent_keys:
     st.write(key)        
-if 'agentss' in st.session_state:
+if agent_keys:
     st.info("当前数字人：")  
     for x,y in st.session_state["agentss"].items():
         st.write("姓名：",y.name,"，特征：",y.traits,"，状态：",y.status)
