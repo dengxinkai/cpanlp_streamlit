@@ -519,7 +519,7 @@ with tab3:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-if st.button('创建', help="创建数字人", type="primary"):
+if st.button('创建d', help="创建数字人", type="primary",key="ddd"):
     # rest of your code here
     
     # add this code to write the data to CSV using Pandas
