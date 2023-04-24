@@ -113,7 +113,7 @@ if agent_keys:
                     '状态': do_status,
                     '反思阈值': do_reflection_threshold
                 })
-    with st.expander("当前数字人"):
+    with st.expander("数字人df"):
         st.dataframe(df)
     @st.experimental_memo
     def convert_df(df):
