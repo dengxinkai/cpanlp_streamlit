@@ -72,6 +72,7 @@ if st.button('刷新页面'):
 if agent_keys:
     do_name=[]
     do_age=[]
+    do_gender=[]
     do_traits=[]
     do_status=[]
     do_reflection_threshold=[]
@@ -85,6 +86,7 @@ if agent_keys:
             st.write(f"{i+1}、姓名：",y.name)
             do_name.append(y.name)
             do_age.append(y.age)
+            do_gender.append(y.gender)
             do_traits.append(y.traits)
             do_status.append(y.status)
             do_reflection_threshold.append(y.reflection_threshold)
@@ -109,6 +111,7 @@ if agent_keys:
     df = pd.DataFrame({
                     '姓名': do_name,
                     '年龄': do_age,
+                    '性别': do_gender,
                     '特征': do_traits,
                     '状态': do_status,
                     '反思阈值': do_reflection_threshold,
@@ -146,6 +149,7 @@ agents={}
 class GenerativeAgent(BaseModel):
     name: str
     age: int
+    gender: str
     traits: str
     status: str
     llm: BaseLanguageModel
@@ -442,6 +446,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
 with tab1:
     name = st.text_input('姓名','Graham', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
+    gender = st.text_input('性别','男', key="gender1_6")
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
     status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
     reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
@@ -466,13 +471,14 @@ with tab1:
             agent1.add_memory(memory)    
         st.session_state[f"agent_{name}"] = agent1
         st.experimental_rerun()
-    uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、特征、状态、反思阈值、记忆和总结")
+    uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、性别、特征、状态、反思阈值、记忆和总结")
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
         st.dataframe(data)
         for index, row in data.iterrows():
             name = row['姓名']
             age = row['年龄']
+            gender = row['性别']
             traits = row['特征']
             status = row['状态']
             memory = row['记忆']
@@ -480,6 +486,7 @@ with tab1:
             reflection_threshold = row['反思阈值']
             st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
                   age=age,
+                  gender=gender,
                   traits=traits,
                   status=status,
                   memory_retriever=create_new_memory_retriever(),
