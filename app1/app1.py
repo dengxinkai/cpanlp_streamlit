@@ -151,7 +151,7 @@ class GenerativeAgent(BaseModel):
     llm: BaseLanguageModel
     memory_retriever: TimeWeightedVectorStoreRetriever
     verbose: bool = False
-    
+    agent_memory: str= ""
     reflection_threshold: Optional[float] = None
     
     current_plan: List[str] = []    
