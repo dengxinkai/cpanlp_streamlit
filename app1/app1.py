@@ -190,12 +190,12 @@ class GenerativeAgent(BaseModel):
     def _compute_agent_summary(self):
         """"""
         prompt = PromptTemplate.from_template(
-            "输出用中文，除了关键词"
-            +"How would you summarize {name}'s core characteristics given the"
+            "How would you summarize {name}'s core characteristics given the"
             +" following statements:\n"
             +"{related_memories}"
             + "Do not embellish."
             +"\n\nSummary: "
+            +"输出用中文，除了关键词"
         )
         # The agent seeks to think about their core characteristics.
         relevant_memories = self.fetch_memories(f"{self.name}'s core characteristics")
@@ -206,11 +206,12 @@ class GenerativeAgent(BaseModel):
     def _get_topics_of_reflection(self, last_k: int = 50) -> Tuple[str, str, str]:
         """Return the 3 most salient high-level questions about recent observations."""
         prompt = PromptTemplate.from_template(
-                        "输出用中文，除了关键词"
-            +"{observations}\n\n"
+            "{observations}\n\n"
             + "Given only the information above, what are the 3 most salient"
             + " high-level questions we can answer about the subjects in the statements?"
             + " Provide each question on a new line.\n\n"
+                        +"输出用中文"
+
         )
         reflection_chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         observations = self.memory_retriever.memory_stream[-last_k:]
@@ -221,11 +222,11 @@ class GenerativeAgent(BaseModel):
     def _get_insights_on_topic(self, topic: str) -> List[str]:
         """Generate 'insights' on a topic of reflection, based on pertinent memories."""
         prompt = PromptTemplate.from_template(
-            "输出用中文，除了关键词"
-            +"Statements about {topic}\n"
+            "Statements about {topic}\n"
             +"{related_statements}\n\n"
             + "What 5 high-level insights can you infer from the above statements?"
             + " (example format: insight (because of 1, 5, 3))"
+                        +"输出用中文，除了关键词"
 
         )
         related_memories = self.fetch_memories(topic)
@@ -304,18 +305,17 @@ class GenerativeAgent(BaseModel):
         return f"{summary}\nIt is {current_time_str}.\n{self.name}'s status: {self.status}"
     def _get_entity_from_observation(self, observation: str) -> str:
         prompt = PromptTemplate.from_template(
-            "输出用中文，除了关键词"
-            +"What is the observed entity in the following observation? {observation}"
+            "What is the observed entity in the following observation? {observation}"
             +"\nEntity="
+            +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(observation=observation).strip()
     def _get_entity_action(self, observation: str, entity_name: str) -> str:
         prompt = PromptTemplate.from_template(
-            "输出用中文，除了关键词"
-            +"What is the {entity} doing in the following observation? {observation}"
+            "What is the {entity} doing in the following observation? {observation}"
             +"\nThe {entity} is"
-           
+           +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(entity=entity_name, observation=observation).strip()
@@ -361,8 +361,7 @@ class GenerativeAgent(BaseModel):
     ) -> str:
         """React to a given observation."""
         prompt = PromptTemplate.from_template(
-                "输出用中文，除了SAY:、REACT:等关键词"
-                +"{agent_summary_description}"
+                "{agent_summary_description}"
                 +"\nIt is {current_time}."
                 +"\n{agent_name}'s status: {agent_status}"
                 + "\nSummary of relevant context from {agent_name}'s memory:"
@@ -370,6 +369,7 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
+                +"输出用中文，除了SAY:、REACT:等关键词"
 
         )
         agent_summary_description = self.get_summary()
@@ -389,12 +389,12 @@ class GenerativeAgent(BaseModel):
     def generate_reaction(self, observation: str) -> Tuple[bool, str]:
         """React to a given observation."""
         call_to_action_template = (
-            "输出用中文，除了SAY:、REACT:等关键词"
-            +"Should {agent_name} react to the observation, and if so,"
+            "Should {agent_name} react to the observation, and if so,"
             +" what would be an appropriate reaction? Respond in one line."
             +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
+                +"输出用中文，除了SAY:、REACT:等关键词"
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
