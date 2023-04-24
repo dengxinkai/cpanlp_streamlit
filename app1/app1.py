@@ -456,6 +456,7 @@ with tab1:
         global agentss
         agent1 = GenerativeAgent(name=name, 
           age=age,
+          gender=gender,
           traits=traits,
           status=status,
           memory_retriever=create_new_memory_retriever(),
