@@ -190,12 +190,12 @@ class GenerativeAgent(BaseModel):
     def _compute_agent_summary(self):
         """"""
         prompt = PromptTemplate.from_template(
-            "How would you summarize {name}'s core characteristics given the"
+            "输出用中文，除了关键词"
+            +"How would you summarize {name}'s core characteristics given the"
             +" following statements:\n"
             +"{related_memories}"
             + "Do not embellish."
             +"\n\nSummary: "
-            +"输出用中文，除了关键词"
         )
         # The agent seeks to think about their core characteristics.
         relevant_memories = self.fetch_memories(f"{self.name}'s core characteristics")
@@ -222,11 +222,11 @@ class GenerativeAgent(BaseModel):
     def _get_insights_on_topic(self, topic: str) -> List[str]:
         """Generate 'insights' on a topic of reflection, based on pertinent memories."""
         prompt = PromptTemplate.from_template(
-            "Statements about {topic}\n"
+            "输出用中文，除了关键词"
+            +"Statements about {topic}\n"
             +"{related_statements}\n\n"
             + "What 5 high-level insights can you infer from the above statements?"
             + " (example format: insight (because of 1, 5, 3))"
-                        +"输出用中文，除了关键词"
 
         )
         related_memories = self.fetch_memories(topic)
@@ -305,17 +305,18 @@ class GenerativeAgent(BaseModel):
         return f"{summary}\nIt is {current_time_str}.\n{self.name}'s status: {self.status}"
     def _get_entity_from_observation(self, observation: str) -> str:
         prompt = PromptTemplate.from_template(
-            "What is the observed entity in the following observation? {observation}"
+            "输出用中文，除了关键词"
+            +"What is the observed entity in the following observation? {observation}"
             +"\nEntity="
-            +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(observation=observation).strip()
     def _get_entity_action(self, observation: str, entity_name: str) -> str:
         prompt = PromptTemplate.from_template(
-            "What is the {entity} doing in the following observation? {observation}"
+            "输出用中文，除了关键词"
+            +"What is the {entity} doing in the following observation? {observation}"
             +"\nThe {entity} is"
-           +"输出用中文，除了关键词"
+           
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(entity=entity_name, observation=observation).strip()
