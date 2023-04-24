@@ -108,6 +108,7 @@ if agent_keys:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 end_time = time.time()
                 st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+                st.experimental_rerun()
     df = pd.DataFrame({
                     '姓名': do_name,
                     '年龄': do_age,
