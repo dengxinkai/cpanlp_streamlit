@@ -270,7 +270,6 @@ class GenerativeAgent(BaseModel):
             self.memory_importance = 0.0
             self.status = old_status
         return result
-    
     def fetch_memories(self, observation: str) -> List[Document]:
         return self.memory_retriever.get_relevant_documents(observation)
     def get_summary(self, force_refresh: bool = False) -> str:
@@ -440,7 +439,6 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         if break_dialogue:
             break
         turns += 1
-
 with tab1:
     name = st.text_input('姓名','Graham', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
@@ -502,17 +500,19 @@ with tab2:
             updates.append(st.session_state[key].name)
         option = st.selectbox("更新人选择",
         (updates), key="update")
-        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用分号分隔")
+        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用逗号分隔")
         if st.button('确认',help="记忆更新",type="primary"):
-            memory_list = memory.split(";")
+            memory_list = memory.split(",")
             for key in agent_keys:
                 if getattr(st.session_state[key], 'name') == option:
                     for memory in memory_list:
-                        st.session_state[key].add_memory(memory)   
-        observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用分号分隔")
+                        st.session_state[key].add_memory(memory)
+                        st.session_state[key].memory+=memory
+                        
+        observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用逗号分隔")
         if st.button('确认',help="观察更新",type="primary"):
             start_time = time.time()
-            observ_list = observ.split(";")
+            observ_list = observ.split(",")
             with get_openai_callback() as cb:
                 for key in agent_keys:
                     if getattr(st.session_state[key], 'name') == option:
