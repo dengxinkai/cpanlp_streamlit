@@ -80,7 +80,7 @@ if agent_keys:
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
         y=st.session_state[key]
-        col1, col2, col3 = st.columns([1, 1,8])
+        col1, col2, col3 = st.columns([1, 1,6])
         with col1:
             st.write(f"{i+1}、姓名：",y.name)
             do_name.append(y.name)
