@@ -470,7 +470,7 @@ with tab1:
             agent1.add_memory(memory)    
         st.session_state[f"agent_{name}"] = agent1
         st.experimental_rerun()
-    uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、特征、状态、反思阈值")
+    uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、特征、状态、反思阈值、记忆和总结")
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
         st.dataframe(data)
@@ -479,6 +479,8 @@ with tab1:
             age = row['年龄']
             traits = row['特征']
             status = row['状态']
+            memory = row['记忆']
+            summary = row['总结'] 
             reflection_threshold = row['反思阈值']
             st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
                   age=age,
@@ -491,6 +493,8 @@ with tab1:
                        "正在烦恼如何博士毕业",
                        "吃饭不规律",
                    ],
+                  agent_memory=memory,
+                  summary=summary,
                    reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
                  )
 with tab2:   
