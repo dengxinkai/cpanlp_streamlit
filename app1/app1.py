@@ -507,7 +507,7 @@ with tab2:
                 if getattr(st.session_state[key], 'name') == option:
                     for memory in memory_list:
                         st.session_state[key].add_memory(memory)
-                        st.session_state[key].memory+=memory
+                        st.session_state[key].agent_memory+=memory
                         
         observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用逗号分隔")
         if st.button('确认',help="观察更新",type="primary"):
