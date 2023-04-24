@@ -113,7 +113,8 @@ if agent_keys:
                     '状态': do_status,
                     '反思阈值': do_reflection_threshold
                 })
-    st.dataframe(df)
+    with st.expander("See explanation"):
+        st.dataframe(df)
     @st.experimental_memo
     def convert_df(df):
        return df.to_csv(index=False).encode('utf-8')
