@@ -75,6 +75,7 @@ if agent_keys:
     do_traits=[]
     do_status=[]
     do_reflection_threshold=[]
+    do_summary=[]
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
         y=st.session_state[key]
@@ -86,6 +87,7 @@ if agent_keys:
             do_traits.append(y.traits)
             do_status.append(y.status)
             do_reflection_threshold.append(y.reflection_threshold)
+            do_summary.append(y.summary)
         with col2:
             if st.button('删除',key=f"del_{key}"):
                 del st.session_state[key]
@@ -107,7 +109,8 @@ if agent_keys:
                     '年龄': do_age,
                     '特征': do_traits,
                     '状态': do_status,
-                    '反思阈值': do_reflection_threshold
+                    '反思阈值': do_reflection_threshold,
+                    '总结':do_summary
                 })
     with st.expander("数字人df"):
         st.dataframe(df)
