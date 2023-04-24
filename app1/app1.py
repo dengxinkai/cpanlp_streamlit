@@ -369,6 +369,8 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
+                +"输出用中文，除了SAY:、REACT:等标志词"
+
         )
         agent_summary_description = self.get_summary()
         relevant_memories_str = self.summarize_related_memories(observation)
