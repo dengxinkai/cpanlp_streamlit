@@ -442,7 +442,7 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         turns += 1
 
 with tab1:
-    name = st.text_input('姓名','邓新凯', key="name_input1_6")
+    name = st.text_input('姓名','Graham', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
     status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
@@ -458,9 +458,7 @@ with tab1:
           memory_retriever=create_new_memory_retriever(),
           llm=LLM,
           daily_summaries = [
-               "正在为创业找寻合作伙伴",
-               "正在烦恼如何博士毕业",
-               "吃饭不规律",
+               "",
            ],
            agent_memory=memory,
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
