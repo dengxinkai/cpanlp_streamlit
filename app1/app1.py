@@ -462,12 +462,12 @@ with tab1:
                "正在烦恼如何博士毕业",
                "吃饭不规律",
            ],
+           agent_memory=memory,
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
          )
         memory_list = memory.split(";")
         for memory in memory_list:
             agent1.add_memory(memory)    
-        setattr(agent1, "agent_memory", memory)
         st.session_state[f"agent_{name}"] = agent1
         st.experimental_rerun()
     uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、特征、状态、反思阈值")
