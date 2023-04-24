@@ -120,7 +120,7 @@ if agent_keys:
                     '总结':do_summary
                 })
     with st.expander("数字人df"):
-        st.dataframe(df)
+        st.dataframe(df, use_container_width=True)
     if st.button('总结所有数字人',help="总结所有",key=f"sum_all",type="primary"):
                 start_time = time.time()
                 with get_openai_callback() as cb:
