@@ -121,6 +121,19 @@ if agent_keys:
                 })
     with st.expander("数字人df"):
         st.dataframe(df)
+    if st.button('总结所有数字人',help="总结所有",key=f"sum_all",type="primary"):
+                start_time = time.time()
+                with get_openai_callback() as cb:
+                    for key in agent_keys:
+                        st.success(st.session_state[key].get_summary(force_refresh=True))
+                    with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                end_time = time.time()
+                st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+                st.experimental_rerun()
     @st.experimental_memo
     def convert_df(df):
        return df.to_csv(index=False).encode('utf-8')
