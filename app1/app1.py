@@ -206,12 +206,11 @@ class GenerativeAgent(BaseModel):
     def _get_topics_of_reflection(self, last_k: int = 50) -> Tuple[str, str, str]:
         """Return the 3 most salient high-level questions about recent observations."""
         prompt = PromptTemplate.from_template(
-            "{observations}\n\n"
+                        "输出用中文，除了关键词"
+            +"{observations}\n\n"
             + "Given only the information above, what are the 3 most salient"
             + " high-level questions we can answer about the subjects in the statements?"
             + " Provide each question on a new line.\n\n"
-                        +"输出用中文"
-
         )
         reflection_chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         observations = self.memory_retriever.memory_stream[-last_k:]
@@ -362,7 +361,8 @@ class GenerativeAgent(BaseModel):
     ) -> str:
         """React to a given observation."""
         prompt = PromptTemplate.from_template(
-                "{agent_summary_description}"
+                "输出用中文，除了SAY:、REACT:等关键词"
+                +"{agent_summary_description}"
                 +"\nIt is {current_time}."
                 +"\n{agent_name}'s status: {agent_status}"
                 + "\nSummary of relevant context from {agent_name}'s memory:"
@@ -370,7 +370,6 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
-                +"输出用中文，除了SAY:、REACT:等关键词"
 
         )
         agent_summary_description = self.get_summary()
@@ -390,12 +389,12 @@ class GenerativeAgent(BaseModel):
     def generate_reaction(self, observation: str) -> Tuple[bool, str]:
         """React to a given observation."""
         call_to_action_template = (
-            "Should {agent_name} react to the observation, and if so,"
+            "输出用中文，除了SAY:、REACT:等关键词"
+            +"Should {agent_name} react to the observation, and if so,"
             +" what would be an appropriate reaction? Respond in one line."
             +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
-                +"输出用中文，除了SAY:、REACT:等关键词"
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
