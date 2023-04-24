@@ -585,6 +585,19 @@ with tab3:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+        if st.button('采访',help="采访",type="primary"):
+            start_time = time.time()
+            with get_openai_callback() as cb:
+                for key in agent_keys:
+                        st.success(interview_agent(st.session_state[key], interview))
+                with st.expander("费用"):
+                    st.success(f"Total Tokens: {cb.total_tokens}")
+                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                    st.success(f"Completion Tokens: {cb.completion_tokens}")
+                    st.success(f"Total Cost (USD): ${cb.total_cost}")
+            end_time = time.time()
+            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+
 
 
 
