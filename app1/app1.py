@@ -381,11 +381,11 @@ class GenerativeAgent(BaseModel):
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
         self.add_memory(f"{self.name} 观察到 {observation} 同时反应了 {result}")
-        if "REACT:" in result:
-            reaction = result.split("REACT:")[-1].strip()
+        if "REACT:" in result or "REACT：" in result or "反应：" in result or "反应:" in result:
+            reaction = re.split(r'REACT:|REACT：|反应：|反应:', result)[-1].strip()
             return False, f"{reaction}"
-        if "SAY:" in result:
-            said_value = result.split("SAY:")[-1].strip()
+        if "SAY:" in result or "SAY：" in result or "说：" in result or "说:" in result:
+            said_value = re.split(r'SAY:|SAY：|说：|说:', result)[-1].strip()
             return True, f"{self.name} 说 {said_value}"
         else:
             return False, result
@@ -396,12 +396,12 @@ class GenerativeAgent(BaseModel):
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
-        if "GOODBYE:" in result:
-            farewell = result.split("GOODBYE:")[-1].strip()
+        if "GOODBYE:" in result or "GOODBYE：" in result or "再见：" in result or "再见:" in result:
+            farewell = re.split(r'GOODBYE:|GOODBYE：|再见：|再见:', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {farewell}")
             return False, f"{self.name} 说：{farewell}"
-        if "SAY:" in result:
-            response_text = result.split("SAY:")[-1].strip()
+        if "SAY:" in result or "SAY：" in result or "说：" in result or "说:" in result:
+            response_text = re.split(r'SAY:|SAY：|说：|说:', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} and 同时说 {response_text}")
             return True, f"{self.name} 说：{response_text}"
         else:
@@ -461,7 +461,7 @@ with tab1:
            agent_memory=memory,
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
          )
-        memory_list = memory.split(";")
+        memory_list = re.split(r'，|,', memory)
         for memory in memory_list:
             agent1.add_memory(memory)    
         st.session_state[f"agent_{name}"] = agent1
@@ -502,7 +502,7 @@ with tab2:
         (updates), key="update")
         memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用逗号分隔")
         if st.button('确认',help="记忆更新",type="primary"):
-            memory_list = memory.split(",")
+            memory_list = re.split(r'，|,', memory)
             for key in agent_keys:
                 if getattr(st.session_state[key], 'name') == option:
                     for memory in memory_list:
@@ -512,7 +512,7 @@ with tab2:
         observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用逗号分隔")
         if st.button('确认',help="观察更新",type="primary"):
             start_time = time.time()
-            observ_list = observ.split(",")
+            observ_list = re.split(r'，|,', observ)
             with get_openai_callback() as cb:
                 for key in agent_keys:
                     if getattr(st.session_state[key], 'name') == option:
