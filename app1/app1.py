@@ -51,7 +51,6 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-
 with st.sidebar:
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
@@ -68,44 +67,41 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
-
-
 if st.button('刷新页面'):
     st.experimental_rerun()
-
 if agent_keys:
     do_name=[]
     do_age=[]
     do_traits=[]
     do_status=[]
     do_reflection_threshold=[]
-    st.write("当前数字人：")
-    for i,key in enumerate(agent_keys):
-        y=st.session_state[key]
-        col1, col2, col3 = st.columns([1, 1,8])
-        with col1:
-            st.write(f"{i+1}、姓名：",y.name)
-            do_name.append(y.name)
-            do_age.append(y.age)
-            do_traits.append(y.traits)
-            do_status.append(y.status)
-            do_reflection_threshold.append(y.reflection_threshold)
-        with col2:
-            if st.button('删除',key=f"del_{key}"):
-                del st.session_state[key]
-                st.experimental_rerun()
-        with col3:        
-            if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
-                start_time = time.time()
-                with get_openai_callback() as cb:
-                    st.success(st.session_state[key].get_summary(force_refresh=True))
-                    with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                end_time = time.time()
-                st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+    with st.expander("当前数字人："):
+        for i,key in enumerate(agent_keys):
+            y=st.session_state[key]
+            col1, col2, col3 = st.columns([1, 1,8])
+            with col1:
+                st.write(f"{i+1}、姓名：",y.name)
+                do_name.append(y.name)
+                do_age.append(y.age)
+                do_traits.append(y.traits)
+                do_status.append(y.status)
+                do_reflection_threshold.append(y.reflection_threshold)
+            with col2:
+                if st.button('删除',key=f"del_{key}"):
+                    del st.session_state[key]
+                    st.experimental_rerun()
+            with col3:        
+                if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
+                    start_time = time.time()
+                    with get_openai_callback() as cb:
+                        st.success(st.session_state[key].get_summary(force_refresh=True))
+                        with st.expander("费用"):
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                    end_time = time.time()
+                    st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
     df = pd.DataFrame({
                     '姓名': do_name,
                     '年龄': do_age,
