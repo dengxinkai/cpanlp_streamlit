@@ -125,7 +125,7 @@ if agent_keys:
                 start_time = time.time()
                 with get_openai_callback() as cb:
                     for key in agent_keys:
-                        st.write(st.session_state[key].get_summary(force_refresh=True))
+                        st.success(st.session_state[key].get_summary(force_refresh=True))
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -133,7 +133,6 @@ if agent_keys:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 end_time = time.time()
                 st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-                st.experimental_rerun()
     @st.experimental_memo
     def convert_df(df):
        return df.to_csv(index=False).encode('utf-8')
