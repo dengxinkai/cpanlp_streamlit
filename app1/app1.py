@@ -572,7 +572,7 @@ with tab3:
         "采访人选择?",
         (interws), key="intero")
         interview = st.text_input('采访','你怎么看待', key="interview")
-        if st.button('采访',help="采访",type="primary"):
+        if st.button('单个采访',help="单个采访",type="primary",key="dange"):
             start_time = time.time()
             with get_openai_callback() as cb:
                 for key in agent_keys:
@@ -585,7 +585,7 @@ with tab3:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-        if st.button('采访',help="采访",type="primary"):
+        if st.button('全部采访',help="全部采访",type="primary",key="quanbu"):
             start_time = time.time()
             with get_openai_callback() as cb:
                 for key in agent_keys:
