@@ -125,7 +125,7 @@ if agent_keys:
                 start_time = time.time()
                 with get_openai_callback() as cb:
                     for key in agent_keys:
-                        st.success(st.session_state[key].get_summary(force_refresh=True))
+                        st.write(st.session_state[key].get_summary(force_refresh=True))
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
