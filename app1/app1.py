@@ -75,6 +75,7 @@ if agent_keys:
     do_traits=[]
     do_status=[]
     do_reflection_threshold=[]
+    do_memory=[]
     do_summary=[]
     st.write("当前数字人：")
     for i,key in enumerate(agent_keys):
@@ -87,6 +88,7 @@ if agent_keys:
             do_traits.append(y.traits)
             do_status.append(y.status)
             do_reflection_threshold.append(y.reflection_threshold)
+            do_memory.append(y.agent_memory)
             do_summary.append(y.summary)
         with col2:
             if st.button('删除',key=f"del_{key}"):
@@ -110,6 +112,7 @@ if agent_keys:
                     '特征': do_traits,
                     '状态': do_status,
                     '反思阈值': do_reflection_threshold,
+                    '记忆':do_memory,
                     '总结':do_summary
                 })
     with st.expander("数字人df"):
@@ -463,7 +466,8 @@ with tab1:
          )
         memory_list = memory.split(";")
         for memory in memory_list:
-            agent1.add_memory(memory)      
+            agent1.add_memory(memory)    
+        setattr(agent1, "agent_memory", memory)
         st.session_state[f"agent_{name}"] = agent1
         st.experimental_rerun()
     uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、特征、状态、反思阈值")
