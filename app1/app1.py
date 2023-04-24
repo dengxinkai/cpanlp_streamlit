@@ -195,7 +195,7 @@ class GenerativeAgent(BaseModel):
             +"{related_memories}"
             + "Do not embellish."
             +"\n\nSummary: "
-            +"输出用中文"
+            +"输出用中文，除了关键词"
         )
         # The agent seeks to think about their core characteristics.
         relevant_memories = self.fetch_memories(f"{self.name}'s core characteristics")
@@ -226,7 +226,7 @@ class GenerativeAgent(BaseModel):
             +"{related_statements}\n\n"
             + "What 5 high-level insights can you infer from the above statements?"
             + " (example format: insight (because of 1, 5, 3))"
-                        +"输出用中文"
+                        +"输出用中文，除了关键词"
 
         )
         related_memories = self.fetch_memories(topic)
@@ -307,7 +307,7 @@ class GenerativeAgent(BaseModel):
         prompt = PromptTemplate.from_template(
             "What is the observed entity in the following observation? {observation}"
             +"\nEntity="
-            +"输出用中文"
+            +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(observation=observation).strip()
@@ -315,7 +315,7 @@ class GenerativeAgent(BaseModel):
         prompt = PromptTemplate.from_template(
             "What is the {entity} doing in the following observation? {observation}"
             +"\nThe {entity} is"
-            +"输出用中文"
+           +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(entity=entity_name, observation=observation).strip()
@@ -369,7 +369,7 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
-                +"结果用中文表示，除了SAY:、REACT:等标志词"
+                +"输出用中文，除了SAY:、REACT:等关键词"
 
         )
         agent_summary_description = self.get_summary()
@@ -394,7 +394,7 @@ class GenerativeAgent(BaseModel):
             +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
-                        +"结果用中文表示，除了SAY:、REACT:等标志词"
+                +"输出用中文，除了SAY:、REACT:等关键词"
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
@@ -410,7 +410,7 @@ class GenerativeAgent(BaseModel):
     def generate_dialogue_response(self, observation: str) -> Tuple[bool, str]:
         call_to_action_template = (
             '{agent_name} 会说什么？结束对话，请写：GOODBYE:"要说的话"。否则，要继续对话，请写：SAY:"接下来要说的话"\n\n'
-             +"结果用中文表示，除了SAY:、GOODBYE:等标志词"
+                +"输出用中文，除了SAY:、GOODBYE:等关键词"
             # 'What would {agent_name} say? To end the conversation, write: GOODBYE: "what to say". Otherwise to continue the conversation, write: SAY: "what to say next"\n\n'
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
