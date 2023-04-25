@@ -53,10 +53,10 @@ st.set_page_config(
 )
 with st.sidebar:
     if 'input_api' in st.session_state:
-        ww = st.text_input('',st.session_state["input_api"], key="input_api",label_visibility="collapsed")
+        st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
         st.info('请先输入正确的openai api-key')
-        ww = st.text_input('api-key','', key="input_api")
+        st.text_input('api-key','', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
         temperature = st.slider("`temperature`", 0.01, 0.99, 0.3,help="用于控制生成文本随机性和多样性的参数。较高的温度值通常适用于生成较为自由流畅的文本，而较低的温度值则适用于生成更加确定性的文本。")
         frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3,help="用于控制生成文本中单词重复频率的技术。数值越大，模型对单词重复使用的惩罚就越严格，生成文本中出现相同单词的概率就越低；数值越小，生成文本中出现相同单词的概率就越高。")
@@ -67,9 +67,9 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
     if 'user_name' in st.session_state:
-        USER_NAME = st.text_input('',st.session_state["user_name"], key="user_name",label_visibility="collapsed")
+        USER_NAME = st.text_input(st.session_state["user_name"], key="user_name",label_visibility="collapsed")
     else:
-        USER_NAME = st.text_input('你的名字','', key="user_name")
+        USER_NAME = st.text_input('输入你的名字','', key="user_name")
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
     st.experimental_rerun()
