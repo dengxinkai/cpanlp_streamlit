@@ -67,7 +67,6 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
     USER_NAME = st.text_input("请输入你的名字","Person", key="user_name")
-
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
     st.experimental_rerun()
@@ -175,13 +174,11 @@ class GenerativeAgent(BaseModel):
     summary: str = ""  #: :meta private:
     summary_refresh_seconds: int= 3600  #: :meta private:
     last_refreshed: datetime =Field(default_factory=datetime.now)  #: :meta private:
-    daily_summaries: List[str] #: :meta private:
+    daily_summaries: List[str] = [] #: :meta private:
     memory_importance: float = 0.0 #: :meta private:
     max_tokens_limit: int = 1200 #: :meta private:
-    
     class Config:
         arbitrary_types_allowed = True
-
     @staticmethod
     def _parse_list(text: str) -> List[str]:
         lines = re.split(r'\n', text.strip())
