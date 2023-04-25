@@ -237,7 +237,7 @@ class GenerativeAgent(BaseModel):
     
     def pause_to_reflect(self) -> List[str]:
         """Reflect on recent observations and generate 'insights'."""
-        st.write(f"Character {self.name} is reflecting")
+        print(f"Character {self.name} is reflecting")
         new_insights = []
         topics = self._get_topics_of_reflection()
         for topic in topics:
@@ -413,12 +413,12 @@ class GenerativeAgent(BaseModel):
             farewell = re.split(r'GOODBYE:|GOODBYE：|再见：|再见:', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {farewell}")
             self.agent_memory += f",{self.name} 观察到 {observation} 同时说 {farewell}"
-            return False, f"{self.name} 说：{farewell}"
+            return False, f"{self.name} 观察到 {observation} and 同时说 {response_text}"
         if "SAY:" in result or "SAY：" in result or "说：" in result or "说:" in result:
             response_text = re.split(r'SAY:|SAY：|说：|说:', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} and 同时说 {response_text}")
             self.agent_memory += f",{self.name} 观察到 {observation} and 同时说 {response_text}"
-            return True, f"{self.name} 说：{response_text}"
+            return True, f"{self.name} 观察到 {observation} and 同时说 {response_text}"
         else:
             return False, result
 def relevance_score_fn(score: float) -> float:
