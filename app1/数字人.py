@@ -403,13 +403,8 @@ class GenerativeAgent(BaseModel):
             return False, result
     def generate_dialogue_response(self, observation: str) -> Tuple[bool, str]:
         call_to_action_template = (
-             "Should {agent_name} react to the observation, and if so,"
-            +" what would be an appropriate reaction? Respond in one line."
-            +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
-            +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
-            + "\nEither do nothing, react, or say something but not both.\n\n"
-                +"输出用中文，除了SAY:、REACT:等关键词"
-            # 'What would {agent_name} say? To end the conversation, write: GOODBYE: "what to say". Otherwise to continue the conversation, write: SAY: "what to say next"\n\n'
+            'What would {agent_name} say? To end the conversation, write: GOODBYE: "what to say". Otherwise to continue the conversation, write: SAY: "what to say next"\n\n'
+             +"输出用中文，除了GOODBYE:、SAY:等关键词"
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
