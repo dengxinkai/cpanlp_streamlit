@@ -53,7 +53,7 @@ st.set_page_config(
 )
 with st.sidebar:
     if 'input_api' in st.session_state:
-        ww = st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
+        ww = st.text_input('',st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
         st.info('请先输入正确的openai api-key')
         ww = st.text_input('api-key','', key="input_api")
@@ -67,7 +67,7 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
     if 'user_name' in st.session_state:
-        USER_NAME = st.text_input(st.session_state["user_name"], key="user_name",label_visibility="collapsed")
+        USER_NAME = st.text_input('',st.session_state["user_name"], key="user_name",label_visibility="collapsed")
     else:
         USER_NAME = st.text_input('你的名字','', key="user_name")
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
