@@ -66,10 +66,10 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-    if 'user_name' in st.session_state:
-        USER_NAME = st.text_input(st.session_state["user_name"], key="user_name",label_visibility="collapsed")
-    else:
-        USER_NAME = st.text_input('输入你的名字','', key="user_name")
+    
+    USER_NAME = st.text_input(st.session_state["user_name"], key="user_name",label_visibility="collapsed")
+    st.write(f"你好 {USER_NAME}")
+
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
     st.experimental_rerun()
