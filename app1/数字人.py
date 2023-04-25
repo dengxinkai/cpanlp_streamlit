@@ -67,7 +67,7 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
     
-    USER_NAME = st.text_input("请输入你的名字","Person", key="user_name",label_visibility="collapsed")
+    USER_NAME = st.text_input("请输入你的名字","Person", key="user_name")
 
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
