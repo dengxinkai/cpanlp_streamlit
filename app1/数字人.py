@@ -66,7 +66,6 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-    
     USER_NAME = st.text_input("请输入你的名字","Person", key="user_name")
 
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
@@ -135,7 +134,7 @@ if agent_keys:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 end_time = time.time()
                 st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    @st.experimental_memo
+    @st.cache_data(persist="disk")
     def convert_df(df):
        return df.to_csv(index=False).encode('utf-8')
     csv = convert_df(df)
