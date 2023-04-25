@@ -403,8 +403,12 @@ class GenerativeAgent(BaseModel):
             return False, result
     def generate_dialogue_response(self, observation: str) -> Tuple[bool, str]:
         call_to_action_template = (
-            '{agent_name} 会说什么？结束对话，请写：GOODBYE:"要说的话"。否则，要继续对话，请写：SAY:"接下来要说的话"\n\n'
-                +"输出用中文，除了SAY:、GOODBYE:等关键词"
+             "Should {agent_name} react to the observation, and if so,"
+            +" what would be an appropriate reaction? Respond in one line."
+            +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
+            +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
+            + "\nEither do nothing, react, or say something but not both.\n\n"
+                +"输出用中文，除了SAY:、REACT:等关键词"
             # 'What would {agent_name} say? To end the conversation, write: GOODBYE: "what to say". Otherwise to continue the conversation, write: SAY: "what to say next"\n\n'
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
@@ -418,7 +422,7 @@ class GenerativeAgent(BaseModel):
             response_text = re.split(r'SAY|说', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {response_text}")
             self.agent_memory += f",{self.name} 观察到 {observation} 同时说 {response_text}"
-            return True, f"{self.name} 观察到 {observation} 同时说 {response_text}"
+            return True, f"{self.name} 说：{response_text}"
         else:
             return False, result
 def relevance_score_fn(score: float) -> float:
