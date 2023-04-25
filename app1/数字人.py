@@ -417,7 +417,7 @@ class GenerativeAgent(BaseModel):
             farewell = re.split(r'GOODBYE|再见', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {farewell}")
             self.agent_memory += f",{self.name} 观察到 {observation} 同时说 {farewell}"
-            return False, f"{self.name} 观察到 {observation} 同时说 {response_text}"
+            return False, f"{self.name} 说：{farewell}"
         if "SAY" in result or "说" in result:
             response_text = re.split(r'SAY|说', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {response_text}")
