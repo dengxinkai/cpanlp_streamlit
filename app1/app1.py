@@ -230,7 +230,6 @@ class GenerativeAgent(BaseModel):
             + "What 5 high-level insights can you infer from the above statements?"
             + " (example format: insight (because of 1, 5, 3))"
                         +"输出用中文，除了关键词"
-
         )
         related_memories = self.fetch_memories(topic)
         related_statements = "\n".join([f"{i+1}. {memory.page_content}" 
@@ -243,7 +242,7 @@ class GenerativeAgent(BaseModel):
     
     def pause_to_reflect(self) -> List[str]:
         """Reflect on recent observations and generate 'insights'."""
-        print(colored(f"Character {self.name} is reflecting", "blue"))
+        st.write(f"Character {self.name} is reflecting")
         new_insights = []
         topics = self._get_topics_of_reflection()
         for topic in topics:
@@ -310,7 +309,6 @@ class GenerativeAgent(BaseModel):
         prompt = PromptTemplate.from_template(
             "What is the observed entity in the following observation? {observation}"
             +"\nEntity="
-            +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(observation=observation).strip()
@@ -318,7 +316,6 @@ class GenerativeAgent(BaseModel):
         prompt = PromptTemplate.from_template(
             "What is the {entity} doing in the following observation? {observation}"
             +"\nThe {entity} is"
-           +"输出用中文，除了关键词"
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(entity=entity_name, observation=observation).strip()
@@ -390,7 +387,6 @@ class GenerativeAgent(BaseModel):
         result = action_prediction_chain.run(**kwargs)
         return result.strip()
     def generate_reaction(self, observation: str) -> Tuple[bool, str]:
-        """React to a given observation."""
         call_to_action_template = (
             "Should {agent_name} react to the observation, and if so,"
             +" what would be an appropriate reaction? Respond in one line."
