@@ -628,7 +628,7 @@ with tab3:
                 })
         csv_inter = convert_df(df_inter)
         st.download_button(
-           "下载所有数字人",
+           "下载采访记录",
            csv_inter,
            "file.csv",
            "text/csv",
