@@ -295,8 +295,6 @@ class GenerativeAgent(BaseModel):
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
         return (
-            f"姓名: {self.name} (age: {self.age})"
-            +f"\n内在特质: {self.traits}"
             +f"\n{self.summary}"
         )
     def get_full_header(self, force_refresh: bool = False) -> str:
