@@ -302,7 +302,7 @@ class GenerativeAgent(BaseModel):
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
         return (
-            +f"{self.summary}"
+            f"{self.summary}"
         )
     def get_full_header(self, force_refresh: bool = False) -> str:
         summary = self.get_summary(force_refresh=force_refresh)
