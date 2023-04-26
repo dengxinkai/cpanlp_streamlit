@@ -128,11 +128,20 @@ if agent_keys:
     if st.button('总结所有数字人',help="总结所有",key=f"sum_all",type="primary"):
                 start_time = time.time()
                 with get_openai_callback() as cb:
-                    for key in agent_keys:
-                        # 使用asyncio.run()函数来异步地调用st.session_state[key].get_summary()方法
-                        summary = asyncio.run(st.session_state[key].get_summary(force_refresh=True))
-                        # 使用st.success()函数展示返回的摘要
-                        st.success(summary)
+                    async def summary_all_agents(agent_keys):
+                        tasks = []
+                        for key in agent_keys:
+                            task = asyncio.create_task(get_summary_async(st.session_state[key]))
+                            tasks.append(task)
+                        results = await asyncio.gather(*tasks)
+                        for key, summary in zip(agent_keys, results):
+                            st.success(summary)
+
+
+                    async def get_summary_async(agent):
+                        summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
+                        return summary
+                    asyncio.run(summary_all_agents(agent_keys, interview))
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -295,6 +304,8 @@ class GenerativeAgent(BaseModel):
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
         return (
+            f"姓名: {self.name} (age: {self.age})"
+            +f"\n内在特质: {self.traits}"
             +f"\n{self.summary}"
         )
     def get_full_header(self, force_refresh: bool = False) -> str:
