@@ -141,7 +141,7 @@ if agent_keys:
                     async def get_summary_async(agent):
                         summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
                         return summary
-                    asyncio.run(summary_all_agents(agent_keys, interview))
+                    asyncio.run(summary_all_agents(agent_keys))
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
