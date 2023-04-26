@@ -136,8 +136,6 @@ if agent_keys:
                         results = await asyncio.gather(*tasks)
                         for key, summary in zip(agent_keys, results):
                             st.success(summary)
-
-
                     async def get_summary_async(agent):
                         summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
                         return summary
@@ -304,9 +302,7 @@ class GenerativeAgent(BaseModel):
             self.summary = self._compute_agent_summary()
             self.last_refreshed = current_time
         return (
-            f"姓名: {self.name} (age: {self.age})"
-            +f"\n内在特质: {self.traits}"
-            +f"\n{self.summary}"
+            +f"{self.summary}"
         )
     def get_full_header(self, force_refresh: bool = False) -> str:
         summary = self.get_summary(force_refresh=force_refresh)
