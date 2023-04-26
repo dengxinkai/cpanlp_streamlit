@@ -53,11 +53,11 @@ st.set_page_config(
     }
 )
 from PIL import Image
+image = Image.open('shuziren.jpg')
 
+st.image(image, caption='Sunrise by the mountains')
 # 加载并显示图像
-image_url = 'https://github.com/dengxinkai/cpanlp_streamlit/blob/main/app1/shuziren.jpg'
-image = Image.open(image_url)
-st.image(image, caption='Image', use_column_width=True)
+
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
