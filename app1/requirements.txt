@@ -11,3 +11,4 @@ wikipedia
 pinecone-client
 google-api-python-client
 faiss-cpu
+asyncio
