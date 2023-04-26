@@ -418,7 +418,7 @@ class GenerativeAgent(BaseModel):
         else:
             return False, result
     async def generate_concurrently(self):
-         prompt = PromptTemplate.from_template(
+        prompt = PromptTemplate.from_template(
                     "{agent_summary_description}"
                     +"\nIt is {current_time}."
                     +"\n{agent_name}'s status: {agent_status}"
@@ -431,9 +431,7 @@ class GenerativeAgent(BaseModel):
             +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
-                    +"输出用中文，除了SAY:、REACT:等关键词"
-
-            )
+                    +"输出用中文，除了SAY:、REACT:等关键词")
         agent_summary_description = self.get_summary()
         relevant_memories_str = self.summarize_related_memories(observation)
         current_time_str = datetime.now().strftime("%B %d, %Y, %I:%M %p")
