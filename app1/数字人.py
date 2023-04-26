@@ -52,11 +52,6 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-from PIL import Image
-image = Image.open('shuziren.jpg')
-
-st.image(image, caption='Sunrise by the mountains')
-# 加载并显示图像
 
 @st.cache_data(persist="disk")
 def convert_df(df):
