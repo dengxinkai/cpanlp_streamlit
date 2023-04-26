@@ -504,15 +504,13 @@ with tab1:
                   memory_retriever=create_new_memory_retriever(),
                   llm=LLM,
                   daily_summaries = [
-                       "正在为创业找寻合作伙伴",
-                       "正在烦恼如何博士毕业",
-                       "吃饭不规律",
+                       "",
                    ],
                   agent_memory=memory,
                   summary=summary,
                    reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
                  )
-            memory_list = re.split(r'#', memory)
+            memory_list = re.split(r'#', memory)[1:]
             for memory in memory_list:
                 agent1.add_memory(memory)   
 with tab2:   
