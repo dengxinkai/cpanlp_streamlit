@@ -580,6 +580,21 @@ with tab4:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+async def async_generate(chain):
+    resp = await chain.arun(product="toothpaste")
+    st.write(resp)
+
+async def generate_concurrently():
+    llm = OpenAI(temperature=0.9)
+    prompt = PromptTemplate(
+        input_variables=["product"],
+        template="What is a good name for a company that makes {product}?",
+    )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    tasks = [async_generate(chain) for _ in range(5)]
+    await asyncio.gather(*tasks)
+
+
 with tab3:            
     if agent_keys:
         do_inter_name=[]
@@ -611,65 +626,16 @@ with tab3:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         if st.button('全部采访',help="全部采访",type="primary",key="quanbu"):
             start_time = time.time()
-            async def _generate_reaction1(
-                                    self,
-                                    observation: str,
-                                    suffix: str
-                                ) -> str:
-                                    """React to a given observation."""
-                                    prompt = PromptTemplate.from_template(
-                                            "{agent_summary_description}"
-                                            +"\nIt is {current_time}."
-                                            +"\n{agent_name}'s status: {agent_status}"
-                                            + "\nSummary of relevant context from {agent_name}'s memory:"
-                                            +"\n{relevant_memories}"
-                                            +"\nMost recent observations: {recent_observations}"
-                                            + "\nObservation: {observation}"
-                                            + "\n\n" + suffix
-                                            +"输出用中文，除了SAY:、REACT:等关键词"
-
-                                    )
-                                    agent_summary_description = self.get_summary()
-                                    relevant_memories_str = self.summarize_related_memories(observation)
-                                    current_time_str = datetime.now().strftime("%B %d, %Y, %I:%M %p")
-                                    kwargs = dict(agent_summary_description=agent_summary_description,
-                                                  current_time=current_time_str,
-                                                  relevant_memories=relevant_memories_str,
-                                                  agent_name=self.name,
-                                                  observation=observation,
-                                                 agent_status=self.status)
-                                    consumed_tokens = self.llm.get_num_tokens(prompt.format(recent_observations="", **kwargs))
-                                    kwargs["recent_observations"] = self._get_memories_until_limit(consumed_tokens)
-                                    action_prediction_chain = LLMChain(llm=self.llm, prompt=prompt)
-                                    result = await action_prediction_chain.arun(**kwargs)
-                                    return result.strip()
-            async def interview_agent1(agent: GenerativeAgent, message: str) -> str:
-                new_message = f"{USER_NAME} 说 {message}"
-                return (await agent.generate_dialogue_response(new_message))[1]
-
-            async def interview_agents1(agent_keys, interview):
-                do_inter_name = []
-                do_inter_result = []
-                for key in agent_keys:
-                    inter_result = await interview_agent(st.session_state[key], interview)
-                    st.success(inter_result)
-                    do_inter_name.append(st.session_state[key].name)
-                    do_inter_result.append(inter_result)
-
             with get_openai_callback() as cb:
-                for key in agent_keys:
+                asyncio.run(generate_concurrently())
+#                 for key in agent_keys:
+# inter_result=interview_agent(st.session_state[key], interview)
+#                     st.success(inter_result)
                     
-                    loop = asyncio.get_event_loop()
-
-                    # call the async functions with the required parameters
-                   
-                    inter_agents_result = loop.run_until_complete(interview_agents(agent_keys, interview))
-
-                    # close the event loop
-                    loop.close()
-                    st.success(inter_result)
-                    do_inter_name.append(st.session_state[key].name)
-                    do_inter_result.append(inter_result)
+                    
+#                     st.success(inter_result)
+#                     do_inter_name.append(st.session_state[key].name)
+#                     do_inter_result.append(inter_result)
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
