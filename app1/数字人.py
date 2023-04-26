@@ -1,4 +1,5 @@
 import streamlit as st
+import asyncio
 import wikipedia
 import faiss
 import numpy as np
@@ -431,7 +432,6 @@ def create_new_memory_retriever():
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 def interview_agent(agent: GenerativeAgent, message: str) -> str:
-    """Help the notebook user interact with the agent."""
     new_message = f"{USER_NAME} 说 {message}"
     return agent.generate_dialogue_response(new_message)[1]
 def run_conversation(agents: List[GenerativeAgent], initial_observation: str) -> None:
