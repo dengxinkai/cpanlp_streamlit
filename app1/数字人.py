@@ -622,20 +622,20 @@ with tab3:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-            st.session["df_inter"] = pd.DataFrame({
-                        '被采访人':do_inter_name,
-                        '采访结果': do_inter_result,
-                    })
-            with st.expander("采访记录"):
-                st.dataframe(st.session["df_inter"], use_container_width=True)
-            csv_inter = convert_df(st.session["df_inter"])
-            st.download_button(
-               "下载采访记录",
-               csv_inter,
-               "file.csv",
-               "text/csv",
-               key='download-csv_inter'
-            )
+        st.session["df_inter"] = pd.DataFrame({
+                    '被采访人':do_inter_name,
+                    '采访结果': do_inter_result,
+                })
+        with st.expander("采访记录"):
+            st.dataframe(st.session["df_inter"], use_container_width=True)
+        csv_inter = convert_df(st.session["df_inter"])
+        st.download_button(
+           "下载采访记录",
+           csv_inter,
+           "file.csv",
+           "text/csv",
+           key='download-csv_inter'
+        )
 
 
 
