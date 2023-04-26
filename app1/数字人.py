@@ -84,7 +84,7 @@ if agent_keys:
         y=st.session_state[key]
         col1, col2, col3 = st.columns([2, 1,6])
         with col1:
-            st.write(f"{i}、",y.name)
+            st.write(f"{i+1}、",y.name)
             do_name.append(y.name)
             do_age.append(y.age)
             do_gender.append(y.gender)
