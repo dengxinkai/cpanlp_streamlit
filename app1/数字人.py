@@ -410,19 +410,18 @@ class GenerativeAgent(BaseModel):
         if "GOODBYE:" in result or "GOODBYE：" in result or "再见：" in result or "再见:" in result:
             farewell = re.split(r'GOODBYE：|GOODBYE:|再见:|再见：', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {farewell}")
-            self.agent_memory += f",{self.name} 观察到 {observation} 同时说 {farewell}"
+            self.agent_memory += f"#{self.name} 观察到 {observation} 同时说 {farewell}"
             return False, f"{self.name} 说：{farewell}"
         if "SAY:" in result or "SAY：" in result or "说：" in result or "说:" in result:
             response_text = re.split(r'SAY：|说：|SAY:|说:', result)[-1].strip()
             self.add_memory(f"{self.name} 观察到 {observation} 同时说 {response_text}")
-            self.agent_memory += f",{self.name} 观察到 {observation} 同时说 {response_text}"
+            self.agent_memory += f"#{self.name} 观察到 {observation} 同时说 {response_text}"
             return True, f"{self.name} 说：{response_text}"
         else:
             return False, result
 def relevance_score_fn(score: float) -> float:
     """Return a similarity score on a scale [0, 1]."""
     return 1.0 - score / math.sqrt(2)
-
 def create_new_memory_retriever():
     """Create a new vector store retriever unique to the agent."""
     # Define your embedding model
@@ -455,11 +454,15 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
 with tab1:
     name = st.text_input('姓名','Graham', key="name_input1_6")
     age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
-    gender = st.text_input('性别','男', key="gender1_6")
+    gender = st.selectbox(
+        "性别",
+        ("男", "女"),
+        label_visibility="collapsed"
+          )
     traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
     status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
     reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-    memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5",help="记忆，不同记忆用分号分隔")
+    memory = st.text_input('记忆','妈妈很善良，喜欢看动漫', key="mery_input1_5",help="记忆，不同记忆用#分隔")
     if st.button('创建',help="创建数字人",type="primary"):
         global agent1
         global agentss
@@ -476,7 +479,7 @@ with tab1:
            agent_memory=memory,
            reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
          )
-        memory_list = re.split(r'，|,', memory)
+        memory_list = re.split(r'#', memory)
         for memory in memory_list:
             agent1.add_memory(memory)    
         st.session_state[f"agent_{name}"] = agent1
@@ -510,6 +513,9 @@ with tab1:
                   summary=summary,
                    reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
                  )
+            memory_list = re.split(r'#', memory)
+            for memory in memory_list:
+                agent1.add_memory(memory)   
 with tab2:   
     if agent_keys:  
         updates = []
@@ -517,14 +523,14 @@ with tab2:
             updates.append(st.session_state[key].name)
         option = st.selectbox("更新人选择",
         (updates), key="update")
-        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用逗号分隔")
+        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用#分隔")
         if st.button('确认',help="记忆更新",type="primary"):
-            memory_list = re.split(r'，|,', memory)
+            memory_list = re.split(r'#', memory)
             for key in agent_keys:
                 if getattr(st.session_state[key], 'name') == option:
                     for memory in memory_list:
                         st.session_state[key].add_memory(memory)
-                        st.session_state[key].agent_memory = st.session_state[key].agent_memory + ',' + memory
+                        st.session_state[key].agent_memory = st.session_state[key].agent_memory + '#' + memory
             st.experimental_rerun()  
         observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用逗号分隔")
         if st.button('确认',help="观察更新",type="primary"):
