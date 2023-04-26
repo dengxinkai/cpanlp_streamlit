@@ -458,38 +458,39 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
             break
         turns += 1
 with tab1:
-    name = st.text_input('姓名','Graham', key="name_input1_6")
-    age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
-    gender = st.selectbox(
-        "性别",
-        ("男", "女"),
-        label_visibility="collapsed"
-          )
-    traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
-    status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
-    reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-    memory = st.text_input('记忆','#妈妈很善良#喜欢看动漫#有过一个心爱的女人', key="mery_input1_5",help="记忆，不同记忆用#分隔")
-    if st.button('创建',help="创建数字人",type="primary"):
-        global agent1
-        global agentss
-        agent1 = GenerativeAgent(name=name, 
-          age=age,
-          gender=gender,
-          traits=traits,
-          status=status,
-          memory_retriever=create_new_memory_retriever(),
-          llm=LLM,
-          daily_summaries = [
-               "",
-           ],
-           agent_memory=memory,
-           reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
-         )
-        memory_list = re.split(r'#', memory)[1:]
-        for memory in memory_list:
-            agent1.add_memory(memory)    
-        st.session_state[f"agent_{name}"] = agent1
-        st.experimental_rerun()
+    with st.expander("单个创建"):
+        name = st.text_input('姓名','Graham', key="name_input1_6")
+        age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
+        gender = st.selectbox(
+            "性别",
+            ("男", "女"),
+            label_visibility="collapsed"
+              )
+        traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
+        status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
+        reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
+        memory = st.text_input('记忆','#妈妈很善良#喜欢看动漫#有过一个心爱的女人', key="mery_input1_5",help="记忆，不同记忆用#分隔")
+        if st.button('创建',help="创建数字人",type="primary"):
+            global agent1
+            global agentss
+            agent1 = GenerativeAgent(name=name, 
+              age=age,
+              gender=gender,
+              traits=traits,
+              status=status,
+              memory_retriever=create_new_memory_retriever(),
+              llm=LLM,
+              daily_summaries = [
+                   "",
+               ],
+               agent_memory=memory,
+               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+             )
+            memory_list = re.split(r'#', memory)[1:]
+            for memory in memory_list:
+                agent1.add_memory(memory)    
+            st.session_state[f"agent_{name}"] = agent1
+            st.experimental_rerun()
     uploaded_file = st.file_uploader("通过csv文件批量建立数字人", type=["csv"],help="csv格式：姓名、年龄、性别、特征、状态、反思阈值、记忆、总结")
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
