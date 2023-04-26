@@ -43,7 +43,7 @@ from langchain.prompts.chat import (
 )
 st.set_page_config(
     page_title="数字人",
-    page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
+    page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app1/shuziren.jpg",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
