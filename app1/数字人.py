@@ -129,7 +129,10 @@ if agent_keys:
                 start_time = time.time()
                 with get_openai_callback() as cb:
                     for key in agent_keys:
-                        st.success(st.session_state[key].get_summary(force_refresh=True))
+                        # 使用asyncio.run()函数来异步地调用st.session_state[key].get_summary()方法
+                        summary = asyncio.run(st.session_state[key].get_summary(force_refresh=True))
+                        # 使用st.success()函数展示返回的摘要
+                        st.success(summary)
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
