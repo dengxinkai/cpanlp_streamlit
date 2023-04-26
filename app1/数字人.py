@@ -232,9 +232,7 @@ class GenerativeAgent(BaseModel):
                                         enumerate(related_memories)])
         reflection_chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         result = reflection_chain.run(topic=topic, related_statements=related_statements)
-        # TODO: Parse the connections between memories and insights
         return self._parse_list(result)
-    
     def pause_to_reflect(self) -> List[str]:
         """Reflect on recent observations and generate 'insights'."""
         print(f"Character {self.name} is reflecting")
@@ -510,9 +508,9 @@ with tab1:
                   summary=summary,
                    reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
                  )
-            memory_list = re.split(r'#', memory)[1:]
-            for memory in memory_list:
-                agent1.add_memory(memory)   
+#             memory_list = re.split(r'#', memory)[1:]
+#             for memory in memory_list:
+#                 agent1.add_memory(memory)   
 with tab2:   
     if agent_keys:  
         updates = []
