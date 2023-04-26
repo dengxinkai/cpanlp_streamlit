@@ -626,6 +626,8 @@ with tab3:
                     '被采访人':do_inter_name,
                     '采访结果': do_inter_result,
                 })
+        with st.expander("采访记录"):
+            st.dataframe(df_inter, use_container_width=True)
         csv_inter = convert_df(df_inter)
         st.download_button(
            "下载采访记录",
