@@ -55,7 +55,7 @@ st.set_page_config(
 from PIL import Image
 
 # 加载并显示图像
-image_url = 'https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app1/shuziren.jpg'
+image_url = 'https://github.com/dengxinkai/cpanlp_streamlit/blob/main/app1/shuziren.jpg'
 image = Image.open(image_url)
 st.image(image, caption='Image', use_column_width=True)
 @st.cache_data(persist="disk")
