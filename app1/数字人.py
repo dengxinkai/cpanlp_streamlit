@@ -581,14 +581,14 @@ with tab4:
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 async def async_generate(chain):
-    resp = await chain.arun(product="toothpaste")
+    resp = await chain.arun(product="女人")
     st.write(resp)
 
 async def generate_concurrently():
     llm = OpenAI(temperature=0.9)
     prompt = PromptTemplate(
         input_variables=["product"],
-        template="What is a good name for a company that makes {product}?",
+        template="如何成功追到{product}?",
     )
     chain = LLMChain(llm=llm, prompt=prompt)
     tasks = [async_generate(chain) for _ in range(5)]
