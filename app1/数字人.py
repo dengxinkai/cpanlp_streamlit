@@ -51,6 +51,9 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
+@st.cache_data(persist="disk")
+def convert_df(df):
+   return df.to_csv(index=False).encode('utf-8')
 with st.sidebar:
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
@@ -133,9 +136,7 @@ if agent_keys:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 end_time = time.time()
                 st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    @st.cache_data(persist="disk")
-    def convert_df(df):
-       return df.to_csv(index=False).encode('utf-8')
+    
     csv = convert_df(df)
     st.download_button(
        "下载所有数字人",
@@ -580,7 +581,9 @@ with tab4:
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab3:            
-    if agent_keys:  
+    if agent_keys:
+        do_inter_name=[]
+        do_inter_result=[]
         interws = []
         for key in agent_keys:
             interws.append(st.session_state[key].name)
@@ -593,7 +596,10 @@ with tab3:
             with get_openai_callback() as cb:
                 for key in agent_keys:
                     if getattr(st.session_state[key], 'name') == option:
-                        st.success(interview_agent(st.session_state[key], interview))
+                        inter_result=interview_agent(st.session_state[key], interview)
+                        st.success(inter_result)
+                        do_inter_name.append(st.session_state[key].name)
+                        do_inter_result.append(inter_result)
                         with st.expander("费用"):
                             st.success(f"Total Tokens: {cb.total_tokens}")
                             st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -605,7 +611,10 @@ with tab3:
             start_time = time.time()
             with get_openai_callback() as cb:
                 for key in agent_keys:
-                        st.success(interview_agent(st.session_state[key], interview))
+                    inter_result=interview_agent(st.session_state[key], interview)
+                    st.success(inter_result)
+                    do_inter_name.append(st.session_state[key].name)
+                    do_inter_result.append(inter_result)
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -613,6 +622,19 @@ with tab3:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+        df_inter = pd.DataFrame({
+                    '被采访人':do_inter_name,
+                    '采访结果': do_inter_result,
+                })
+        csv_inter = convert_df(df_inter)
+        st.download_button(
+           "下载所有数字人",
+           csv_inter,
+           "file.csv",
+           "text/csv",
+           key='download-csv_inter'
+        )
+
 
 
 
