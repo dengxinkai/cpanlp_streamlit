@@ -583,6 +583,7 @@ with tab4:
 with tab3:            
     if agent_keys:
         do_inter_name=[]
+        do_inter_quesition=[]
         do_inter_result=[]
         interws = []
         for key in agent_keys:
@@ -599,6 +600,7 @@ with tab3:
                         inter_result=interview_agent(st.session_state[key], interview)
                         st.success(inter_result)
                         do_inter_name.append(st.session_state[key].name)
+                        do_inter_quesition.append(interview)
                         do_inter_result.append(inter_result)
                         with st.expander("费用"):
                             st.success(f"Total Tokens: {cb.total_tokens}")
@@ -624,6 +626,7 @@ with tab3:
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         df_inter = pd.DataFrame({
                     '被采访人':do_inter_name,
+                    '采访问题':do_inter_quesition,
                     '采访结果': do_inter_result,
                 })
         with st.expander("采访记录"):
