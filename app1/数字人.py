@@ -185,6 +185,8 @@ class GenerativeAgent(BaseModel):
     def _parse_list(text: str) -> List[str]:
         lines = re.split(r'\n', text.strip())
         return [re.sub(r'^\s*\d+\.\s*', '', line).strip() for line in lines]
+
+
     def _compute_agent_summary(self):
         """"""
         prompt = PromptTemplate.from_template(
@@ -417,36 +419,6 @@ class GenerativeAgent(BaseModel):
             return True, f"{self.name} 说：{response_text}"
         else:
             return False, result
-    async def generate_concurrently(self):
-        prompt = PromptTemplate.from_template(
-                    "{agent_summary_description}"
-                    +"\nIt is {current_time}."
-                    +"\n{agent_name}'s status: {agent_status}"
-                    + "\nSummary of relevant context from {agent_name}'s memory:"
-                    +"\n{relevant_memories}"
-                    +"\nMost recent observations: {recent_observations}"
-                    + "\nObservation: {observation}"
-                    + "\n\n" +  "Should {agent_name} react to the observation, and if so,"
-            +" what would be an appropriate reaction? Respond in one line."
-            +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
-            +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
-            + "\nEither do nothing, react, or say something but not both.\n\n"
-                    +"输出用中文，除了SAY:、REACT:等关键词")
-        agent_summary_description = self.get_summary()
-        relevant_memories_str = self.summarize_related_memories(observation)
-        current_time_str = datetime.now().strftime("%B %d, %Y, %I:%M %p")
-        kwargs = dict(agent_summary_description=agent_summary_description,
-                      current_time=current_time_str,
-                      relevant_memories=relevant_memories_str,
-                      agent_name=self.name,
-                      observation=observation,
-                     agent_status=self.status)
-        consumed_tokens = self.llm.get_num_tokens(prompt.format(recent_observations="", **kwargs))
-        kwargs["recent_observations"] = self._get_memories_until_limit(consumed_tokens)
-        chain = LLMChain(llm=self.llm, prompt=prompt)
-        tasks = [resp = await chain.arun(**kwargs)
-        st.write(resp) for _ in range(len(agent_keys))]
-        await asyncio.gather(*tasks)
 def relevance_score_fn(score: float) -> float:
     """Return a similarity score on a scale [0, 1]."""
     return 1.0 - score / math.sqrt(2)
@@ -608,9 +580,6 @@ with tab4:
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-
-
-
 with tab3:            
     if agent_keys:
         do_inter_name=[]
@@ -644,15 +613,10 @@ with tab3:
             start_time = time.time()
             with get_openai_callback() as cb:
                 for key in agent_keys:
-                    asyncio.run(st.session_state[key].generate_concurrently())
-#                 for key in agent_keys:
-# inter_result=interview_agent(st.session_state[key], interview)
-#                     st.success(inter_result)
-                    
-                    
-#                     st.success(inter_result)
-#                     do_inter_name.append(st.session_state[key].name)
-#                     do_inter_result.append(inter_result)
+                    inter_result=interview_agent(st.session_state[key], interview)
+                    st.success(inter_result)
+                    do_inter_name.append(st.session_state[key].name)
+                    do_inter_result.append(inter_result)
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
@@ -675,6 +639,12 @@ with tab3:
            "text/csv",
            key='download-csv_inter'
         )
+
+
+
+
+
+
 
 
 
