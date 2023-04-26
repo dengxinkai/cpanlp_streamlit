@@ -612,11 +612,24 @@ with tab3:
         if st.button('全部采访',help="全部采访",type="primary",key="quanbu"):
             start_time = time.time()
             with get_openai_callback() as cb:
-                for key in agent_keys:
-                    inter_result=interview_agent(st.session_state[key], interview)
-                    st.success(inter_result)
-                    do_inter_name.append(st.session_state[key].name)
-                    do_inter_result.append(inter_result)
+                async def interview_all_agents(agent_keys, interview):
+    
+                    tasks = []
+                    for key in agent_keys:
+                        task = asyncio.create_task(interview_agent_async(st.session_state[key], interview))
+                        tasks.append(task)
+                    results = await asyncio.gather(*tasks)
+                    for key, inter_result in zip(agent_keys, results):
+                        st.success(inter_result)
+                        do_inter_name.append(st.session_state[key].name)
+                        do_inter_result.append(inter_result)
+                    return do_inter_name, do_inter_result
+
+                async def interview_agent_async(agent, interview):
+                    inter_result = await asyncio.to_thread(interview_agent, agent, interview)
+                    return inter_result
+                do_inter_name, do_inter_result = await interview_all_agents(agent_keys, interview)
+
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
