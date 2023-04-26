@@ -628,7 +628,7 @@ with tab3:
                 async def interview_agent_async(agent, interview):
                     inter_result = await asyncio.to_thread(interview_agent, agent, interview)
                     return inter_result
-                do_inter_name, do_inter_result = await interview_all_agents(agent_keys, interview)
+                do_inter_name, do_inter_result = asyncio.run(interview_all_agents(agent_keys, interview))
 
                 with st.expander("费用"):
                     st.success(f"Total Tokens: {cb.total_tokens}")
