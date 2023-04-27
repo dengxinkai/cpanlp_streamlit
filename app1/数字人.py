@@ -161,7 +161,6 @@ if agent_keys:
              
 else:
     st.write("当前不存在数字人") 
-
 tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新观察与记忆", "数字人访问","数字人对话"])
 LLM = ChatOpenAI(
         model_name=model,
@@ -197,8 +196,6 @@ class GenerativeAgent(BaseModel):
     def _parse_list(text: str) -> List[str]:
         lines = re.split(r'\n', text.strip())
         return [re.sub(r'^\s*\d+\.\s*', '', line).strip() for line in lines]
-
-
     def _compute_agent_summary(self):
         """"""
         prompt = PromptTemplate.from_template(
@@ -223,7 +220,6 @@ class GenerativeAgent(BaseModel):
             + " high-level questions we can answer about the subjects in the statements?"
             + " Provide each question on a new line.\n\n"
                         +"输出用中文"
-
         )
         reflection_chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         observations = self.memory_retriever.memory_stream[-last_k:]
@@ -257,7 +253,6 @@ class GenerativeAgent(BaseModel):
                 self.add_memory(insight)
             new_insights.extend(insights)
         return new_insights
-    
     def _score_memory_importance(self, memory_content: str, weight: float = 0.15) -> float:
         prompt = PromptTemplate.from_template(
          "On the scale of 1 to 10, where 1 is purely mundane"
@@ -344,7 +339,6 @@ class GenerativeAgent(BaseModel):
         )
         chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
         return chain.run(q1=q1, context_str=context_str.strip()).strip()
-    
     def _get_memories_until_limit(self, consumed_tokens: int) -> str:
         """Reduce the number of tokens in the documents."""
         result = []
