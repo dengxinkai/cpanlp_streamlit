@@ -248,7 +248,6 @@ class GenerativeAgent(BaseModel):
         result = reflection_chain.run(topic=topic, related_statements=related_statements)
         return self._parse_list(result)
     def pause_to_reflect(self) -> List[str]:
-        """Reflect on recent observations and generate 'insights'."""
         print(f"Character {self.name} is reflecting")
         new_insights = []
         topics = self._get_topics_of_reflection()
@@ -260,9 +259,6 @@ class GenerativeAgent(BaseModel):
         return new_insights
     
     def _score_memory_importance(self, memory_content: str, weight: float = 0.15) -> float:
-        """Score the absolute importance of the given memory."""
-        # A weight of 0.25 makes this less important than it
-        # would be otherwise, relative to salience and time
         prompt = PromptTemplate.from_template(
          "On the scale of 1 to 10, where 1 is purely mundane"
          +" (e.g., brushing teeth, making bed) and 10 is"
