@@ -1,7 +1,6 @@
 import streamlit as st
 import wikipedia
 import faiss
-
 import numpy as np
 import pandas as pd
 import base64
@@ -40,7 +39,7 @@ from langchain.prompts.chat import (
 from utils import template3
 
 st.set_page_config(
-    page_title="可读-财报GPT",
+    page_title="智能财报",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -226,6 +225,7 @@ class BabyAGI(Chain, BaseModel):
         )
 wikipedia.set_lang("zh")
 with st.sidebar:
+    st.image("https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png")
     st.info('请先输入正确的openai api-key')
     st.text_input('api-key','', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
