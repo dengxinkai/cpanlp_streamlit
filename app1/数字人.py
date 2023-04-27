@@ -57,6 +57,8 @@ st.image("https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 with st.sidebar:
+    st.image("https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app1/shuziren.jpg")
+
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
