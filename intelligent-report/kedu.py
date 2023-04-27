@@ -48,9 +48,10 @@ st.set_page_config(
         'About': "智能财报"
     }
 )
+logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 wikipedia.set_lang("zh")
 with st.sidebar:
-    st.image("https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png")
+    st.image(logo_url)
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
@@ -66,6 +67,9 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0)
 显示 = ""
+wikipedia = WikipediaAPIWrapper()
+search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
+
 class TaskCreationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
@@ -239,12 +243,7 @@ class BabyAGI(Chain, BaseModel):
             vectorstore=vectorstore,
             **kwargs
         )
-
-st.title('智能财报（中国上市公司）')
 tab1, tab2 = st.tabs(["问答模式(QA)", "任务模式（BabyAGI）"])
-wikipedia = WikipediaAPIWrapper()
-search = GoogleSearchAPIWrapper(google_api_key="AIzaSyCLKh_M6oShQ6rUJiw8UeQ74M39tlCUa9M",google_cse_id="c147e3f22fbdb4316")
-logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name=model,
