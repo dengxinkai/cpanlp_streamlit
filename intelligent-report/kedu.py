@@ -245,7 +245,7 @@ class BabyAGI(Chain, BaseModel):
         )
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
-tab1, tab2 = st.tabs(["问答模式(QA)", "任务模式（BabyAGI）"])
+tab1, tab2 = st.tabs(["财报问答(QA)", "任务模式（BabyAGI）"])
 if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name=model,
