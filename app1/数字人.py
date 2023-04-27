@@ -52,7 +52,6 @@ st.set_page_config(
         'About': "可读-财报GPT"
     }
 )
-st.image("https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app1/shuziren.jpg")
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
