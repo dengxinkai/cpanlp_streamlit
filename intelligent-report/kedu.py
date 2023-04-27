@@ -539,7 +539,7 @@ if st.session_state.input_api:
                 verbose=verbose,
                 max_iterations=max_iterations
             )
-            if st.button('确认'):
+            if st.button('确认',key="renwu"):
                 start_time = time.time()
                 baby_agi({"objective": OBJECTIVE})
                 text_list = 显示.split('\n')
