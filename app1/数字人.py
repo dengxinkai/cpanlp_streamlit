@@ -49,7 +49,7 @@ st.set_page_config(
     menu_items={
         'Get Help': 'https://www.cpanlp.com/',
         'Report a bug': "https://www.cpanlp.com/",
-        'About': "可读-财报GPT"
+        'About': '社科实验数字人'
     }
 )
 @st.cache_data(persist="disk")
