@@ -437,7 +437,7 @@ if st.session_state.input_api:
                         )
                     agent_executor = AgentExecutor.from_agent_and_tools(agent=agent3, tools=tools, verbose=True,return_intermediate_steps=True)
                     response = agent_executor({"input":query})
-                    st.caption(response["output"])
+                    st.success(response["output"])
                     with st.expander("查看过程"):
                         st.write(response["intermediate_steps"])
                 else:
@@ -539,7 +539,7 @@ if st.session_state.input_api:
                 verbose=verbose,
                 max_iterations=max_iterations
             )
-            if st.button('问答'):
+            if st.button('确认'):
                 start_time = time.time()
                 baby_agi({"objective": OBJECTIVE})
                 text_list = 显示.split('\n')
@@ -547,8 +547,10 @@ if st.session_state.input_api:
                     st.write(i)
                 end_time = time.time()
                 elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                    st.success(f"Total Tokens: {cb.total_tokens}")
+                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                    st.success(f"Completion Tokens: {cb.completion_tokens}")
+                    st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-                st.write(f"Total Tokens: {cb.total_tokens}") 
-                st.write(f"Prompt Tokens: {cb.prompt_tokens}") 
-                st.write(f"Completion Tokens: {cb.completion_tokens}") 
-                st.write(f"Total Cost (USD): ${cb.total_cost}") 
+                
