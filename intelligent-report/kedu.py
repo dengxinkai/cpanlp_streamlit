@@ -31,7 +31,7 @@ with st.sidebar:
     if 'input_api' in st.session_state:
         st.text_input("api-key",st.session_state["input_api"], key="input_api")
     else:
-        st.info('请先输入正确的openai api-key')
+        st.info('请先输入正确的Openai api-key')
         st.text_input('api-key','', key="input_api")
     with st.expander("ChatOpenAI属性设置"):
         temperature = st.slider("`temperature`", 0.01, 0.99, 0.3,help="用于控制生成文本随机性和多样性的参数。较高的温度值通常适用于生成较为自由流畅的文本，而较低的温度值则适用于生成更加确定性的文本。")
@@ -236,4 +236,5 @@ if st.session_state.input_api:
                "text/csv",
                key='download-csv_inter'
             )
-
+else:
+    st.header("请先输入正确的Openai api-key")
