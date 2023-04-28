@@ -66,7 +66,7 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0,key="main_model")
-    with st.expander("index设置"):
+    with st.expander("文件Index设置"):
         chunk_size = st.number_input('chunk_size',value=500,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         embedding_choice = st.radio("`embedding模型选择`",
@@ -416,9 +416,9 @@ if st.session_state.input_api:
                     )
                     chain_type_kwargs = {"prompt": PROMPT}
                     if embedding_choice == "HuggingFaceEmbeddings":
-                        embeddings = HuggingFaceEmbeddings()
+                        embeddings_cho = HuggingFaceEmbeddings()
                     else:
-                        embeddings = OpenAIEmbeddings()
+                        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
                     documents = loader.load()
                     text_splitter = RecursiveCharacterTextSplitter(
                         chunk_size=chunk_size,
@@ -426,12 +426,17 @@ if st.session_state.input_api:
                         length_function=len,
                     )
                     texts = text_splitter.split_documents(documents)
-                    db = Chroma.from_documents(texts, embeddings)
+                    db = Chroma.from_documents(texts, embeddings_cho)
                     retriever = db.as_retriever()
                     wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                    if embedding_choice == "OpenAIEmbeddings":
+                        with st.expander("费用"):
+                                st.success(f"Total Tokens: {cb.total_tokens}")
+                                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                                st.success(f"Completion Tokens: {cb.completion_tokens}")
+                                st.success(f"Total Cost (USD): ${cb.total_cost}")
                 if st.button('确认',key="file"):
                     start_time = time.time()
-                    
                     st.success(wwww.run("公司情况"))
                     end_time = time.time()
                     elapsed_time = end_time - start_time
