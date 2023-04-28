@@ -185,7 +185,8 @@ if st.session_state.input_api:
             input_file_web = st.text_input('单个查询','',key="input_file_web")
             if st.button('确认',key="fileweb",type="primary"):
                 start_time = time.time()
-                ww=st.success(st.session_state['wwww'].run(input_file_web))
+                ww=st.session_state['wwww'].run(input_file_web)
+                st.success(ww)
                 do_question.append(input_file_web)
                 do_answer.append(ww)
                 end_time = time.time()
@@ -224,10 +225,7 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-            df_inter = pd.DataFrame({
-            '问题':do_question,
-            '回答':do_answer,
-             })
+            df_inter = pd.DataFrame({'问题':do_question,'回答':do_answer,})
             with st.expander("回答记录"):
                 st.dataframe(df_inter, use_container_width=True)
             csv_inter = convert_df(df_inter)
