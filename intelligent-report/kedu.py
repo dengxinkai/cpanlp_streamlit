@@ -24,7 +24,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain.chains.base import Chain
 from langchain.llms import OpenAI,BaseLLM
-from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma,FAISS
 from langchain.vectorstores.base import VectorStore
 from langchain.chains.mapreduce import MapReduceChain
@@ -396,6 +396,38 @@ if st.session_state.input_api:
     with tab1:
         with get_openai_callback() as cb:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
+            input_file = st.text_input(':blue[查询]','',key="file")
+            if st.button('确认',key="file"):
+                start_time = time.time()
+                prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
+                PROMPT = PromptTemplate(
+                    template=prompt_template, input_variables=["context", "question"]
+                )
+                chain_type_kwargs = {"prompt": PROMPT}
+                from langchain.embeddings import HuggingFaceEmbeddings
+                embeddings = HuggingFaceEmbeddings()
+
+                loader = PyPDFLoader("http://static.cninfo.com.cn/finalpage/2022-08-17/1214319463.PDF")
+                documents = loader.load()
+                text_splitter = RecursiveCharacterTextSplitter(
+                    # Set a really small chunk size, just to show.
+                    chunk_size=500,
+                    chunk_overlap=0,
+                    length_function=len,
+                )
+                texts = text_splitter.split_documents(documents)
+                db = Chroma.from_documents(texts, embeddings)
+                retriever = db.as_retriever()
+                wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                st.success(wwww.run("公司情况"))
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
     with tab2:
         with get_openai_callback() as cb:
             with st.expander("[可选]上传"):
