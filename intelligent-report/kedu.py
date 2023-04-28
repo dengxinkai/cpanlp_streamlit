@@ -224,18 +224,18 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-                df_inter = pd.DataFrame({
-                '问题':do_question,
-                '回答':do_answer,
-                 })
-                with st.expander("回答记录"):
-                    st.dataframe(df_inter, use_container_width=True)
-                csv_inter = convert_df(df_inter)
-                st.download_button(
-                   "下载回答记录",
-                   csv_inter,
-                   "file.csv",
-                   "text/csv",
-                   key='download-csv_inter'
-                )
- 
+            df_inter = pd.DataFrame({
+            '问题':do_question,
+            '回答':do_answer,
+             })
+            with st.expander("回答记录"):
+                st.dataframe(df_inter, use_container_width=True)
+            csv_inter = convert_df(df_inter)
+            st.download_button(
+               "下载回答记录",
+               csv_inter,
+               "file.csv",
+               "text/csv",
+               key='download-csv_inter'
+            )
+
