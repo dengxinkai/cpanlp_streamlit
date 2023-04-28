@@ -123,6 +123,8 @@ if st.session_state.input_api:
                 input_file = st.text_input('单个查询','',key="file_web")
                 upload_query=upload_file_pdf()
                 if st.button('确认',key="file_upload",type="primary"):
+                    global do_answer
+                    global do_question
                     start_time = time.time()
                     ww=upload_query.run(input_file)
                     st.success(ww)
@@ -138,6 +140,8 @@ if st.session_state.input_api:
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                 input_files = st.text_input('批量查询','',key="file_webss")
                 if st.button('确认',key="file_uploads",type="primary"):
+                    global do_answer
+                    global do_question
                     start_time = time.time()
                     input_list = re.split(r'#', input_files)[0:]
                     async def upload_all_files_async(input_list):
