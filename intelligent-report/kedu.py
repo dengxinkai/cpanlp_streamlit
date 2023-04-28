@@ -53,22 +53,34 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-if st.button('刷新页面',key="rerun"):
-    st.experimental_rerun()
-if st.button('清除所有缓存',key="clearcache"):
-    st.cache_data.clear()
-if st.session_state.input_api:
-    llm=ChatOpenAI(
-        model_name=model,
-        temperature=temperature,
-        frequency_penalty=frequency_penalty,
-        presence_penalty=presence_penalty,
-        top_p=top_p,
-        openai_api_key=st.session_state.input_api
+@st.cache_data(persist="disk")
+def upload_file(input_text):
+    loader = PyPDFLoader(input_text)
+    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
+    PROMPT = PromptTemplate(
+        template=prompt_template, input_variables=["context", "question"]
     )
-    @st.cache_resource
-    def upload_file(input_text):
-        loader = PyPDFLoader(input_text)
+    chain_type_kwargs = {"prompt": PROMPT}
+    if embedding_choice == "HuggingFaceEmbeddings":
+        embeddings_cho = HuggingFaceEmbeddings()
+    else:
+        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=len,
+    )
+    texts = text_splitter.split_documents(documents)
+    db = Chroma.from_documents(texts, embeddings_cho)
+    retriever = db.as_retriever()
+    return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+@st.cache_data(persist="disk")
+def upload_file_pdf():
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(file.read())
+        tmp_file.flush()
+        loader = PyPDFLoader(tmp_file.name)
         prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
         PROMPT = PromptTemplate(
             template=prompt_template, input_variables=["context", "question"]
@@ -88,31 +100,20 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings_cho)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-    @st.cache_resource
-    def upload_file_pdf():
-        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            tmp_file.write(file.read())
-            tmp_file.flush()
-            loader = PyPDFLoader(tmp_file.name)
-            prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
-            PROMPT = PromptTemplate(
-                template=prompt_template, input_variables=["context", "question"]
-            )
-            chain_type_kwargs = {"prompt": PROMPT}
-            if embedding_choice == "HuggingFaceEmbeddings":
-                embeddings_cho = HuggingFaceEmbeddings()
-            else:
-                embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-            documents = loader.load()
-            text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=chunk_size,
-                chunk_overlap=chunk_overlap,
-                length_function=len,
-            )
-            texts = text_splitter.split_documents(documents)
-            db = Chroma.from_documents(texts, embeddings_cho)
-            retriever = db.as_retriever()
-            return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+if st.button('刷新页面',key="rerun"):
+    st.experimental_rerun()
+if st.button('清除所有缓存',key="clearcache"):
+    st.cache_data.clear()
+if st.session_state.input_api:
+    llm=ChatOpenAI(
+        model_name=model,
+        temperature=temperature,
+        frequency_penalty=frequency_penalty,
+        presence_penalty=presence_penalty,
+        top_p=top_p,
+        openai_api_key=st.session_state.input_api
+    )
+    
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
