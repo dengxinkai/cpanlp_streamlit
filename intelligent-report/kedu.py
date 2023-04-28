@@ -1,11 +1,13 @@
 import streamlit as st
 import asyncio
+import pinecone 
 import numpy as np
 import pandas as pd
 import tempfile
 import re
 import time
 from typing import List, Union,Callable,Dict, Optional, Any
+from langchain.vectorstores import Pinecone
 from langchain.prompts import PromptTemplate
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,6 +16,8 @@ from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
+from langchain.chains.question_answering import load_qa_chain
+
 st.set_page_config(
     page_title="智能财报",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -24,6 +28,10 @@ st.set_page_config(
         'Report a bug': "https://www.cpanlp.com/",
         'About': "智能财报"
     }
+)
+pinecone.init(
+    api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+    environment="us-west1-gcp-free"  # next to api key in console
 )
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
@@ -71,9 +79,8 @@ def upload_file(input_text):
         length_function=len,
     )
     texts = text_splitter.split_documents(documents)
-    db = Chroma.from_documents(texts, embeddings_cho)
-    retriever = db.as_retriever()
-    return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+    docsearch = Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace="lihai")
+    return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(), chain_type_kwargs=chain_type_kwargs)
 def upload_file_pdf(file):
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         tmp_file.write(file.read())
