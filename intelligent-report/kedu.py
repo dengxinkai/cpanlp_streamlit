@@ -245,7 +245,7 @@ class BabyAGI(Chain, BaseModel):
         )
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
-tab1, tab2 = st.tabs(["财报问答(QA)", "任务模式（BabyAGI）"])
+tab1,tab2, tab3 = st.tabs(["财报文件问答","财报问答(QA)", "任务模式（BabyAGI）"])
 if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name=model,
@@ -395,6 +395,9 @@ if st.session_state.input_api:
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
         with get_openai_callback() as cb:
+            file = st.file_uploader("PDF上传", type="pdf",key="upload")
+    with tab2:
+        with get_openai_callback() as cb:
             with st.expander("[可选]上传"):
                 file = st.file_uploader("PDF文件", type="pdf")
                 input_text = st.text_input('PDF网址', '')
@@ -485,7 +488,7 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-    with tab2:
+    with tab3:
         with get_openai_callback() as cb:
             OBJECTIVE = st.text_input('提问','', key="name_input1_2")
             todo_prompt = PromptTemplate.from_template("尽量以少的token准确快速给出这个目标最重要的待办事项： {objective}.")
