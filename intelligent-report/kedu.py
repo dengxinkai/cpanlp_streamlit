@@ -469,7 +469,8 @@ if st.session_state.input_api:
                         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                     input_files = st.text_input('批量查询','',key="file_webss")
                     if st.button('确认',key="file_uploads",type="primary"):
-                        input_list = re.split(r'#', input_files)[1:]
+                        start_time = time.time()
+                        input_list = re.split(r'#', input_files)[0:]
                         async def upload_all_files_async(input_list):
                             tasks = []
                             for input_file in input_list:
@@ -483,6 +484,14 @@ if st.session_state.input_api:
                             result = await asyncio.to_thread(upload_query.run, input_file)
                             return result
                         asyncio.run(upload_all_files_async(input_list))
+                        end_time = time.time()
+                        elapsed_time = end_time - start_time
+                        with st.expander("费用"):
+                                st.success(f"Total Tokens: {cb.total_tokens}")
+                                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                                st.success(f"Completion Tokens: {cb.completion_tokens}")
+                                st.success(f"Total Cost (USD): ${cb.total_cost}")
+                        st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
 #                         async def interview_all_agents(agent_keys, interview):
 #                             tasks = []
 #                             for key in agent_keys:
