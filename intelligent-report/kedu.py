@@ -51,7 +51,7 @@ st.set_page_config(
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 wikipedia.set_lang("zh")
 with st.sidebar:
-    st.image(logo_url)
+    st.image(logo_url,width=200)
     if 'input_api' in st.session_state:
         st.text_input(st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
