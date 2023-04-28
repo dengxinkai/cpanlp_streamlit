@@ -1,7 +1,7 @@
 streamlit
 pandas
 numpy
-langchain
+langchain == 0.0.151
 openai
 tiktoken
 chromadb
