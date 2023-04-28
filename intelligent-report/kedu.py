@@ -97,6 +97,9 @@ class TaskCreationChain(LLMChain):
             input_variables=["result", "task_description", "incomplete_tasks", "objective"],
         )
         return cls(prompt=prompt, llm=llm, verbose=verbose)
+@st.cache_data(persist="disk")
+def convert_df(df):
+   return df.to_csv(index=False).encode('utf-8')
 class TaskPrioritizationChain(LLMChain):
     @classmethod
     def from_llm(cls, llm: BaseLLM, verbose: bool = True) -> LLMChain:
