@@ -396,7 +396,7 @@ if st.session_state.input_api:
     with tab1:
         with get_openai_callback() as cb:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
-            input_file = st.text_input(':blue[查询]','',key="file")
+            input_file = st.text_input(':blue[查询]','',key="file_web")
             if st.button('确认',key="file"):
                 start_time = time.time()
                 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
