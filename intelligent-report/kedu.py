@@ -136,7 +136,7 @@ if st.session_state.input_api:
                             st.success(f"Completion Tokens: {cb.completion_tokens}")
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-                input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如'公司收入#公司名称#公司前景'")
+                input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
                 if st.button('确认',key="file_uploads",type="primary"):
                     start_time = time.time()
                     input_list = re.split(r'#', input_files)[0:]
@@ -197,7 +197,7 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒") 
-            input_file_webs = st.text_input('批量查询','',key="input_file_webss",help="不同问题用#隔开，比如'公司收入#公司名称#公司前景'")
+            input_file_webs = st.text_input('批量查询','',key="input_file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
             if st.button('确认',key="filewebsss",type="primary"):
                 start_time = time.time()
                 input_list = re.split(r'#', input_file_webs)[0:]
