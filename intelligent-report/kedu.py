@@ -401,7 +401,6 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
-        
         with get_openai_callback() as cb:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
@@ -429,12 +428,6 @@ if st.session_state.input_api:
                     db = Chroma.from_documents(texts, embeddings_cho)
                     retriever = db.as_retriever()
                     wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-                    if embedding_choice == "OpenAIEmbeddings":
-                        with st.expander("费用"):
-                                st.success(f"Total Tokens: {cb.total_tokens}")
-                                st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                                st.success(f"Completion Tokens: {cb.completion_tokens}")
-                                st.success(f"Total Cost (USD): ${cb.total_cost}")
                 if st.button('确认',key="file"):
                     start_time = time.time()
                     st.success(wwww.run("公司情况"))
@@ -446,6 +439,43 @@ if st.session_state.input_api:
                             st.success(f"Completion Tokens: {cb.completion_tokens}")
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+            input_text = st.text_input('PDF网址', '')
+            if input_text is not None:
+                input_file = st.text_input('查询内容','',key="file_web")
+                with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                    tmp_file.write(file.read())
+                    tmp_file.flush()
+                    loader = PyPDFLoader(tmp_file.name)
+                    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
+                    PROMPT = PromptTemplate(
+                        template=prompt_template, input_variables=["context", "question"]
+                    )
+                    chain_type_kwargs = {"prompt": PROMPT}
+                    if embedding_choice == "HuggingFaceEmbeddings":
+                        embeddings_cho = HuggingFaceEmbeddings()
+                    else:
+                        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+                    documents = loader.load()
+                    text_splitter = RecursiveCharacterTextSplitter(
+                        chunk_size=chunk_size,
+                        chunk_overlap=chunk_overlap,
+                        length_function=len,
+                    )
+                    texts = text_splitter.split_documents(documents)
+                    db = Chroma.from_documents(texts, embeddings_cho)
+                    retriever = db.as_retriever()
+                    wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                if st.button('确认',key="file"):
+                    start_time = time.time()
+                    st.success(wwww.run("公司情况"))
+                    end_time = time.time()
+                    elapsed_time = end_time - start_time
+                    with st.expander("费用"):
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                    st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒") 
     with tab2:
         with get_openai_callback() as cb:
             with st.expander("[可选]上传"):
