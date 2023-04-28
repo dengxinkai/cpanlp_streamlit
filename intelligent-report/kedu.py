@@ -466,7 +466,7 @@ if st.session_state.input_api:
             else:
                 input_text = st.text_input('PDF网址', '',key="pdfweb")
                 if st.button('载入',key="pdfw"):
-                    st.success(st.session_state['wwww'] = upload_file(input_text)
+                    st.session_state['wwww'] = upload_file(input_text)
                 input_file_web = st.text_input('查询内容','',key="input_file_web")
                 if st.button('确认',key="fileweb",type="primary"):
                     start_time = time.time()
