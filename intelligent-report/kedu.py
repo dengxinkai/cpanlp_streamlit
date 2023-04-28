@@ -429,10 +429,10 @@ if st.session_state.input_api:
                         texts = text_splitter.split_documents(documents)
                         db = Chroma.from_documents(texts, embeddings_cho)
                         retriever = db.as_retriever()
-                        wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                        st.session_state['upload_query']= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
                     if st.button('确认',key="file_upload",type="primary"):
                         start_time = time.time()
-                        st.success(wwww.run(input_file))
+                        st.success(st.session_state['upload_query'].run(input_file))
                         end_time = time.time()
                         elapsed_time = end_time - start_time
                         with st.expander("费用"):
