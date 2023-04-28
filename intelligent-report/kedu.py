@@ -48,7 +48,7 @@ with st.sidebar:
         embedding_choice = st.radio("`embedding模型选择`",
                             ("HuggingFaceEmbeddings",
                             "OpenAIEmbeddings"),
-                            index=1,key="embedding_choice")
+                            index=0,key="embedding_choice")
 
 @st.cache_data(persist="disk")
 def convert_df(df):
