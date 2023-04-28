@@ -422,6 +422,31 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings_cho)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+    @st.cache_resource
+    def upload_file_pdf():
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file.flush()
+            loader = PyPDFLoader(tmp_file.name)
+            prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
+            PROMPT = PromptTemplate(
+                template=prompt_template, input_variables=["context", "question"]
+            )
+            chain_type_kwargs = {"prompt": PROMPT}
+            if embedding_choice == "HuggingFaceEmbeddings":
+                embeddings_cho = HuggingFaceEmbeddings()
+            else:
+                embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+            documents = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=chunk_size,
+                chunk_overlap=chunk_overlap,
+                length_function=len,
+            )
+            texts = text_splitter.split_documents(documents)
+            db = Chroma.from_documents(texts, embeddings_cho)
+            retriever = db.as_retriever()
+            return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
         fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
         with get_openai_callback() as cb:
@@ -429,29 +454,7 @@ if st.session_state.input_api:
                 file = st.file_uploader("PDF上传", type="pdf",key="upload")
                 if file is not None:
                     input_file = st.text_input('查询内容','',key="file_web")
-                    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-                        tmp_file.write(file.read())
-                        tmp_file.flush()
-                        loader = PyPDFLoader(tmp_file.name)
-                        prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
-                        PROMPT = PromptTemplate(
-                            template=prompt_template, input_variables=["context", "question"]
-                        )
-                        chain_type_kwargs = {"prompt": PROMPT}
-                        if embedding_choice == "HuggingFaceEmbeddings":
-                            embeddings_cho = HuggingFaceEmbeddings()
-                        else:
-                            embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-                        documents = loader.load()
-                        text_splitter = RecursiveCharacterTextSplitter(
-                            chunk_size=chunk_size,
-                            chunk_overlap=chunk_overlap,
-                            length_function=len,
-                        )
-                        texts = text_splitter.split_documents(documents)
-                        db = Chroma.from_documents(texts, embeddings_cho)
-                        retriever = db.as_retriever()
-                        upload_query= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                    upload_query=upload_file_pdf()
                     if st.button('确认',key="file_upload",type="primary"):
                         start_time = time.time()
                         st.success(upload_query.run(input_file))
