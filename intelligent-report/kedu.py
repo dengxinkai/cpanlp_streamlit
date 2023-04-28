@@ -61,7 +61,7 @@ def upload_file(input_text):
     )
     chain_type_kwargs = {"prompt": PROMPT}
     if embedding_choice == "HuggingFaceEmbeddings":
-        embeddings_cho = HuggingFaceEmbeddings(model_name='./huggingface/shibing624_text2vec-base-chinese')
+        embeddings_cho = HuggingFaceEmbeddings()
     else:
         embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     documents = loader.load()
@@ -85,7 +85,7 @@ def upload_file_pdf(file):
         )
         chain_type_kwargs = {"prompt": PROMPT}
         if embedding_choice == "HuggingFaceEmbeddings":
-            embeddings_cho = HuggingFaceEmbeddings(model_name='./huggingface/shibing624_text2vec-base-chinese')
+            embeddings_cho = HuggingFaceEmbeddings()
         else:
             embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
         documents = loader.load()
