@@ -453,7 +453,7 @@ if st.session_state.input_api:
             if fileoption=="本地上传":
                 file = st.file_uploader("PDF上传", type="pdf",key="upload")
                 if file is not None:
-                    input_file = st.text_input('查询内容','',key="file_web")
+                    input_file = st.text_input('单个查询','',key="file_web")
                     upload_query=upload_file_pdf()
                     if st.button('确认',key="file_upload",type="primary"):
                         start_time = time.time()
@@ -466,6 +466,40 @@ if st.session_state.input_api:
                                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                                 st.success(f"Total Cost (USD): ${cb.total_cost}")
                         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+                   input_files = st.text_input('批量查询','',key="file_webs")
+                   if st.button('确认',key="file_uploads",type="primary"):
+                        input_list = re.split(r'#', input_files)[1:]
+                        async def upload_all_files_async(input_list):
+                            tasks = []
+                            for input_file in input_list:
+                                task = asyncio.create_task(upload_query_async(input_file))
+                                tasks.append(task)
+                            results = await asyncio.gather(*tasks)
+                            for key, inter_result in zip(input_list, results):
+                                st.write(key)
+                                st.success(inter_result)
+                        async def upload_query_async(input_file):
+                            result = await asyncio.to_thread(upload_query.run, input_file)
+                            return result
+                        asyncio.run(upload_all_files_async(input_list))
+#                         async def interview_all_agents(agent_keys, interview):
+#                             tasks = []
+#                             for key in agent_keys:
+#                                 task = asyncio.create_task(interview_agent_async(st.session_state[key], interview))
+#                                 tasks.append(task)
+#                             results = await asyncio.gather(*tasks)
+#                             for key, inter_result in zip(agent_keys, results):
+#                                 st.success(inter_result)
+#                                 do_inter_name.append(st.session_state[key].name)
+#                                 do_inter_quesition.append(interview)
+#                                 do_inter_result.append(inter_result)
+#                             return do_inter_name,do_inter_quesition, do_inter_result
+                       
+#                         async def interview_agent_async(agent, interview):
+#                             inter_result = await asyncio.to_thread(interview_agent, agent, interview)
+#                             return inter_result
+                        do_inter_name, do_inter_quesition,do_inter_result = asyncio.run(interview_all_agents(agent_keys, interview))
+
             else:
                 input_text = st.text_input('PDF网址', '',key="pdfweb")
                 if st.button('载入',key="pdfw"):
