@@ -76,7 +76,7 @@ def upload_file(input_text):
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
 @st.cache_data(persist="disk")
-def upload_file_pdf():
+def upload_file_pdf(file):
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         tmp_file.write(file.read())
         tmp_file.flush()
@@ -122,7 +122,7 @@ if st.session_state.input_api:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
                 input_file = st.text_input('单个查询','',key="file_web")
-                upload_query=upload_file_pdf()
+                upload_query=upload_file_pdf(file)
                 if st.button('确认',key="file_upload",type="primary"):
                     start_time = time.time()
                     ww=upload_query.run(input_file)
