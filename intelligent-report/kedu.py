@@ -185,7 +185,9 @@ if st.session_state.input_api:
             input_file_web = st.text_input('单个查询','',key="input_file_web")
             if st.button('确认',key="fileweb",type="primary"):
                 start_time = time.time()
-                st.success(st.session_state['wwww'].run(input_file_web))
+                ww=st.success(st.session_state['wwww'].run(input_file_web))
+                do_question.append(input_file_web)
+                do_answer.append(ww)
                 end_time = time.time()
                 elapsed_time = end_time - start_time
                 with st.expander("费用"):
