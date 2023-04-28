@@ -80,7 +80,6 @@ def upload_file(input_text):
     )
     texts = text_splitter.split_documents(documents)
     docsearch = Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace="lihai")
-    return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=docsearch.as_retriever(), chain_type_kwargs=chain_type_kwargs)
 def upload_file_pdf(file):
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         tmp_file.write(file.read())
@@ -185,14 +184,18 @@ if st.session_state.input_api:
                 )
         else:
             input_text = st.text_input('PDF网址', '',key="pdfweb")
-            wwww = upload_file(input_text)
+            upload_file(input_text)
             input_file_web = st.text_input('单个查询','',key="input_file_web")
             if st.button('确认',key="fileweb",type="primary"):
                 start_time = time.time()
-                ww=wwww.run(input_file_web)
-                st.success(ww)
+                namespace="lihai"
+                index = pinecone.Index(index_name="kedu")
+                a=embeddings.embed_query(input_text)
+                www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
+                c = [x["metadata"]["text"] for x in www["matches"]]
+                st.success(c)
                 do_question.append(input_file_web)
-                do_answer.append(ww)
+                do_answer.append(c)
                 end_time = time.time()
                 elapsed_time = end_time - start_time
                 with st.expander("费用"):
