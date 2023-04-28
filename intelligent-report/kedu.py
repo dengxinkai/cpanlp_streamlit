@@ -10,6 +10,7 @@ from langchain.prompts import PromptTemplate
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
+from langchain import LLMChain
 from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
@@ -66,6 +67,16 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
+    if st.button('测试',key="rerun",key="new"):
+        prompt = PromptTemplate(
+            input_variables=["product"],
+            template="写出价值投资常问的关于 {product}的3个一句话问题?",
+        )
+        chain = LLMChain(llm=llm, prompt=prompt)
+        st.success(chain.run("管理"))
+
+
+
     @st.cache_resource
     def upload_file(input_text):
         loader = PyPDFLoader(input_text)
@@ -238,3 +249,4 @@ if st.session_state.input_api:
             )
 else:
     st.header("请先输入正确的Openai api-key")
+    
