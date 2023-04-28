@@ -75,7 +75,7 @@ def upload_file(input_text):
     db = Chroma.from_documents(texts, embeddings_cho)
     retriever = db.as_retriever()
     return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-@st.cache_data(persist="disk")
+@st.cache_resource
 def upload_file_pdf(file):
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         tmp_file.write(file.read())
