@@ -430,7 +430,7 @@ if st.session_state.input_api:
                         db = Chroma.from_documents(texts, embeddings_cho)
                         retriever = db.as_retriever()
                         wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-                    if st.button('确认',key="file"):
+                    if st.button('确认',key="file_upload",type="primary"):
                         start_time = time.time()
                         st.success(wwww.run(input_file))
                         end_time = time.time()
@@ -443,7 +443,7 @@ if st.session_state.input_api:
                         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
             else:
                 input_text = st.text_input('PDF网址', '',key="pdfweb")
-                if st.button('确认',key="pdfw"):
+                if st.button('载入',key="pdfw"):
                     loader = PyPDFLoader(input_text)
                     prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
                     PROMPT = PromptTemplate(
@@ -465,8 +465,7 @@ if st.session_state.input_api:
                     retriever = db.as_retriever()
                     st.session_state['wwww']= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
                 input_file_web = st.text_input('查询内容','',key="input_file_web")
-
-                if st.button('确认',key="fileweb"):
+                if st.button('确认',key="fileweb",type="primary"):
                     start_time = time.time()
                     st.success(st.session_state['wwww'].run(input_file_web))
                     end_time = time.time()
