@@ -1,4 +1,5 @@
 import streamlit as st
+import asyncio
 import wikipedia
 import faiss
 import numpy as np
