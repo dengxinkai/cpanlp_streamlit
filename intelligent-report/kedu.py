@@ -48,7 +48,7 @@ with st.sidebar:
         embedding_choice = st.radio("`embedding模型选择`",
                             ("HuggingFaceEmbeddings",
                             "OpenAIEmbeddings"),
-                            index=0,key="embedding_choice")
+                            index=1,key="embedding_choice")
 
 @st.cache_data(persist="disk")
 def convert_df(df):
@@ -113,7 +113,6 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
-    
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
@@ -132,10 +131,10 @@ if st.session_state.input_api:
                     end_time = time.time()
                     elapsed_time = end_time - start_time
                     with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                 input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
                 if st.button('确认',key="file_uploads",type="primary"):
@@ -160,10 +159,10 @@ if st.session_state.input_api:
                     end_time = time.time()
                     elapsed_time = end_time - start_time
                     with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                 df_inter = pd.DataFrame({
                 '问题':do_question,
