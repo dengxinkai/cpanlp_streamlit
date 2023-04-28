@@ -182,59 +182,58 @@ if st.session_state.input_api:
             input_text = st.text_input('PDF网址', '',key="pdfweb")
             if st.button('载入',key="pdfw"):
                 st.session_state['wwww'] = upload_file(input_text)
-            if st.session_state.wwww:
-                input_file_web = st.text_input('单个查询','',key="input_file_web")
-                if st.button('确认',key="fileweb",type="primary"):
-                    start_time = time.time()
-                    ww=st.session_state['wwww'].run(input_file_web)
-                    st.success(ww)
-                    do_question.append(input_file_web)
-                    do_answer.append(ww)
-                    end_time = time.time()
-                    elapsed_time = end_time - start_time
-                    with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
-                    st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒") 
-                input_file_webs = st.text_input('批量查询','',key="input_file_webss")
-                if st.button('确认',key="filewebsss",type="primary"):
-                    start_time = time.time()
-                    input_list = re.split(r'#', input_file_webs)[0:]
-                    async def upload_all_files_async(input_list):
-                        tasks = []
-                        for input_file in input_list:
-                            task = asyncio.create_task(upload_query_async(input_file))
-                            tasks.append(task)
-                        results = await asyncio.gather(*tasks)
-                        for key, inter_result in zip(input_list, results):
-                            st.write(key)
-                            st.success(inter_result)
-                            do_question.append(key)
-                            do_answer.append(inter_result)
-                        return do_question,do_answer
-                    async def upload_query_async(input_file):
-                        result = await asyncio.to_thread(st.session_state['wwww'].run, input_file)
-                        return result
-                    do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
-                    end_time = time.time()
-                    elapsed_time = end_time - start_time
-                    with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
-                    st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-                df_inter = pd.DataFrame({'问题':do_question,'回答':do_answer,})
-                with st.expander("回答记录"):
-                    st.dataframe(df_inter, use_container_width=True)
-                csv_inter = convert_df(df_inter)
-                st.download_button(
-                   "下载回答记录",
-                   csv_inter,
-                   "file.csv",
-                   "text/csv",
-                   key='download-csv_inter'
-                )
+            input_file_web = st.text_input('单个查询','',key="input_file_web")
+            if st.button('确认',key="fileweb",type="primary"):
+                start_time = time.time()
+                ww=st.session_state['wwww'].run(input_file_web)
+                st.success(ww)
+                do_question.append(input_file_web)
+                do_answer.append(ww)
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒") 
+            input_file_webs = st.text_input('批量查询','',key="input_file_webss")
+            if st.button('确认',key="filewebsss",type="primary"):
+                start_time = time.time()
+                input_list = re.split(r'#', input_file_webs)[0:]
+                async def upload_all_files_async(input_list):
+                    tasks = []
+                    for input_file in input_list:
+                        task = asyncio.create_task(upload_query_async(input_file))
+                        tasks.append(task)
+                    results = await asyncio.gather(*tasks)
+                    for key, inter_result in zip(input_list, results):
+                        st.write(key)
+                        st.success(inter_result)
+                        do_question.append(key)
+                        do_answer.append(inter_result)
+                    return do_question,do_answer
+                async def upload_query_async(input_file):
+                    result = await asyncio.to_thread(st.session_state['wwww'].run, input_file)
+                    return result
+                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+            df_inter = pd.DataFrame({'问题':do_question,'回答':do_answer,})
+            with st.expander("回答记录"):
+                st.dataframe(df_inter, use_container_width=True)
+            csv_inter = convert_df(df_inter)
+            st.download_button(
+               "下载回答记录",
+               csv_inter,
+               "file.csv",
+               "text/csv",
+               key='download-csv_inter'
+            )
 
