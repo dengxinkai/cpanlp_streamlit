@@ -53,7 +53,6 @@ wikipedia.set_lang("zh")
 with st.sidebar:
     st.image(logo_url,width=150)
     if 'input_api' in st.session_state:
-        st.info('请先输入正确的openai api-key')
         st.text_input("",st.session_state["input_api"], key="input_api",label_visibility="collapsed")
     else:
         st.info('请先输入正确的openai api-key')
@@ -402,6 +401,7 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
+        option = st.selectbox('文件载入?',('本地上传', 'URL'))
         with get_openai_callback() as cb:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
