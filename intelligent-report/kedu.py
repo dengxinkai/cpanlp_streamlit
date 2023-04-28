@@ -400,6 +400,28 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+    @st.cache_resource
+    def upload_file(input_text):
+        loader = PyPDFLoader(input_text)
+        prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
+        PROMPT = PromptTemplate(
+            template=prompt_template, input_variables=["context", "question"]
+        )
+        chain_type_kwargs = {"prompt": PROMPT}
+        if embedding_choice == "HuggingFaceEmbeddings":
+            embeddings_cho = HuggingFaceEmbeddings()
+        else:
+            embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        db = Chroma.from_documents(texts, embeddings_cho)
+        retriever = db.as_retriever()
+        return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
         fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
         with get_openai_callback() as cb:
@@ -429,10 +451,10 @@ if st.session_state.input_api:
                         texts = text_splitter.split_documents(documents)
                         db = Chroma.from_documents(texts, embeddings_cho)
                         retriever = db.as_retriever()
-                        st.session_state['upload_query']= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                        upload_query= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
                     if st.button('确认',key="file_upload",type="primary"):
                         start_time = time.time()
-                        st.success(st.session_state['upload_query'].run(input_file))
+                        st.success(upload_query.run(input_file))
                         end_time = time.time()
                         elapsed_time = end_time - start_time
                         with st.expander("费用"):
@@ -444,26 +466,7 @@ if st.session_state.input_api:
             else:
                 input_text = st.text_input('PDF网址', '',key="pdfweb")
                 if st.button('载入',key="pdfw"):
-                    loader = PyPDFLoader(input_text)
-                    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
-                    PROMPT = PromptTemplate(
-                        template=prompt_template, input_variables=["context", "question"]
-                    )
-                    chain_type_kwargs = {"prompt": PROMPT}
-                    if embedding_choice == "HuggingFaceEmbeddings":
-                        embeddings_cho = HuggingFaceEmbeddings()
-                    else:
-                        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-                    documents = loader.load()
-                    text_splitter = RecursiveCharacterTextSplitter(
-                        chunk_size=chunk_size,
-                        chunk_overlap=chunk_overlap,
-                        length_function=len,
-                    )
-                    texts = text_splitter.split_documents(documents)
-                    db = Chroma.from_documents(texts, embeddings_cho)
-                    retriever = db.as_retriever()
-                    st.session_state['wwww']= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                    st.success(st.session_state['wwww'] = upload_file(input_text)
                 input_file_web = st.text_input('查询内容','',key="input_file_web")
                 if st.button('确认',key="fileweb",type="primary"):
                     start_time = time.time()
