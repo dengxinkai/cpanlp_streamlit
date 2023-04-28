@@ -460,12 +460,12 @@ if st.session_state.input_api:
                 texts = text_splitter.split_documents(documents)
                 db = Chroma.from_documents(texts, embeddings_cho)
                 retriever = db.as_retriever()
-                wwww= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+                st.session_state['wwww']= RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
             input_file_web = st.text_input('查询内容','',key="input_file_web")
 
             if st.button('确认',key="fileweb"):
                 start_time = time.time()
-                st.success(wwww.run(input_file_web))
+                st.success(st.session_state['wwww'].run(input_file_web))
                 end_time = time.time()
                 elapsed_time = end_time - start_time
                 with st.expander("费用"):
