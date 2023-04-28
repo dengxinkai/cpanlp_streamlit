@@ -14,7 +14,6 @@ from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
-from utils import template3
 st.set_page_config(
     page_title="智能财报",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -30,7 +29,7 @@ logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/a
 with st.sidebar:
     st.image(logo_url,width=150)
     if 'input_api' in st.session_state:
-        st.text_input("",st.session_state["input_api"], key="input_api",label_visibility="collapsed")
+        st.text_input("api-key",st.session_state["input_api"], key="input_api")
     else:
         st.info('请先输入正确的openai api-key')
         st.text_input('api-key','', key="input_api")
@@ -54,7 +53,6 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
 if st.session_state.input_api:
@@ -124,7 +122,10 @@ if st.session_state.input_api:
                 upload_query=upload_file_pdf()
                 if st.button('确认',key="file_upload",type="primary"):
                     start_time = time.time()
-                    st.success(upload_query.run(input_file))
+                    ww=upload_query.run(input_file)
+                    st.success(ww)
+                    do_question.append(input_file)
+                    do_answer.append(ww)
                     end_time = time.time()
                     elapsed_time = end_time - start_time
                     with st.expander("费用"):
