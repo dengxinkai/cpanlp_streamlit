@@ -396,7 +396,11 @@ if st.session_state.input_api:
     with tab1:
         with get_openai_callback() as cb:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
-            input_file = st.text_input(':blue[查询]','',key="file_web")
+            with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                    tmp_file.write(file.read())
+                    tmp_file.flush()
+                    loader = PyPDFLoader(tmp_file.name)
+            input_file = st.text_input('查询内容','',key="file_web")
             if st.button('确认',key="file"):
                 start_time = time.time()
                 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
@@ -404,10 +408,7 @@ if st.session_state.input_api:
                     template=prompt_template, input_variables=["context", "question"]
                 )
                 chain_type_kwargs = {"prompt": PROMPT}
-                from langchain.embeddings import HuggingFaceEmbeddings
                 embeddings = HuggingFaceEmbeddings()
-
-                loader = PyPDFLoader("http://static.cninfo.com.cn/finalpage/2022-08-17/1214319463.PDF")
                 documents = loader.load()
                 text_splitter = RecursiveCharacterTextSplitter(
                     # Set a really small chunk size, just to show.
