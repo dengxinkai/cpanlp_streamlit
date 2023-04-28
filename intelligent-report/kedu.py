@@ -449,6 +449,8 @@ if st.session_state.input_api:
             retriever = db.as_retriever()
             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
+        do_question=[]
+        do_answer=[]
         fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
         with get_openai_callback() as cb:
             if fileoption=="本地上传":
@@ -480,10 +482,13 @@ if st.session_state.input_api:
                             for key, inter_result in zip(input_list, results):
                                 st.write(key)
                                 st.success(inter_result)
+                                do_question.append(key)
+                                do_answer.append(inter_result)
+                            return do_question,do_answer
                         async def upload_query_async(input_file):
                             result = await asyncio.to_thread(upload_query.run, input_file)
                             return result
-                        asyncio.run(upload_all_files_async(input_list))
+                        do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
                         end_time = time.time()
                         elapsed_time = end_time - start_time
                         with st.expander("费用"):
@@ -492,6 +497,22 @@ if st.session_state.input_api:
                                 st.success(f"Completion Tokens: {cb.completion_tokens}")
                                 st.success(f"Total Cost (USD): ${cb.total_cost}")
                         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+                    df_inter = pd.DataFrame({
+                    '被采访人':do_inter_name,
+                    '采访问题':do_inter_quesition,
+                    '采访结果': do_inter_result,
+                     })
+                    with st.expander("采访记录"):
+                        st.dataframe(df_inter, use_container_width=True)
+                    csv_inter = convert_df(df_inter)
+                    st.download_button(
+                       "下载采访记录",
+                       csv_inter,
+                       "file.csv",
+                       "text/csv",
+                       key='download-csv_inter'
+                    )
+
 #                         async def interview_all_agents(agent_keys, interview):
 #                             tasks = []
 #                             for key in agent_keys:
