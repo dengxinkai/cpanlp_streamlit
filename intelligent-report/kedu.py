@@ -188,6 +188,10 @@ if st.session_state.input_api:
             input_file_web = st.text_input('单个查询','',key="input_file_web")
             if st.button('确认',key="fileweb",type="primary"):
                 start_time = time.time()
+                pinecone.init(
+                    api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                    environment="us-west1-gcp-free"  # next to api key in console
+                )
                 namespace="lihai"
                 index = pinecone.Index(index_name="kedu")
                 a=embeddings.embed_query(input_text)
