@@ -498,9 +498,8 @@ if st.session_state.input_api:
                                 st.success(f"Total Cost (USD): ${cb.total_cost}")
                         st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                     df_inter = pd.DataFrame({
-                    '被采访人':do_inter_name,
-                    '采访问题':do_inter_quesition,
-                    '采访结果': do_inter_result,
+                    '问题':do_question,
+                    '回答':do_answer,
                      })
                     with st.expander("采访记录"):
                         st.dataframe(df_inter, use_container_width=True)
