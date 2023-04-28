@@ -394,6 +394,9 @@ if st.session_state.input_api:
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     with tab1:
+        with st.expander("分割器设置"):
+            chunk_size = st.number_input('chunk_size',min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
+            chunk_overlap = st.number_input('chunk_overlap',min_value=50,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         with get_openai_callback() as cb:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
@@ -410,9 +413,8 @@ if st.session_state.input_api:
                     embeddings = HuggingFaceEmbeddings()
                     documents = loader.load()
                     text_splitter = RecursiveCharacterTextSplitter(
-                        # Set a really small chunk size, just to show.
-                        chunk_size=500,
-                        chunk_overlap=0,
+                        chunk_size=chunk_size,
+                        chunk_overlap=chunk_overlap,
                         length_function=len,
                     )
                     texts = text_splitter.split_documents(documents)
