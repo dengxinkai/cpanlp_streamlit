@@ -2,17 +2,14 @@ pexpect
 streamlit
 pandas
 numpy
-langchain == 0.0.151
+langchain
 openai
 tiktoken
 chromadb
 pypdf
-wikipedia
 pinecone-client
-google-api-python-client
 faiss-cpu
 requests
 matplotlib
 chineseize_matplotlib
-scikit-learn
 asyncio
