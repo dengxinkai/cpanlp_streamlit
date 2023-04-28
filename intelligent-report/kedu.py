@@ -1,13 +1,11 @@
 import streamlit as st
 import asyncio
-import pinecone 
 import numpy as np
 import pandas as pd
 import tempfile
 import re
 import time
 from typing import List, Union,Callable,Dict, Optional, Any
-from langchain.vectorstores import Pinecone
 from langchain.prompts import PromptTemplate
 from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -16,8 +14,6 @@ from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
-from langchain.chains.question_answering import load_qa_chain
-
 st.set_page_config(
     page_title="智能财报",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -28,10 +24,6 @@ st.set_page_config(
         'Report a bug': "https://www.cpanlp.com/",
         'About': "智能财报"
     }
-)
-pinecone.init(
-    api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-    environment="us-west1-gcp-free"  # next to api key in console
 )
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
@@ -61,30 +53,22 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-def upload_file(input_text):
-    loader = PyPDFLoader(input_text)
-    prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
-    PROMPT = PromptTemplate(
-        template=prompt_template, input_variables=["context", "question"]
+if st.button('刷新页面',key="rerun"):
+    st.experimental_rerun()
+if st.button('清除所有缓存',key="clearcache"):
+    st.cache_data.clear()
+if st.session_state.input_api:
+    llm=ChatOpenAI(
+        model_name=model,
+        temperature=temperature,
+        frequency_penalty=frequency_penalty,
+        presence_penalty=presence_penalty,
+        top_p=top_p,
+        openai_api_key=st.session_state.input_api
     )
-    chain_type_kwargs = {"prompt": PROMPT}
-    if embedding_choice == "HuggingFaceEmbeddings":
-        embeddings_cho = HuggingFaceEmbeddings()
-    else:
-        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-        length_function=len,
-    )
-    texts = text_splitter.split_documents(documents)
-    docsearch = Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace="lihai")
-def upload_file_pdf(file):
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        tmp_file.write(file.read())
-        tmp_file.flush()
-        loader = PyPDFLoader(tmp_file.name)
+    @st.cache_resource
+    def upload_file(input_text):
+        loader = PyPDFLoader(input_text)
         prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
         PROMPT = PromptTemplate(
             template=prompt_template, input_variables=["context", "question"]
@@ -104,19 +88,31 @@ def upload_file_pdf(file):
         db = Chroma.from_documents(texts, embeddings_cho)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-if st.button('刷新页面',key="rerun"):
-    st.experimental_rerun()
-if st.button('清除所有缓存',key="clearcache"):
-    st.cache_data.clear()
-if st.session_state.input_api:
-    llm=ChatOpenAI(
-        model_name=model,
-        temperature=temperature,
-        frequency_penalty=frequency_penalty,
-        presence_penalty=presence_penalty,
-        top_p=top_p,
-        openai_api_key=st.session_state.input_api
-    )
+    @st.cache_resource
+    def upload_file_pdf():
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file.flush()
+            loader = PyPDFLoader(tmp_file.name)
+            prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
+            PROMPT = PromptTemplate(
+                template=prompt_template, input_variables=["context", "question"]
+            )
+            chain_type_kwargs = {"prompt": PROMPT}
+            if embedding_choice == "HuggingFaceEmbeddings":
+                embeddings_cho = HuggingFaceEmbeddings()
+            else:
+                embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+            documents = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=chunk_size,
+                chunk_overlap=chunk_overlap,
+                length_function=len,
+            )
+            texts = text_splitter.split_documents(documents)
+            db = Chroma.from_documents(texts, embeddings_cho)
+            retriever = db.as_retriever()
+            return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
@@ -125,7 +121,7 @@ if st.session_state.input_api:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
                 input_file = st.text_input('单个查询','',key="file_web")
-                upload_query=upload_file_pdf(file)
+                upload_query=upload_file_pdf()
                 if st.button('确认',key="file_upload",type="primary"):
                     start_time = time.time()
                     ww=upload_query.run(input_file)
@@ -135,10 +131,10 @@ if st.session_state.input_api:
                     end_time = time.time()
                     elapsed_time = end_time - start_time
                     with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                 input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
                 if st.button('确认',key="file_uploads",type="primary"):
@@ -163,10 +159,10 @@ if st.session_state.input_api:
                     end_time = time.time()
                     elapsed_time = end_time - start_time
                     with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                 df_inter = pd.DataFrame({
                 '问题':do_question,
@@ -184,22 +180,15 @@ if st.session_state.input_api:
                 )
         else:
             input_text = st.text_input('PDF网址', '',key="pdfweb")
-            upload_file(input_text)
+            if st.button('载入',key="pdfw"):
+                st.session_state['wwww'] = upload_file(input_text)
             input_file_web = st.text_input('单个查询','',key="input_file_web")
             if st.button('确认',key="fileweb",type="primary"):
                 start_time = time.time()
-                pinecone.init(
-                    api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                    environment="us-west1-gcp-free"  # next to api key in console
-                )
-                namespace="lihai"
-                index = pinecone.Index(index_name="kedu")
-                a=embeddings.embed_query(input_text)
-                www=index.query(vector=a, top_k=1, namespace=namespace, include_metadata=True)
-                c = [x["metadata"]["text"] for x in www["matches"]]
-                st.success(c)
+                ww=st.session_state['wwww'].run(input_file_web)
+                st.success(ww)
                 do_question.append(input_file_web)
-                do_answer.append(c)
+                do_answer.append(ww)
                 end_time = time.time()
                 elapsed_time = end_time - start_time
                 with st.expander("费用"):
@@ -225,7 +214,7 @@ if st.session_state.input_api:
                         do_answer.append(inter_result)
                     return do_question,do_answer
                 async def upload_query_async(input_file):
-                    result = await asyncio.to_thread(wwww.run, input_file)
+                    result = await asyncio.to_thread(st.session_state['wwww'].run, input_file)
                     return result
                 do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
                 end_time = time.time()
