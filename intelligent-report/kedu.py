@@ -440,7 +440,7 @@ if st.session_state.input_api:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
                     st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
             input_text = st.text_input('PDF网址', '',key="pdfweb")
-            if input_text != "":
+            if st.button('确认',key="pdfw"):
                 loader = PyPDFLoader(input_text)
                 prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
                 PROMPT = PromptTemplate(
