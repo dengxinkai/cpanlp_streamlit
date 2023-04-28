@@ -11,10 +11,7 @@ import pinecone
 import requests
 import re
 import time
-from pydantic import BaseModel, Field
-from collections import deque
 from typing import List, Union,Callable,Dict, Optional, Any
-from langchain.agents import  ZeroShotAgent,AgentExecutor, LLMSingleActionAgent, AgentOutputParser,initialize_agent, Tool,AgentType,create_pandas_dataframe_agent
 from langchain.prompts import StringPromptTemplate,PromptTemplate
 from langchain import OpenAI, SerpAPIWrapper, LLMChain
 from langchain.schema import AgentAction, AgentFinish,Document
