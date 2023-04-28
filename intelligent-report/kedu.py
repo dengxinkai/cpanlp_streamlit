@@ -499,7 +499,7 @@ if st.session_state.input_api:
 #                         async def interview_agent_async(agent, interview):
 #                             inter_result = await asyncio.to_thread(interview_agent, agent, interview)
 #                             return inter_result
-                        do_inter_name, do_inter_quesition,do_inter_result = asyncio.run(interview_all_agents(agent_keys, interview))
+#                         do_inter_name, do_inter_quesition,do_inter_result = asyncio.run(interview_all_agents(agent_keys, interview))
 
             else:
                 input_text = st.text_input('PDF网址', '',key="pdfweb")
