@@ -29,10 +29,7 @@ st.set_page_config(
         'About': "智能财报"
     }
 )
-pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                      environment="us-west1-gcp-free",  # next to api key in console
-                      )
-index = pinecone.Index(index_name="kedu")
+
 
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
@@ -143,6 +140,10 @@ if st.session_state.input_api:
                 upload_file_pdf()
             input_file = st.text_input('单个查询','',key="file_web")
             if st.button('确认',key="file_upload",type="primary"):
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free",  # next to api key in console
+                      )
+                index = pinecone.Index(index_name="kedu")
                 start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
                 www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
