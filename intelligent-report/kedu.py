@@ -68,6 +68,8 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       environment="us-west1-gcp-free", 
                       namespace=pinename
                       )
+index = pinecone.Index(index_name="kedu")
+
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
@@ -184,6 +186,11 @@ if st.session_state.input_api:
         else:
             input_text = st.text_input('PDF网址', '',key="pdfweb")
             if st.button('载入数据库',key="pdfw"):
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace=pinename
+                      )
+                index = pinecone.Index(index_name="kedu")
                 upload_file(input_text)
             input_file_web = st.text_input('单个查询','',key="input_file_web")
 
