@@ -110,7 +110,7 @@ if st.session_state.input_api:
             st.cache_data.clear()
     do_question=[]
     do_answer=[]
-    fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
+    fileoption = st.radio('数据库创建方式?',('本地上传', 'URL'),key="fileoption")
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
