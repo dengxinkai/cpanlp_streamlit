@@ -165,21 +165,23 @@ if st.session_state.input_api:
                 a=embeddings_cho.embed_query(input_file)
                 www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
                 ww=www["matches"][0]["metadata"]["text"]
-                template = """Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES"). 
+                
+                template = """Given the following extracted parts of a long document and a question, create a final answer. 
                 If you don't know the answer, just say that you don't know. Don't try to make up an answer.
-                ALWAYS return a "SOURCES" part in your answer.
-                Respond in Italian.
-
+                Respond in Chinese.
                 QUESTION: {question}
                 =========
                 {summaries}
                 =========
                 FINAL ANSWER IN CHINESE:"""
-                PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
+                prompt = PromptTemplate(
+                    input_variables=["summaries", "question"],
+                    template=template,
+                )
+                chain = LLMChain(prompt=prompt, llm=llm)
 
-                chain = load_qa_with_sources_chain(llm, chain_type="stuff", prompt=PROMPT)
-                ww1=chain({"input_documents": ww, "question": input_file}, return_only_outputs=True)["output_text"]
-                
+                ww1=chain.predict(summaries=ww, question=input_file)
+               
 
                 st.success(ww1)
                 do_question.append(input_file)
