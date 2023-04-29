@@ -15,6 +15,7 @@ from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
+from langchain.vectorstores import DeepLake
 
 st.set_page_config(
     page_title="智能财报",
@@ -46,7 +47,7 @@ with st.sidebar:
                                 "gpt-4"),
                                 index=0,key="main_model")
     with st.expander("文件Index设置"):
-        chunk_size = st.number_input('chunk_size',value=500,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
+        chunk_size = st.number_input('chunk_size',value=800,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         embedding_choice = st.radio("`embedding模型选择`",
                             ("HuggingFaceEmbeddings",
@@ -122,7 +123,7 @@ if st.session_state.input_api:
                 length_function=len,
             )
             texts = text_splitter.split_documents(documents)
-            db = Chroma.from_documents(texts, embeddings_cho)
+            db = DeepLake.from_documents(texts, dataset_path="./my_deeplake/", embedding=embeddings_cho, overwrite=True)
             retriever = db.as_retriever()
             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
