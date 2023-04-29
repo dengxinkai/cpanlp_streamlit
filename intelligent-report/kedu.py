@@ -110,7 +110,7 @@ if st.session_state.input_api:
             st.cache_data.clear()
     do_question=[]
     do_answer=[]
-    fileoption = st.radio('数据库创建方式?',('本地上传', 'URL'),key="fileoption")
+    fileoption = st.radio('**数据库创建方式**',('本地上传', 'URL'),key="fileoption")
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
@@ -193,7 +193,7 @@ if st.session_state.input_api:
                 index = pinecone.Index(index_name="kedu")
                 upload_file(input_text)
                 st.cache_data.clear()
-            input_file_web = st.text_input('查询','',key="input_file_web")
+            input_file_web = st.text_input('**查询**','',key="input_file_web")
 
             if st.button('数据库查询',key="file_web"):
                 ww=""
