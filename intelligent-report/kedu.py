@@ -28,6 +28,8 @@ st.set_page_config(
         'About': "智能财报"
     }
 )
+st.markdown("***")
+
 gc.enable()
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
