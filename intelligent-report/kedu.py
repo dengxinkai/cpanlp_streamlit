@@ -53,6 +53,12 @@ with st.sidebar:
         chunk_size = st.number_input('chunk_size',value=500,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         top_k = st.number_input('top_k',value=3,min_value=0,max_value=10,step=1,key="top_k")
+    st.write("使用注意事项：")
+    st.write("1、上传文档：使用系统上传功能将pdf文档上传至向量数据库。")
+    st.write("2、自建数据库：通过上传文档自建向量数据库，进行后续数据处理和查询。")
+    st.write("3、AI查询：使用AI功能对数据库进行查询，获得所需数据。")
+    st.warning("定期清理：请及时清理不再需要的数据库，以便他人使用。")
+   
 
 @st.cache_data(persist="disk")
 def convert_df(df):
