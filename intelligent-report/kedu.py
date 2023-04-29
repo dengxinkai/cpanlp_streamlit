@@ -141,7 +141,7 @@ if st.session_state.input_api:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             input_file = st.text_input('单个查询','',key="file_web")
-            if st.button('确认',key="file_upload",type="primary"):
+            if st.button('数据库查询',key="file_upload",type="primary"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace=pinename
@@ -163,7 +163,7 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-            if st.button('AI确认',key="aifile_upload",type="primary"):
+            if st.button('AI查询',key="aifile_upload",type="primary"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace='ceshi'
