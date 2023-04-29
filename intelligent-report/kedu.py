@@ -114,7 +114,7 @@ if st.session_state.input_api:
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
-            input_file = st.text_input('**查询**','',key="file_web")
+            input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
             if st.button('数据库查询',key="file_upload"):
                 ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -193,7 +193,7 @@ if st.session_state.input_api:
                 index = pinecone.Index(index_name="kedu")
                 upload_file(input_text)
                 st.cache_data.clear()
-            input_file_web = st.text_input('**查询**','',key="input_file_web")
+            input_file_web = st.text_input('**查询**','公司核心竞争力',key="input_file_web",help="例子")
 
             if st.button('数据库查询',key="file_web"):
                 ww=""
