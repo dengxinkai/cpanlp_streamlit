@@ -56,7 +56,7 @@ with st.sidebar:
     st.write("使用注意事项：")
     st.write("1、上传文档：使用系统上传功能将pdf文档上传至自建向量数据库。")
     st.write("2、AI查询：使用AI功能对数据库进行查询，获得所需数据。")
-    st.warning("定期清理：请及时清理不再需要的数据库，以便他人使用。")
+    st.warning("请及时清理不再需要的数据库，以便他人使用。")
    
 
 @st.cache_data(persist="disk")
