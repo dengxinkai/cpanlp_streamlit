@@ -207,6 +207,7 @@ if st.session_state.input_api:
                 do_answer.append(ww)    
             
             if st.button('AI查询',key="aifile_web",type="primary"):
+                ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace='ceshi'
