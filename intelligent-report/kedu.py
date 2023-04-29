@@ -139,8 +139,9 @@ if st.session_state.input_api:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
-                input_file = st.text_input('单个查询','',key="file_web")
+                
                 upload_file_pdf()
+            input_file = st.text_input('单个查询','',key="file_web")
             if st.button('确认',key="file_upload",type="primary"):
                 start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
