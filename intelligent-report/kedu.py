@@ -32,6 +32,8 @@ st.set_page_config(
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free",  # next to api key in console
                       )
+index = pinecone.Index(index_name="kedu")
+
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
     st.image(logo_url,width=150)
@@ -67,6 +69,10 @@ if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
 if st.session_state.input_api:
+    if embedding_choice == "HuggingFaceEmbeddings":
+        embeddings_cho = HuggingFaceEmbeddings()
+    else:
+        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     llm=ChatOpenAI(
         model_name=model,
         temperature=temperature,
@@ -115,10 +121,6 @@ if st.session_state.input_api:
                 template=prompt_template, input_variables=["context", "question"]
             )
             chain_type_kwargs = {"prompt": PROMPT}
-            if embedding_choice == "HuggingFaceEmbeddings":
-                embeddings_cho = HuggingFaceEmbeddings()
-            else:
-                embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
             documents = loader.load()
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=chunk_size,
@@ -141,7 +143,10 @@ if st.session_state.input_api:
                 upload_file_pdf()
                 if st.button('确认',key="file_upload",type="primary"):
                     start_time = time.time()
-                    ww=upload_query.run(input_file)
+                    a=embeddings_cho.embed_query(input_file)
+                    www=index.query(vector=a, top_k=1, namespace='Tirole_CorporateFinance', include_metadata=True)
+                    ww=www["matches"][0]["metadata"]["text"]
+                    
                     st.success(ww)
                     do_question.append(input_file)
                     do_answer.append(ww)
