@@ -28,6 +28,7 @@ st.set_page_config(
         'About': "智能财报"
     }
 )
+gc.enable()
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
     st.image(logo_url,width=150)
@@ -58,6 +59,8 @@ def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
+    gc.collect()
+
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 if st.session_state.input_api:
