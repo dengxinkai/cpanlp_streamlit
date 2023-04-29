@@ -131,11 +131,7 @@ if st.session_state.input_api:
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
-            if file is not None:
-                
-                upload_file_pdf()
-            input_file = st.text_input('单个查询','',key="file_web")
-            if st.button('确认',key="file_upload",type="primary"):
+             if st.button('确认',key="file_upload",type="primary"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace='ceshi'
@@ -157,6 +153,48 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+             if st.button('AI确认',key="aifile_upload",type="primary"):
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace='ceshi'
+                      )
+                index = pinecone.Index(index_name="kedu")
+                start_time = time.time()
+                a=embeddings_cho.embed_query(input_file)
+                www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
+                ww=www["matches"][0]["metadata"]["text"]
+                template = """Given the following extracted parts of a long document and a question, create a final answer with references ("SOURCES"). 
+                If you don't know the answer, just say that you don't know. Don't try to make up an answer.
+                ALWAYS return a "SOURCES" part in your answer.
+                Respond in Italian.
+
+                QUESTION: {question}
+                =========
+                {summaries}
+                =========
+                FINAL ANSWER IN CHINESE:"""
+                PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
+
+                chain = load_qa_with_sources_chain(OpenAI(temperature=0), chain_type="stuff", prompt=PROMPT)
+                ww1=chain({"input_documents": ww, "question": input_file}, return_only_outputs=True)["output_text"]
+                
+
+                st.success(ww1)
+                do_question.append(input_file)
+                do_answer.append(ww1)
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+            if file is not None:
+                
+                upload_file_pdf()
+            input_file = st.text_input('单个查询','',key="file_web")
+           
                 input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
                 if st.button('确认',key="file_uploads",type="primary"):
                     start_time = time.time()
