@@ -64,7 +64,7 @@ if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
-                      namespace='ceshi'
+                      namespace='ceshi1'
                       )
 if st.session_state.input_api:
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
@@ -123,7 +123,7 @@ if st.session_state.input_api:
                 length_function=len,
             )
             texts = text_splitter.split_documents(documents)
-            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace='ceshi')
+            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace='ceshi1')
 #             retriever = db.as_retriever()
 #             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
@@ -136,12 +136,12 @@ if st.session_state.input_api:
             if st.button('确认',key="file_upload",type="primary"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
-                      namespace='ceshi'
+                      namespace='ceshi1'
                       )
                 index = pinecone.Index(index_name="kedu")
                 start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
-                www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
+                www=index.query(vector=a, top_k=1, namespace='ceshi1', include_metadata=True)
                 ww=www["matches"][0]["metadata"]["text"]
 
                 st.success(ww)
