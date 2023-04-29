@@ -20,14 +20,14 @@ from langchain.vectorstores import Pinecone
 from langchain.chains.qa_with_sources import load_qa_with_sources_chain
 
 st.set_page_config(
-    page_title="智能财报",
+    page_title="ChatReport",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
         'Get Help': 'https://www.cpanlp.com/',
         'Report a bug': "https://www.cpanlp.com/",
-        'About': "智能财报"
+        'About': "智能报告"
     }
 )
 
