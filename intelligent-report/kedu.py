@@ -17,6 +17,7 @@ from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
+from langchain.chains.qa_with_sources import load_qa_with_sources_chain
 
 st.set_page_config(
     page_title="智能财报",
