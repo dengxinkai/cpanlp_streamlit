@@ -52,7 +52,7 @@ with st.sidebar:
     with st.expander("文件Index设置"):
         chunk_size = st.number_input('chunk_size',value=500,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
-  
+        top_k = st.number_input('top_k',value=3,min_value=0,max_value=10,step=1,key="top_k")
 
 @st.cache_data(persist="disk")
 def convert_df(df):
@@ -132,7 +132,7 @@ if st.session_state.input_api:
                       )
                 index = pinecone.Index(index_name="kedu")
                 a=embeddings_cho.embed_query(input_file)
-                www=index.query(vector=a, top_k=3, namespace=pinename, include_metadata=True)
+                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
                 for i in range(top_k):
                     ww+=www["matches"][i]["metadata"]["text"]
                 st.success(ww)
