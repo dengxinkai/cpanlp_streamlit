@@ -231,7 +231,7 @@ if st.session_state.input_api:
                     template=template,
                 )
                 chain = LLMChain(prompt=prompt, llm=llm)
-                ww1=chain.predict(summaries=ww, question=input_file)
+                ww1=chain.predict(summaries=ww, question=input_file_web)
                 st.success(ww1)
                 do_question.append(input_file_web)
                 do_answer.append(ww1)
