@@ -15,6 +15,7 @@ from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
+from langchain.vectorstores import Pinecone
 
 st.set_page_config(
     page_title="智能财报",
