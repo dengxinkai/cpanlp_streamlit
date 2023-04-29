@@ -69,8 +69,6 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       environment="us-west1-gcp-free", 
                       namespace=pinename
                       )
-                
-
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
@@ -84,14 +82,6 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
-#     if st.button('测试',key="value_invest"):
-#         prompt = PromptTemplate(
-#             input_variables=["product"],
-#             template="写出价值投资常问的关于 {product}的3个一句话问题?",
-#         )
-#         chain = LLMChain(llm=llm, prompt=prompt)
-#         st.success(chain.run("管理"))
-#     @st.cache_resource
     def upload_file(input_text):
         loader = PyPDFLoader(input_text)
         prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
@@ -119,11 +109,6 @@ if st.session_state.input_api:
             tmp_file.write(file.read())
             tmp_file.flush()
             loader = PyPDFLoader(tmp_file.name)
-            prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
-            PROMPT = PromptTemplate(
-                template=prompt_template, input_variables=["context", "question"]
-            )
-            chain_type_kwargs = {"prompt": PROMPT}
             documents = loader.load()
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=chunk_size,
@@ -132,8 +117,6 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-#             retriever = db.as_retriever()
-#             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
@@ -141,28 +124,20 @@ if st.session_state.input_api:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             input_file = st.text_input('单个查询','',key="file_web")
-            if st.button('数据库查询',key="file_upload",type="primary"):
+            if st.button('数据库查询',key="file_upload"):
+                ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace=pinename
                       )
                 index = pinecone.Index(index_name="kedu")
-                start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
                 www=index.query(vector=a, top_k=3, namespace=pinename, include_metadata=True)
-                ww=www["matches"][0]["metadata"]["text"] + www["matches"][1]["metadata"]["text"] + www["matches"][2]["metadata"]["text"]
-
+                for i in range(top_k):
+                    ww+=www["matches"][i]["metadata"]["text"]
                 st.success(ww)
                 do_question.append(input_file)
                 do_answer.append(ww)
-                end_time = time.time()
-                elapsed_time = end_time - start_time
-                with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
             if st.button('AI查询',key="aifile_upload",type="primary"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
