@@ -61,7 +61,10 @@ if st.button('刷新页面',key="rerun"):
 
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
-
+pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace='ceshi'
+                      )
 if st.session_state.input_api:
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     llm=ChatOpenAI(
@@ -119,8 +122,7 @@ if st.session_state.input_api:
                 length_function=len,
             )
             texts = text_splitter.split_documents(documents)
-            db = Chroma.from_documents(texts, embeddings_cho)
-            docsearch = Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace='ceshi')
+            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace='ceshi')
 #             retriever = db.as_retriever()
 #             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
