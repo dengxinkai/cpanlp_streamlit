@@ -29,9 +29,9 @@ st.set_page_config(
         'About': "智能财报"
     }
 )
-pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
-                      environment="us-east4-gcp",  # next to api key in console
-                      namespace="ssq")
+pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free",  # next to api key in console
+                      )
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
     st.image(logo_url,width=150)
