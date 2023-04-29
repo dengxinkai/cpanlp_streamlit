@@ -167,6 +167,7 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+                st.cache_data.clear()
             if file is not None:
                 upload_file_pdf()
                 df_inter = pd.DataFrame({
