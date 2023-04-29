@@ -78,7 +78,7 @@ if st.session_state.input_api:
         )
         chain = LLMChain(llm=llm, prompt=prompt)
         st.success(chain.run("管理"))
-    @st.cache_resource
+#     @st.cache_resource
     def upload_file(input_text):
         loader = PyPDFLoader(input_text)
         prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
@@ -100,7 +100,7 @@ if st.session_state.input_api:
         db = Chroma.from_documents(texts, embeddings_cho)
         retriever = db.as_retriever()
         return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
-    @st.cache_resource
+#     @st.cache_resource
     def upload_file_pdf():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(file.read())
