@@ -106,7 +106,6 @@ if st.session_state.input_api:
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
             st.cache_data.clear()
-            st.experimental_rerun()
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
