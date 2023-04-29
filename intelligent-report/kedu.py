@@ -5,6 +5,7 @@ import pandas as pd
 import tempfile
 import re
 import time
+import pinecone
 from typing import List, Union,Callable,Dict, Optional, Any
 from langchain.prompts import PromptTemplate
 from langchain.document_loaders import PyPDFLoader
@@ -28,7 +29,9 @@ st.set_page_config(
         'About': "智能财报"
     }
 )
-
+pinecone.init(api_key="bd20d2c3-f100-4d24-954b-c17928d1c2da",  # find at app.pinecone.io
+                      environment="us-east4-gcp",  # next to api key in console
+                      namespace="ssq")
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
     st.image(logo_url,width=150)
