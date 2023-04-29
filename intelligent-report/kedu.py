@@ -63,13 +63,13 @@ if st.button('刷新页面',key="rerun"):
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
+pinename = st.text_input('数据库名称','example',key="pinename")
 
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace=pinename
                       )
                 
-pinename = st.text_input('数据库名称','example',key="pinename")
 
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
