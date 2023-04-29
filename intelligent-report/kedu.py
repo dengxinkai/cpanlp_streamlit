@@ -207,34 +207,7 @@ if st.session_state.input_api:
                 upload_file_pdf()
             
            
-                input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
-                if st.button('确认',key="file_uploads",type="primary"):
-                    start_time = time.time()
-                    input_list = re.split(r'#', input_files)[0:]
-                    async def upload_all_files_async(input_list):
-                        tasks = []
-                        for input_file in input_list:
-                            task = asyncio.create_task(upload_query_async(input_file))
-                            tasks.append(task)
-                        results = await asyncio.gather(*tasks)
-                        for key, inter_result in zip(input_list, results):
-                            st.write(key)
-                            st.success(inter_result)
-                            do_question.append(key)
-                            do_answer.append(inter_result)
-                        return do_question,do_answer
-                    async def upload_query_async(input_file):
-                        result = await asyncio.to_thread(upload_query.run, input_file)
-                        return result
-                    do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
-                    end_time = time.time()
-                    elapsed_time = end_time - start_time
-                    with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
-                    st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+            
                 df_inter = pd.DataFrame({
                 '问题':do_question,
                 '回答':do_answer,
