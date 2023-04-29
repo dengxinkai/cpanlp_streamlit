@@ -1,5 +1,4 @@
 import streamlit as st
-import asyncio
 import numpy as np
 import pandas as pd
 import tempfile
@@ -12,12 +11,10 @@ from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain import LLMChain
-from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
-from langchain.vectorstores import Chroma
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
-from langchain.chains.qa_with_sources import load_qa_with_sources_chain
 
 st.set_page_config(
     page_title="ChatReport",
