@@ -193,7 +193,7 @@ if st.session_state.input_api:
                 index = pinecone.Index(index_name="kedu")
                 upload_file(input_text)
                 st.cache_data.clear()
-            input_file_web = st.text_input('单个查询','',key="input_file_web")
+            input_file_web = st.text_input('查询','',key="input_file_web")
 
             if st.button('数据库查询',key="file_web"):
                 ww=""
