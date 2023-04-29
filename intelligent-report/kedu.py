@@ -51,10 +51,7 @@ with st.sidebar:
     with st.expander("文件Index设置"):
         chunk_size = st.number_input('chunk_size',value=500,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
-        embedding_choice = st.radio("`embedding模型选择`",
-                            ("HuggingFaceEmbeddings",
-                            "OpenAIEmbeddings"),
-                            index=0,key="embedding_choice")
+  
 
 @st.cache_data(persist="disk")
 def convert_df(df):
@@ -66,10 +63,7 @@ if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
 if st.session_state.input_api:
-    if embedding_choice == "HuggingFaceEmbeddings":
-        embeddings_cho = HuggingFaceEmbeddings()
-    else:
-        embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+    embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     llm=ChatOpenAI(
         model_name=model,
         temperature=temperature,
