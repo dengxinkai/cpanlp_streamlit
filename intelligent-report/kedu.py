@@ -173,9 +173,9 @@ if st.session_state.input_api:
                 a=embeddings_cho.embed_query(input_file)
                 www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
                 ww=www["matches"][0]["metadata"]["text"]
-                
-                template = """Given the following extracted parts of a long document and a question, create a final answer. 
-                If you don't know the answer, just say that you don't know. Don't try to make up an answer.
+
+                template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
+                Return any relevant text verbatim.
                 Respond in Chinese.
                 QUESTION: {question}
                 =========
