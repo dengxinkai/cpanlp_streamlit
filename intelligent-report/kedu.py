@@ -145,7 +145,7 @@ if st.session_state.input_api:
                     start_time = time.time()
                     a=embeddings_cho.embed_query(input_file)
                     www=index.query(vector=a, top_k=1, namespace='Tirole_CorporateFinance', include_metadata=True)
-                    ww=www["matches"][0]["metadata"]["text"]
+                    ww=www["matches"]["metadata"]["text"]
                     
                     st.success(ww)
                     do_question.append(input_file)
