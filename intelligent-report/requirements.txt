@@ -11,4 +11,3 @@ pinecone-client
 faiss-cpu
 requests
 asyncio
-deeplake
