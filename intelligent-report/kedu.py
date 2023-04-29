@@ -59,7 +59,6 @@ def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
-
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
@@ -106,6 +105,8 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+            st.cache_data.clear()
+            st.experimental_rerun()
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
