@@ -63,6 +63,8 @@ if st.button('刷新页面',key="rerun"):
 
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
+    gc.collect()
+
 if st.session_state.input_api:
     llm=ChatOpenAI(
         model_name=model,
