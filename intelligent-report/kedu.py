@@ -184,7 +184,7 @@ if st.session_state.input_api:
                    key='download-csv_inter'
                 )
         else:
-            input_text = st.text_input('PDF网址', '',key="pdfweb")
+            input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
             if st.button('载入数据库',key="pdfw"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
