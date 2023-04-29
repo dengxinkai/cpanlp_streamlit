@@ -84,13 +84,13 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
-    if st.button('测试',key="value_invest"):
-        prompt = PromptTemplate(
-            input_variables=["product"],
-            template="写出价值投资常问的关于 {product}的3个一句话问题?",
-        )
-        chain = LLMChain(llm=llm, prompt=prompt)
-        st.success(chain.run("管理"))
+#     if st.button('测试',key="value_invest"):
+#         prompt = PromptTemplate(
+#             input_variables=["product"],
+#             template="写出价值投资常问的关于 {product}的3个一句话问题?",
+#         )
+#         chain = LLMChain(llm=llm, prompt=prompt)
+#         st.success(chain.run("管理"))
 #     @st.cache_resource
     def upload_file(input_text):
         loader = PyPDFLoader(input_text)
