@@ -177,7 +177,7 @@ if st.session_state.input_api:
                 FINAL ANSWER IN CHINESE:"""
                 PROMPT = PromptTemplate(template=template, input_variables=["summaries", "question"])
 
-                chain = load_qa_with_sources_chain(OpenAI(temperature=0), chain_type="stuff", prompt=PROMPT)
+                chain = load_qa_with_sources_chain(llm, chain_type="stuff", prompt=PROMPT)
                 ww1=chain({"input_documents": ww, "question": input_file}, return_only_outputs=True)["output_text"]
                 
 
