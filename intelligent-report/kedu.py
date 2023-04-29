@@ -66,14 +66,14 @@ if st.button('清除所有缓存',key="clearcache"):
 
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
-                      namespace='ceshi1'
+                      namespace=pinename
                       )
                 
-pinename = st.text_input('数据库名称','',key="pinename")
+pinename = st.text_input('数据库名称','example',key="pinename")
 
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
-    index.delete(deleteAll='true', namespace='ceshi1')
+    index.delete(deleteAll='true', namespace=pinename)
 if st.session_state.input_api:
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     llm=ChatOpenAI(
@@ -131,7 +131,7 @@ if st.session_state.input_api:
                 length_function=len,
             )
             texts = text_splitter.split_documents(documents)
-            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace='ceshi1')
+            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
 #             retriever = db.as_retriever()
 #             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
@@ -144,12 +144,12 @@ if st.session_state.input_api:
             if st.button('确认',key="file_upload",type="primary"):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
-                      namespace='ceshi1'
+                      namespace=pinename
                       )
                 index = pinecone.Index(index_name="kedu")
                 start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
-                www=index.query(vector=a, top_k=3, namespace='ceshi1', include_metadata=True)
+                www=index.query(vector=a, top_k=3, namespace=pinename, include_metadata=True)
                 ww=www["matches"][0]["metadata"]["text"] + www["matches"][1]["metadata"]["text"] + www["matches"][2]["metadata"]["text"]
 
                 st.success(ww)
