@@ -364,7 +364,7 @@ class GenerativeAgent(BaseModel):
                 +"\nMost recent observations: {recent_observations}"
                 + "\nObservation: {observation}"
                 + "\n\n" + suffix
-                +"输出用中文，除了SAY:、REACT:等关键词"
+                +"输出用中文，除了SAY:、REACT:"
 
         )
         agent_summary_description = self.get_summary()
@@ -388,7 +388,7 @@ class GenerativeAgent(BaseModel):
             +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
             +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
             + "\nEither do nothing, react, or say something but not both.\n\n"
-                +"输出用中文，除了SAY:、REACT:等关键词"
+                +"输出用中文，除了SAY:、REACT:"
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
@@ -403,7 +403,10 @@ class GenerativeAgent(BaseModel):
             return False, result
     def generate_dialogue_response(self, observation: str) -> Tuple[bool, str]:
         call_to_action_template = (
-            'What would {agent_name} say? To end the conversation, write: GOODBYE: "what to say". Otherwise to continue the conversation, write: SAY: "what to say next"\n\n 输出用中文，除了GOODBYE:、SAY:等关键词'
+            'What would {agent_name} say? To end the conversation,'
+            +'write: GOODBYE: "what to say". '
+            +'Otherwise to continue the conversation, write: SAY: "what to say next"\n\n'
+            +'输出用中文，除了GOODBYE:、SAY:'
         )
         full_result = self._generate_reaction(observation, call_to_action_template)
         result = full_result.strip().split('\n')[0]
