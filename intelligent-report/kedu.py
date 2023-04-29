@@ -166,11 +166,7 @@ if st.session_state.input_api:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
             if file is not None:
-                
                 upload_file_pdf()
-            
-           
-            
                 df_inter = pd.DataFrame({
                 '问题':do_question,
                 '回答':do_answer,
@@ -187,7 +183,7 @@ if st.session_state.input_api:
                 )
         else:
             input_text = st.text_input('PDF网址', '',key="pdfweb")
-            if st.button('载入',key="pdfw"):
+            if st.button('载入数据库',key="pdfw"):
                 upload_file(input_text)
             input_file_web = st.text_input('单个查询','',key="input_file_web")
 
