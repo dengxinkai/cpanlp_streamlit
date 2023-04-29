@@ -144,8 +144,8 @@ if st.session_state.input_api:
                 if st.button('确认',key="file_upload",type="primary"):
                     start_time = time.time()
                     a=embeddings_cho.embed_query(input_file)
-                    www=index.query(vector=a, top_k=1, namespace='Tirole_CorporateFinance', include_metadata=True)
-                    ww=www["matches"]["metadata"]["text"]
+                    www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
+                    ww=www["matches"][0]["metadata"]["text"]
                     
                     st.success(ww)
                     do_question.append(input_file)
