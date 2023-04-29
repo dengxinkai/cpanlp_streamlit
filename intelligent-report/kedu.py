@@ -141,8 +141,8 @@ if st.session_state.input_api:
                 index = pinecone.Index(index_name="kedu")
                 start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
-                www=index.query(vector=a, top_k=1, namespace='ceshi1', include_metadata=True)
-                ww=www["matches"][0]["metadata"]["text"]
+                www=index.query(vector=a, top_k=2, namespace='ceshi1', include_metadata=True)
+                ww=www["matches"][0]["metadata"]["text"] + www["matches"][1]["metadata"]["text"]
 
                 st.success(ww)
                 do_question.append(input_file)
