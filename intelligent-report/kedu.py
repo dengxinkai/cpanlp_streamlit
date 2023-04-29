@@ -123,8 +123,9 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             db = Chroma.from_documents(texts, embeddings_cho)
-            retriever = db.as_retriever()
-            return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+            docsearch = Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace='ceshi')
+#             retriever = db.as_retriever()
+#             return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
     do_question=[]
     do_answer=[]
     fileoption = st.radio('文件载入?',('本地上传', 'URL'),key="fileoption")
@@ -133,7 +134,7 @@ if st.session_state.input_api:
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
                 input_file = st.text_input('单个查询','',key="file_web")
-                upload_query=upload_file_pdf()
+                upload_file_pdf()
                 if st.button('确认',key="file_upload",type="primary"):
                     start_time = time.time()
                     ww=upload_query.run(input_file)
