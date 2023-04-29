@@ -62,10 +62,17 @@ if st.button('刷新页面',key="rerun"):
 
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
+
+
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace='ceshi1'
                       )
+                
+
+if st.button('删除数据库',key="rerun"):
+    index = pinecone.Index(index_name="kedu")
+    index.delete(deleteAll='true', namespace='ceshi1')
 if st.session_state.input_api:
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     llm=ChatOpenAI(
