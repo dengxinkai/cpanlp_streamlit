@@ -84,15 +84,6 @@ if st.session_state.input_api:
     )
     def upload_file(input_text):
         loader = PyPDFLoader(input_text)
-        prompt_template = """Use the following pieces of context to answer the question at the end. If you don't know the answer, just say that you don't know, don't try to make up an answer.{context}Question: {question}Answer in Chinese:"""
-        PROMPT = PromptTemplate(
-            template=prompt_template, input_variables=["context", "question"]
-        )
-        chain_type_kwargs = {"prompt": PROMPT}
-        if embedding_choice == "HuggingFaceEmbeddings":
-            embeddings_cho = HuggingFaceEmbeddings()
-        else:
-            embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
         documents = loader.load()
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
@@ -100,9 +91,7 @@ if st.session_state.input_api:
             length_function=len,
         )
         texts = text_splitter.split_documents(documents)
-        db = Chroma.from_documents(texts, embeddings_cho)
-        retriever = db.as_retriever()
-        return RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=retriever, chain_type_kwargs=chain_type_kwargs)
+        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
 #     @st.cache_resource
     def upload_file_pdf():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -139,6 +128,7 @@ if st.session_state.input_api:
                 do_question.append(input_file)
                 do_answer.append(ww)
             if st.button('AI查询',key="aifile_upload",type="primary"):
+                ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
                       environment="us-west1-gcp-free", 
                       namespace='ceshi'
@@ -146,9 +136,9 @@ if st.session_state.input_api:
                 index = pinecone.Index(index_name="kedu")
                 start_time = time.time()
                 a=embeddings_cho.embed_query(input_file)
-                www=index.query(vector=a, top_k=1, namespace='ceshi', include_metadata=True)
-                ww=www["matches"][0]["metadata"]["text"]
-
+                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                for i in range(top_k):
+                    ww+=www["matches"][i]["metadata"]["text"]
                 template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
                 Return any relevant text verbatim.
                 Respond in Chinese.
@@ -164,8 +154,6 @@ if st.session_state.input_api:
                 chain = LLMChain(prompt=prompt, llm=llm)
 
                 ww1=chain.predict(summaries=ww, question=input_file)
-               
-
                 st.success(ww1)
                 do_question.append(input_file)
                 do_answer.append(ww1)
@@ -200,42 +188,52 @@ if st.session_state.input_api:
         else:
             input_text = st.text_input('PDF网址', '',key="pdfweb")
             if st.button('载入',key="pdfw"):
-                st.session_state['wwww'] = upload_file(input_text)
+                upload_file(input_text)
             input_file_web = st.text_input('单个查询','',key="input_file_web")
-            if st.button('确认',key="fileweb",type="primary"):
-                start_time = time.time()
-                ww=st.session_state['wwww'].run(input_file_web)
+
+            if st.button('数据库查询',key="file_web"):
+                ww=""
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace=pinename
+                      )
+                index = pinecone.Index(index_name="kedu")
+                a=embeddings_cho.embed_query(input_file_web)
+                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                for i in range(top_k):
+                    ww+=www["matches"][i]["metadata"]["text"]
                 st.success(ww)
                 do_question.append(input_file_web)
-                do_answer.append(ww)
-                end_time = time.time()
-                elapsed_time = end_time - start_time
-                with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒") 
-            input_file_webs = st.text_input('批量查询','',key="input_file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
-            if st.button('确认',key="filewebsss",type="primary"):
+                do_answer.append(ww)    
+            
+            if st.button('AI查询',key="aifile_web",type="primary"):
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace='ceshi'
+                      )
+                index = pinecone.Index(index_name="kedu")
                 start_time = time.time()
-                input_list = re.split(r'#', input_file_webs)[0:]
-                async def upload_all_files_async(input_list):
-                    tasks = []
-                    for input_file in input_list:
-                        task = asyncio.create_task(upload_query_async(input_file))
-                        tasks.append(task)
-                    results = await asyncio.gather(*tasks)
-                    for key, inter_result in zip(input_list, results):
-                        st.write(key)
-                        st.success(inter_result)
-                        do_question.append(key)
-                        do_answer.append(inter_result)
-                    return do_question,do_answer
-                async def upload_query_async(input_file):
-                    result = await asyncio.to_thread(st.session_state['wwww'].run, input_file)
-                    return result
-                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+                a=embeddings_cho.embed_query(input_file_web)
+                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                for i in range(top_k):
+                    ww+=www["matches"][i]["metadata"]["text"]
+                template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
+                Return any relevant text verbatim.
+                Respond in Chinese.
+                QUESTION: {question}
+                =========
+                {summaries}
+                =========
+                FINAL ANSWER IN CHINESE:"""
+                prompt = PromptTemplate(
+                    input_variables=["summaries", "question"],
+                    template=template,
+                )
+                chain = LLMChain(prompt=prompt, llm=llm)
+                ww1=chain.predict(summaries=ww, question=input_file)
+                st.success(ww1)
+                do_question.append(input_file_web)
+                do_answer.append(ww1)
                 end_time = time.time()
                 elapsed_time = end_time - start_time
                 with st.expander("费用"):
