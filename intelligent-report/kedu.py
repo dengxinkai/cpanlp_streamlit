@@ -15,6 +15,8 @@ from langchain.embeddings import OpenAIEmbeddings,HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
+import gc
+
 st.set_page_config(
     page_title="智能财报",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -74,9 +76,6 @@ if st.session_state.input_api:
         )
         chain = LLMChain(llm=llm, prompt=prompt)
         st.success(chain.run("管理"))
-
-
-
     @st.cache_resource
     def upload_file(input_text):
         loader = PyPDFLoader(input_text)
