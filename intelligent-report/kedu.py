@@ -113,7 +113,7 @@ if st.session_state.input_api:
         )
         texts = text_splitter.split_documents(documents)
         Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-        st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
+        st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
         st.cache_data.clear()
 #     @st.cache_resource
     def upload_file_pdf():
@@ -187,7 +187,7 @@ if st.session_state.input_api:
                     upload_file()
                 
         else:
-            input_text = st.text_input('文件网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
+            input_text = st.text_input('文件网址（支持格式包括：PPTX、PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
             if st.button('载入数据库',key="pdfw"):
                 with st.spinner('Wait for it...'):
                     pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
