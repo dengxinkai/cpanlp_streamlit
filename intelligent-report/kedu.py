@@ -161,13 +161,7 @@ if st.session_state.input_api:
             web_file_pdf(input_text)
         else:
             st.warning("不支持的文件类型，请上传 PPTX 或 PDF 文件。")
-        file_ext = os.path.splitext(file.name)[1].lower()
-        if file_ext == ".pptx":
-            upload_file_pptx()
-        elif file_ext == ".pdf":
-            upload_file_pdf()
-        else:
-            st.warning("Unsupported file type. Please upload a PPTX or PDF file.")        
+    
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
@@ -193,7 +187,7 @@ if st.session_state.input_api:
                     upload_file()
                 
         else:
-            input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
+            input_text = st.text_input('文件网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
             if st.button('载入数据库',key="pdfw"):
                 with st.spinner('Wait for it...'):
                     pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -201,7 +195,7 @@ if st.session_state.input_api:
                           namespace=pinename
                           )
                     index = pinecone.Index(index_name="kedu")
-                    web_file_pdf(input_text)
+                    web_file(input_text)
                     st.cache_data.clear()
 #主要功能                
         input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
