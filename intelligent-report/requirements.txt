@@ -10,4 +10,4 @@ faiss-cpu
 requests
 asyncio
 unstructured
-
+docx2txt
