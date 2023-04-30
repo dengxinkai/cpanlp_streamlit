@@ -280,12 +280,12 @@ if st.session_state.input_api:
                 do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
                 end_time = time.time()
                 elapsed_time = end_time - start_time
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
                 with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
-                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
 
         df_inter = pd.DataFrame({
             '问题':do_question,
