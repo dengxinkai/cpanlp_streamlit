@@ -212,6 +212,61 @@ if st.session_state.input_api:
                         ww+=www["matches"][i]["metadata"]["text"]
                     return ww
                 do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+            
+            if st.button('AI批量查询',key="aifile_uploadss",type="primary"):
+                start_time = time.time()
+                input_list = re.split(r'#', input_files)[1:]
+                async def upload_all_files_async(input_list):
+                    do_question, do_answer = [], []
+                    tasks = []
+                    for input_file in input_list:
+                        task = asyncio.create_task(upload_query_async(input_file))
+                        tasks.append(task)
+                    results = await asyncio.gather(*tasks)
+                    for key, inter_result in zip(input_list, results):
+                        st.write(key)
+                        st.success(inter_result)
+                        do_question.append(key)
+                        do_answer.append(inter_result)
+                    return do_question,do_answer
+                async def upload_query_async(input_file):
+                    ww=""
+                    ww1=""
+                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                          environment="us-west1-gcp-free", 
+                          namespace='ceshi'
+                          )
+                    index = pinecone.Index(index_name="kedu")
+                    start_time = time.time()
+                    a=embeddings_cho.embed_query(input_file)
+                    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                    for i in range(top_k):
+                        ww+=www["matches"][i]["metadata"]["text"]
+                    template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
+                    Return any relevant text verbatim.
+                    Respond in Chinese.
+                    QUESTION: {question}
+                    =========
+                    {summaries}
+                    =========
+                    FINAL ANSWER IN CHINESE:"""
+                    prompt = PromptTemplate(
+                        input_variables=["summaries", "question"],
+                        template=template,
+                    )
+                    chain = LLMChain(prompt=prompt, llm=llm)
+                    ww1=chain.predict(summaries=ww, question=input_file)
+                    return ww1
+                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+            
             df_inter = pd.DataFrame({
                 '问题':do_question,
                 '回答':do_answer,
