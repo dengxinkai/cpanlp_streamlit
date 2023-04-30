@@ -61,13 +61,13 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-st.write("🫡 :red[记得常常使用刷新和清除缓存]")
+st.write("🫡 :red[记得经常使用刷新和清除缓存功能]")
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
-st.subheader("👇 :blue[第二步：取一个独特的数据库名称]")
+st.subheader("👇 :blue[第二步：创建自己的数据库或连接到已有数据库]")
 pinename = st.text_input('**数据库名称**','report',key="pinename",help="请注意，系统每日定期清除数据库")
 
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -75,7 +75,7 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       namespace=pinename
                       )
 index = pinecone.Index(index_name="kedu")
-st.write("🫡 :red[最后不要忘了，不用的数据库记得删除]")
+st.write("🫡 :red[别忘了删除不再使用的数据库]")
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
