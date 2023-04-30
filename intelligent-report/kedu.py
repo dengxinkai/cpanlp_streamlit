@@ -144,7 +144,7 @@ if st.session_state.input_api:
             input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
             if st.button('确认',key="file_uploads",type="primary"):
                 start_time = time.time()
-                input_list = re.split(r'#', input_files)[0:]
+                input_list = re.split(r'#', input_files)[1:]
                 async def upload_all_files_async(input_list):
                     tasks = []
                     for input_file in input_list:
