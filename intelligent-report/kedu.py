@@ -135,9 +135,9 @@ if st.session_state.input_api:
     def upload_file():
         file_ext = os.path.splitext(file.name)[1].lower()
         if file_ext == ".pptx":
-            upload_file_pptx(file)
+            upload_file_pptx()
         elif file_ext == ".pdf":
-            upload_file_pdf(file)
+            upload_file_pdf()
         else:
             st.warning("Unsupported file type. Please upload a PPTX or PDF file.")
 
