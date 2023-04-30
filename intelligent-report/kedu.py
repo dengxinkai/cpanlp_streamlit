@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import tempfile
 import re
+import os
 import time
 import pinecone
 from typing import List, Union,Callable,Dict, Optional, Any
