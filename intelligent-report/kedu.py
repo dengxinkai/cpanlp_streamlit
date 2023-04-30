@@ -32,7 +32,7 @@ st.set_page_config(
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
     st.image(logo_url,width=150)
-    st.subheader("➡️:blue[第一步：输入api]")
+    st.subheader("👇:blue[第一步：输入Openai的api]")
     if 'input_api' in st.session_state:
         st.text_input("api-key",st.session_state["input_api"], key="input_api")
     else:
@@ -65,7 +65,7 @@ if st.button('刷新页面',key="rerun"):
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
-st.subheader("➡️:blue[第二步：取一个数据库名称]")
+st.subheader("👇:blue[第二步：取一个独特的数据库名称]")
 pinename = st.text_input('**数据库名称**','example',key="pinename",help="请注意，系统每日定期清除数据库")
 
 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -73,7 +73,7 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       namespace=pinename
                       )
 index = pinecone.Index(index_name="kedu")
-
+st.subheader("👇:blue[最后不要忘了，不用的数据库记得删除]")
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
@@ -114,6 +114,7 @@ if st.session_state.input_api:
             st.cache_data.clear()
     do_question=[]
     do_answer=[]
+    st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
     fileoption = st.radio('**数据库创建方式**',('本地上传', 'URL'),key="fileoption")
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
