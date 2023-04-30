@@ -114,7 +114,7 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-            st.success(f"Uploaded {len(texts)} documents from PPTX file.")
+            st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
             st.cache_data.clear()
     def upload_file_pptx():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -129,9 +129,15 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-            st.success(f"Uploaded {len(texts)} documents from PPTX file.")
-
+            st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
             st.cache_data.clear()
+    def upload_file():
+        if file.name.endswith(".pptx"):
+            upload_file_pptx()
+        elif file.name.endswith(".pdf"):
+            upload_file_pdf()
+        else:
+            st.warning("Unsupported file type. Please upload a PPTX or PDF file.")
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
@@ -154,7 +160,7 @@ if st.session_state.input_api:
             file = st.file_uploader("PDF上传", type=("pptx",'pdf'),key="upload")
             if file is not None:
                 with st.spinner('Wait for it...'):
-                    upload_file_pptx()
+                    upload_file()
                 
         else:
             input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
