@@ -113,6 +113,20 @@ if st.session_state.input_api:
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
             st.cache_data.clear()
+    def upload_file_pptx():
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file.flush()
+            loader = UnstructuredPowerPointLoader((tmp_file.name)
+            documents = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=chunk_size,
+                chunk_overlap=chunk_overlap,
+                length_function=len,
+            )
+            texts = text_splitter.split_documents(documents)
+            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+            st.cache_data.clear()
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
