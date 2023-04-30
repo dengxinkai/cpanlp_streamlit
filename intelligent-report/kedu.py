@@ -8,7 +8,7 @@ import time
 import pinecone
 from typing import List, Union,Callable,Dict, Optional, Any
 from langchain.prompts import PromptTemplate
-from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import PyPDFLoader,Docx2txtLoader,UnstructuredPowerPointLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains import RetrievalQA
 from langchain import LLMChain
@@ -17,7 +17,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
 import asyncio
-from langchain.document_loaders import UnstructuredPowerPointLoader
 
 st.set_page_config(
     page_title="ChatReport",
@@ -146,14 +145,31 @@ if st.session_state.input_api:
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
             st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
             st.cache_data.clear()
+    def upload_file_docx():
+        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+            tmp_file.write(file.read())
+            tmp_file.flush()
+            loader = Docx2txtLoader(tmp_file.name)
+            documents = loader.load()
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=chunk_size,
+                chunk_overlap=chunk_overlap,
+                length_function=len,
+            )
+            texts = text_splitter.split_documents(documents)
+            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+            st.success(f"已上传来自 DOCX 文件的 {len(texts)} 个文档。”")
+            st.cache_data.clear()
     def upload_file():
         file_ext = os.path.splitext(file.name)[1].lower()
         if file_ext == ".pptx":
             upload_file_pptx()
         elif file_ext == ".pdf":
             upload_file_pdf()
+        elif file_ext == ".docx":
+            upload_file_docx()
         else:
-            st.warning("不支持的文件类型，请上传 PPTX 或 PDF 文件。")
+            st.warning("不支持的文件类型，请上传 PPTX、DOCX 或 PDF 文件。")
     def web_file(input_text):
         if input_text.lower().endswith('.pptx'):
             web_file_pptx(input_text)
@@ -181,7 +197,7 @@ if st.session_state.input_api:
  #上传  
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
-            file = st.file_uploader("上传文件（支持格式包括：PPTX、PDF）", type=("pptx",'pdf'),key="upload")
+            file = st.file_uploader("上传文件（支持格式包括：PPTX、DOCX和PDF）", type=("pptx",'pdf','docx'),key="upload")
             if file is not None:
                 with st.spinner('Wait for it...'):
                     upload_file()
