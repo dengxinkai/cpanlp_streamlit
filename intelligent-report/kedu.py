@@ -132,12 +132,14 @@ if st.session_state.input_api:
             st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
             st.cache_data.clear()
     def upload_file():
-        if file.name.endswith(".pptx"):
-            upload_file_pptx()
-        elif file.name.endswith(".pdf"):
-            upload_file_pdf()
+        file_ext = os.path.splitext(file.name)[1].lower()
+        if file_ext == ".pptx":
+            upload_file_pptx(file)
+        elif file_ext == ".pdf":
+            upload_file_pdf(file)
         else:
             st.warning("Unsupported file type. Please upload a PPTX or PDF file.")
+
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
