@@ -1,13 +1,12 @@
 pexpect
 streamlit
 pandas
-numpy
 langchain
 openai
 tiktoken
-chromadb
 pypdf
 pinecone-client
 faiss-cpu
 requests
 asyncio
+unstructured
