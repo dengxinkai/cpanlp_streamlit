@@ -33,13 +33,13 @@ st.set_page_config(
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
     st.image(logo_url,width=150)
-    st.subheader("👇 :blue[第一步：输入Openai的api]")
+    st.subheader("👇 :blue[第一步：输入 OpenAI API 密钥]")
     if 'input_api' in st.session_state:
         st.text_input("api-key",st.session_state["input_api"], key="input_api")
     else:
-        st.info('请先输入正确的Openai api-key')
+        st.info('请先输入正确的OpenAI API 密钥')
         st.text_input('api-key','', key="input_api")
-    with st.expander("ChatOpenAI属性设置"):
+    with st.expander("ChatOpenAI属性配置"):
         temperature = st.slider("`temperature`", 0.01, 0.99, 0.3,help="用于控制生成文本随机性和多样性的参数。较高的温度值通常适用于生成较为自由流畅的文本，而较低的温度值则适用于生成更加确定性的文本。")
         frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3,help="用于控制生成文本中单词重复频率的技术。数值越大，模型对单词重复使用的惩罚就越严格，生成文本中出现相同单词的概率就越低；数值越小，生成文本中出现相同单词的概率就越高。")
         presence_penalty = st.slider("`presence_penalty`", 0.01, 0.99, 0.3,help="用于控制语言生成模型生成文本时对输入提示的重视程度的参数。presence_penalty的值较低，模型生成的文本可能与输入提示非常接近，但缺乏创意或原创性。presence_penalty设置为较高的值，模型可能生成更多样化、更具原创性但与输入提示较远的文本。")
@@ -48,7 +48,7 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0,key="main_model")
-    with st.expander("文件Index设置"):
+    with st.expander("向量数据库配置"):
         chunk_size = st.number_input('chunk_size',value=800,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         top_k = st.number_input('top_k',value=3,min_value=0,max_value=10,step=1,key="top_k")
@@ -134,7 +134,7 @@ if st.session_state.input_api:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
-            st.write("🫡 :red[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
+            st.write("🫡 :red[使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。]")
             if st.button('数据库查询',key="file_upload"):
                 ww=upload_query(input_file)
                 st.success(ww)
