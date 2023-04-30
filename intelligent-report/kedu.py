@@ -133,89 +133,105 @@ if st.session_state.input_api:
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
-            input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
-            st.warning("🫡 使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
-            if st.button('数据库查询',key="file_upload"):
-                ww=upload_query(input_file)
-                st.success(ww)
-                do_question.append(input_file)
-                do_answer.append(ww)
+            
                 
-            
-               
-            if st.button('AI查询',key="aifile_upload",type="primary"):
-                with st.spinner('Wait for it...'):
+        else:
+            input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
+            if st.button('载入数据库',key="pdfw"):
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace=pinename
+                      )
+                index = pinecone.Index(index_name="kedu")
+                upload_file(input_text)
+                st.cache_data.clear()
+                
+                
+                
+                
+                
+                
+        input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
+        st.warning("🫡 使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
+        if st.button('数据库查询',key="file_upload"):
+            ww=upload_query(input_file)
+            st.success(ww)
+            do_question.append(input_file)
+            do_answer.append(ww)
 
-                    ww=""
-                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                          environment="us-west1-gcp-free", 
-                          namespace='ceshi'
-                          )
-                    index = pinecone.Index(index_name="kedu")
-                    start_time = time.time()
-                    a=embeddings_cho.embed_query(input_file)
-                    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-                    for i in range(top_k):
-                        ww+=www["matches"][i]["metadata"]["text"]
-                    template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
-                    Return any relevant text verbatim.
-                    Respond in Chinese.
-                    QUESTION: {question}
-                    =========
-                    {summaries}
-                    =========
-                    FINAL ANSWER IN CHINESE:"""
-                    prompt = PromptTemplate(
-                        input_variables=["summaries", "question"],
-                        template=template,
-                    )
-                    chain = LLMChain(prompt=prompt, llm=llm)
+        if st.button('AI查询',key="aifile_upload",type="primary"):
+            with st.spinner('Wait for it...'):
+                ww=""
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace='ceshi'
+                      )
+                index = pinecone.Index(index_name="kedu")
+                start_time = time.time()
+                a=embeddings_cho.embed_query(input_file)
+                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                for i in range(top_k):
+                    ww+=www["matches"][i]["metadata"]["text"]
+                template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
+                Return any relevant text verbatim.
+                Respond in Chinese.
+                QUESTION: {question}
+                =========
+                {summaries}
+                =========
+                FINAL ANSWER IN CHINESE:"""
+                prompt = PromptTemplate(
+                    input_variables=["summaries", "question"],
+                    template=template,
+                )
+                chain = LLMChain(prompt=prompt, llm=llm)
 
-                    ww1=chain.predict(summaries=ww, question=input_file)
-                    st.success(ww1)
-                    do_question.append(input_file)
-                    do_answer.append(ww1)
-                    end_time = time.time()
-                    elapsed_time = end_time - start_time
-                    with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
-                    st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-            
-            input_files = st.text_input('**批量查询**','#公司名称#公司产品',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
-            if st.button('数据库批量查询',key="file_uploads1"):
-                input_list = re.split(r'#', input_files)[1:]
-                async def upload_all_files_async(input_list):
-                    do_question, do_answer = [], []
+                ww1=chain.predict(summaries=ww, question=input_file)
+                st.success(ww1)
+                do_question.append(input_file)
+                do_answer.append(ww1)
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
 
-                    tasks = []
-                    for input_file in input_list:
-                        task = asyncio.create_task(upload_query_async(input_file))
-                        tasks.append(task)
-                    results = await asyncio.gather(*tasks)
-                    for key, inter_result in zip(input_list, results):
-                        st.write(key)
-                        st.success(inter_result)
-                        do_question.append(key)
-                        do_answer.append(inter_result)
-                    return do_question,do_answer
-                async def upload_query_async(input_file):
-                    ww=""
-                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                                  environment="us-west1-gcp-free", 
-                                  namespace=pinename
-                                  )
-                    index = pinecone.Index(index_name="kedu")
-                    a=embeddings_cho.embed_query(input_file)
-                    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-                    for i in range(top_k):
-                        ww+=www["matches"][i]["metadata"]["text"]
-                    return ww
-                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
-            
-            if st.button('AI批量查询',key="aifile_uploadss",type="primary"):
+        input_files = st.text_input('**批量查询**','#公司名称#公司产品',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
+        if st.button('数据库批量查询',key="file_uploads1"):
+            input_list = re.split(r'#', input_files)[1:]
+            async def upload_all_files_async(input_list):
+                do_question, do_answer = [], []
+
+                tasks = []
+                for input_file in input_list:
+                    task = asyncio.create_task(upload_query_async(input_file))
+                    tasks.append(task)
+                results = await asyncio.gather(*tasks)
+                for key, inter_result in zip(input_list, results):
+                    st.write(key)
+                    st.success(inter_result)
+                    do_question.append(key)
+                    do_answer.append(inter_result)
+                return do_question,do_answer
+            async def upload_query_async(input_file):
+                ww=""
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                              environment="us-west1-gcp-free", 
+                              namespace=pinename
+                              )
+                index = pinecone.Index(index_name="kedu")
+                a=embeddings_cho.embed_query(input_file)
+                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                for i in range(top_k):
+                    ww+=www["matches"][i]["metadata"]["text"]
+                return ww
+            do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+
+        if st.button('AI批量查询',key="aifile_uploadss",type="primary"):
+            with st.spinner('Wait for it...'):
 
                 start_time = time.time()
                 input_list = re.split(r'#', input_files)[1:]
@@ -269,99 +285,24 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+
+        df_inter = pd.DataFrame({
+            '问题':do_question,
+            '回答':do_answer,
+             })
+        with st.expander("回答记录"):
+            st.dataframe(df_inter, use_container_width=True)
+        csv_inter = convert_df(df_inter)
+        st.download_button(
+           "下载回答记录",
+           csv_inter,
+           "file.csv",
+           "text/csv",
+           key='download-csv_inter'
+        )
+        if file is not None:
+            upload_file_pdf()
             
-            df_inter = pd.DataFrame({
-                '问题':do_question,
-                '回答':do_answer,
-                 })
-            with st.expander("回答记录"):
-                st.dataframe(df_inter, use_container_width=True)
-            csv_inter = convert_df(df_inter)
-            st.download_button(
-               "下载回答记录",
-               csv_inter,
-               "file.csv",
-               "text/csv",
-               key='download-csv_inter'
-            )
-            if file is not None:
-                upload_file_pdf()
-                
-        else:
-            input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
-            if st.button('载入数据库',key="pdfw"):
-                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                      environment="us-west1-gcp-free", 
-                      namespace=pinename
-                      )
-                index = pinecone.Index(index_name="kedu")
-                upload_file(input_text)
-                st.cache_data.clear()
-            input_file_web = st.text_input('**查询**','公司核心竞争力',key="input_file_web",help="例子")
-            st.write("🫡 :red[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
-            if st.button('数据库查询',key="file_web"):
-                ww=""
-                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                      environment="us-west1-gcp-free", 
-                      namespace=pinename
-                      )
-                index = pinecone.Index(index_name="kedu")
-                a=embeddings_cho.embed_query(input_file_web)
-                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-                for i in range(top_k):
-                    ww+=www["matches"][i]["metadata"]["text"]
-                st.success(ww)
-                do_question.append(input_file_web)
-                do_answer.append(ww)    
-            
-            if st.button('AI查询',key="aifile_web",type="primary"):
-                ww=""
-                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                      environment="us-west1-gcp-free", 
-                      namespace='ceshi'
-                      )
-                index = pinecone.Index(index_name="kedu")
-                start_time = time.time()
-                a=embeddings_cho.embed_query(input_file_web)
-                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-                for i in range(top_k):
-                    ww+=www["matches"][i]["metadata"]["text"]
-                template = """Use the following portion of a long document to see if any of the text is relevant to answer the question. 
-                Return any relevant text verbatim.
-                Respond in Chinese.
-                QUESTION: {question}
-                =========
-                {summaries}
-                =========
-                FINAL ANSWER IN CHINESE:"""
-                prompt = PromptTemplate(
-                    input_variables=["summaries", "question"],
-                    template=template,
-                )
-                chain = LLMChain(prompt=prompt, llm=llm)
-                ww1=chain.predict(summaries=ww, question=input_file_web)
-                st.success(ww1)
-                do_question.append(input_file_web)
-                do_answer.append(ww1)
-                end_time = time.time()
-                elapsed_time = end_time - start_time
-                with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-            df_inter = pd.DataFrame({'问题':do_question,'回答':do_answer,})
-            with st.expander("回答记录"):
-                st.dataframe(df_inter, use_container_width=True)
-            csv_inter = convert_df(df_inter)
-            st.download_button(
-               "下载回答记录",
-               csv_inter,
-               "file.csv",
-               "text/csv",
-               key='download-csv_inter'
-            )
 else:
     st.header("请先输入正确的Openai api-key")
     
