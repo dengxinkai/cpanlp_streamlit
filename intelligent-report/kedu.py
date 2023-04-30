@@ -114,6 +114,19 @@ if st.session_state.input_api:
         Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
         st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
         st.cache_data.clear()
+    def web_file_docx(input_text):
+        loader = Docx2txtLoader(input_text)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+        st.success(f"已上传来自 DOCX 文件的 {len(texts)} 个文档。”")
+        st.cache_data.clear()    
+        
 #     @st.cache_resource
     def upload_file_pdf():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -175,8 +188,10 @@ if st.session_state.input_api:
             web_file_pptx(input_text)
         elif input_text.lower().endswith('.pdf'):
             web_file_pdf(input_text)
+        elif input_text.lower().endswith('.docx'):
+            web_file_docx(input_text)
         else:
-            st.warning("不支持的文件类型，请上传 PPTX 或 PDF 文件。")
+            st.warning("不支持的文件类型，请上传 PPTX 、DOCX 或 PDF 文件。")
     
     do_question=[]
     do_answer=[]
@@ -203,7 +218,7 @@ if st.session_state.input_api:
                     upload_file()
                 
         else:
-            input_text = st.text_input('文件网址（支持格式包括：PPTX、PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
+            input_text = st.text_input('文件网址（支持格式包括：PPTX、DOCX 和 PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
             if st.button('载入数据库',key="pdfw"):
                 with st.spinner('Wait for it...'):
                     pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
