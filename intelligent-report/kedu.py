@@ -212,10 +212,7 @@ if st.session_state.input_api:
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
             
             
-            
-            if file is not None:
-                upload_file_pdf()
-                df_inter = pd.DataFrame({
+            df_inter = pd.DataFrame({
                 '问题':do_question,
                 '回答':do_answer,
                  })
@@ -229,6 +226,9 @@ if st.session_state.input_api:
                    "text/csv",
                    key='download-csv_inter'
                 )
+            if file is not None:
+                upload_file_pdf()
+                
         else:
             input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
             if st.button('载入数据库',key="pdfw"):
