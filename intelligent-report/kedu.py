@@ -158,7 +158,7 @@ if st.session_state.input_api:
                         do_answer.append(inter_result)
                     return do_question,do_answer
                 async def upload_query_async(input_file):
-                    result = await asyncio.to_thread(upload_query.run, input_file)
+                    result = await asyncio.to_thread(upload_query, input_file)
                     return result
                 do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
                 end_time = time.time()
