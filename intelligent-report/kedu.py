@@ -16,7 +16,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
 import asyncio
-
 st.set_page_config(
     page_title="ChatReport",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -113,22 +112,6 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-            st.success(f"Uploaded {len(texts)} documents from pdf file.")
-            st.cache_data.clear()
-    def upload_file_pptx():
-        with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-            tmp_file.write(file.read())
-            tmp_file.flush()
-            loader = UnstructuredPowerPointLoader(tmp_file.name)
-            documents = loader.load()
-            text_splitter = RecursiveCharacterTextSplitter(
-                chunk_size=chunk_size,
-                chunk_overlap=chunk_overlap,
-                length_function=len,
-            )
-            texts = text_splitter.split_documents(documents)
-            Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-            st.success(f"Uploaded {len(texts)} documents from pptx file.")
             st.cache_data.clear()
     do_question=[]
     do_answer=[]
@@ -146,11 +129,10 @@ if st.session_state.input_api:
         for i in range(top_k):
             ww+=www["matches"][i]["metadata"]["text"]
         return ww
- #上传 
-    upload_file_pptx()
+ #上传  
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
-            file = st.file_uploader("PDF上传", type=['pdf','pptx'] ,key="upload_files")
+            file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
                 with st.spinner('Wait for it...'):
                     upload_file_pdf()
