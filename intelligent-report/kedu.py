@@ -16,6 +16,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
 import asyncio
+from pptx import Presentation
+
 st.set_page_config(
     page_title="ChatReport",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -113,6 +115,22 @@ if st.session_state.input_api:
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
             st.cache_data.clear()
+    def upload_file_pptx():
+        file = st.file_uploader("Upload a PPTX file", type=("pptx",),key="upload_pptx")
+        if file is not None:
+            with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                tmp_file.write(file.read())
+                tmp_file.flush()
+                presentation = Presentation(tmp_file.name)
+                text = ""
+                for slide in presentation.slides:
+                    for shape in slide.shapes:
+                        if hasattr(shape, "text"):
+                            text += shape.text
+                texts = [text]
+                Pinecone.from_documents(texts, embeddings_cho, index_name="kedu", namespace=pinename)
+                st.cache_data.clear()
+                st.success(f"Uploaded {len(texts)} documents from PPTX file.")
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
@@ -129,10 +147,11 @@ if st.session_state.input_api:
         for i in range(top_k):
             ww+=www["matches"][i]["metadata"]["text"]
         return ww
- #上传  
+ #上传 
+    upload_file_pptx()
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
-            file = st.file_uploader("PDF上传", type="pdf",key="upload")
+            file = st.file_uploader("PDF上传", type="pdf",key="upload_pdf")
             if file is not None:
                 with st.spinner('Wait for it...'):
                     upload_file_pdf()
