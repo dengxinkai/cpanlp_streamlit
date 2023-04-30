@@ -10,3 +10,4 @@ faiss-cpu
 requests
 asyncio
 unstructured
+pptx
