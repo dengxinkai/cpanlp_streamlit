@@ -133,7 +133,8 @@ if st.session_state.input_api:
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
-            
+            if file is not None:
+                upload_file_pdf()
                 
         else:
             input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
@@ -300,8 +301,7 @@ if st.session_state.input_api:
            "text/csv",
            key='download-csv_inter'
         )
-        if file is not None:
-            upload_file_pdf()
+        
             
 else:
     st.header("请先输入正确的Openai api-key")
