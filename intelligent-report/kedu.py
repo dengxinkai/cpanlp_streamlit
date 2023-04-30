@@ -112,12 +112,13 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+            st.sucess(f"Uploaded {len(texts)} documents from PPTX file.")
             st.cache_data.clear()
     def upload_file_pptx():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
             tmp_file.write(file.read())
             tmp_file.flush()
-            loader = UnstructuredPowerPointLoader((tmp_file.name)
+            loader = UnstructuredPowerPointLoader(tmp_file.name)
             documents = loader.load()
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=chunk_size,
@@ -126,6 +127,8 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+            st.sucess(f"Uploaded {len(texts)} documents from PPTX file.")
+
             st.cache_data.clear()
     do_question=[]
     do_answer=[]
@@ -149,7 +152,7 @@ if st.session_state.input_api:
             file = st.file_uploader("PDF上传", type=["pdf,pptx"],key="upload")
             if file is not None:
                 with st.spinner('Wait for it...'):
-                    upload_file_pdf()
+                    upload_file_pptx()
                 
         else:
             input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
