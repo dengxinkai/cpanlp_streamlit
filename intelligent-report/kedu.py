@@ -114,7 +114,7 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-            st.sucess(f"Uploaded {len(texts)} documents from PPTX file.")
+            st.success(f"Uploaded {len(texts)} documents from PPTX file.")
             st.cache_data.clear()
     def upload_file_pptx():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -129,7 +129,7 @@ if st.session_state.input_api:
             )
             texts = text_splitter.split_documents(documents)
             Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-            st.sucess(f"Uploaded {len(texts)} documents from PPTX file.")
+            st.success(f"Uploaded {len(texts)} documents from PPTX file.")
 
             st.cache_data.clear()
     do_question=[]
