@@ -61,7 +61,7 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-st.warning("🫡 记得经常使用刷新和清除缓存功能")
+st.warning("记得经常使用刷新和清除缓存功能")
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
 if st.button('清除所有缓存',key="clearcache"):
@@ -75,7 +75,7 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       namespace=pinename
                       )
 index = pinecone.Index(index_name="kedu")
-st.warning("🫡 别忘了删除不再使用的数据库")
+st.warning("别忘了删除不再使用的数据库")
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
@@ -153,7 +153,7 @@ if st.session_state.input_api:
                 
                 
         input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
-        st.warning("🫡 使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
+        st.warning("使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
         if st.button('数据库查询',key="file_upload"):
             ww=upload_query(input_file)
             st.success(ww)
