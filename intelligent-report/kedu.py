@@ -73,7 +73,7 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       namespace=pinename
                       )
 index = pinecone.Index(index_name="kedu")
-st.write("👇 :blue[最后不要忘了，不用的数据库记得删除]")
+st.write("👇 :orange[最后不要忘了，不用的数据库记得删除]")
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
