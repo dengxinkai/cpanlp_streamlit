@@ -103,6 +103,18 @@ if st.session_state.input_api:
         Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
         st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
         st.cache_data.clear()
+    def web_file_pptx(input_text):
+        loader = UnstructuredPowerPointLoader(input_text)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+        st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
+        st.cache_data.clear()
 #     @st.cache_resource
     def upload_file_pdf():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -141,8 +153,21 @@ if st.session_state.input_api:
         elif file_ext == ".pdf":
             upload_file_pdf()
         else:
-            st.warning("Unsupported file type. Please upload a PPTX or PDF file.")
-
+            st.warning("不支持的文件类型，请上传 PPTX 或 PDF 文件。")
+    def web_file(input_text):
+        if input_text.lower().endswith('.pptx'):
+            web_file_pptx(input_text)
+        elif input_text.lower().endswith('.pdf'):
+            web_file_pdf(input_text)
+        else:
+            st.warning("不支持的文件类型，请上传 PPTX 或 PDF 文件。")
+        file_ext = os.path.splitext(file.name)[1].lower()
+        if file_ext == ".pptx":
+            upload_file_pptx()
+        elif file_ext == ".pdf":
+            upload_file_pdf()
+        else:
+            st.warning("Unsupported file type. Please upload a PPTX or PDF file.")        
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
