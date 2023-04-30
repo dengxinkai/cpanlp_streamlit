@@ -73,7 +73,7 @@ pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pin
                       namespace=pinename
                       )
 index = pinecone.Index(index_name="kedu")
-st.write("👇 :orange[最后不要忘了，不用的数据库记得删除]")
+st.write("👇 :red[最后不要忘了，不用的数据库记得删除]")
 if st.button('删除数据库',key="deletepine"):
     index = pinecone.Index(index_name="kedu")
     index.delete(deleteAll='true', namespace=pinename)
@@ -120,7 +120,7 @@ if st.session_state.input_api:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
-            st.write("👇 :blue[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
+            st.write("👇 :red[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
             if st.button('数据库查询',key="file_upload"):
                 ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -200,7 +200,7 @@ if st.session_state.input_api:
                 upload_file(input_text)
                 st.cache_data.clear()
             input_file_web = st.text_input('**查询**','公司核心竞争力',key="input_file_web",help="例子")
-            st.write("👇 :blue[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
+            st.write("👇 :red[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
             if st.button('数据库查询',key="file_web"):
                 ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
