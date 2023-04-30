@@ -153,7 +153,7 @@ if st.session_state.input_api:
             file = st.file_uploader("PDF上传", type=['pdf', 'pptx'] ,key="upload_files")
             if file is not None:
                 with st.spinner('Wait for it...'):
-                    upload_file_upload_file_pptx()
+                    upload_file_pptx()
                 
         else:
             input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
