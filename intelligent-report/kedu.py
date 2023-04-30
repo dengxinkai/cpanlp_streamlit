@@ -160,7 +160,7 @@ if st.session_state.input_api:
  #上传  
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
-            file = st.file_uploader("文件上传", type=("pptx",'pdf'),key="upload")
+            file = st.file_uploader("上传文件（支持格式包括：PPTX、PDF）", type=("pptx",'pdf'),key="upload")
             if file is not None:
                 with st.spinner('Wait for it...'):
                     upload_file()
