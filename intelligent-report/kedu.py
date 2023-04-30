@@ -143,10 +143,14 @@ if st.session_state.input_api:
                 
             input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
             if st.button('确认',key="file_uploads",type="primary"):
-                start_time = time.time()
                 input_list = re.split(r'#', input_files)[1:]
                 async def upload_all_files_async(input_list):
                     tasks = []
+                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                                  environment="us-west1-gcp-free", 
+                                  namespace=pinename
+                                  )
+                    index = pinecone.Index(index_name="kedu")
                     for input_file in input_list:
                         task = asyncio.create_task(upload_query_async(input_file))
                         tasks.append(task)
@@ -161,16 +165,7 @@ if st.session_state.input_api:
                     result = await asyncio.to_thread(upload_query, input_file)
                     return result
                 do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
-                end_time = time.time()
-                elapsed_time = end_time - start_time
-                with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
-
-                
+               
             if st.button('AI查询',key="aifile_upload",type="primary"):
                 ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
