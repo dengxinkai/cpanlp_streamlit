@@ -134,23 +134,21 @@ if st.session_state.input_api:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             if file is not None:
-                upload_file_pdf()
+                with st.spinner('Wait for it...'):
+                    upload_file_pdf()
                 
         else:
             input_text = st.text_input('PDF网址', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="pdfweb",help="例子")
             if st.button('载入数据库',key="pdfw"):
-                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                      environment="us-west1-gcp-free", 
-                      namespace=pinename
-                      )
-                index = pinecone.Index(index_name="kedu")
-                upload_file(input_text)
-                st.cache_data.clear()
-                
-                
-                
-                
-                
+                with st.spinner('Wait for it...'):
+
+                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                          environment="us-west1-gcp-free", 
+                          namespace=pinename
+                          )
+                    index = pinecone.Index(index_name="kedu")
+                    upload_file(input_text)
+                    st.cache_data.clear()
                 
         input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
         st.warning("使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
