@@ -15,6 +15,7 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
+import asyncio
 
 st.set_page_config(
     page_title="ChatReport",
@@ -117,25 +118,59 @@ if st.session_state.input_api:
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
     fileoption = st.radio('**数据库创建方式**',('本地上传', 'URL'),key="fileoption")
+    def upload_query(input_file):
+        ww=""
+        pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+              environment="us-west1-gcp-free", 
+              namespace=pinename
+              )
+        index = pinecone.Index(index_name="kedu")
+        a=embeddings_cho.embed_query(input_file)
+        www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+        for i in range(top_k):
+            ww+=www["matches"][i]["metadata"]["text"]
+        return ww
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
             input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
             st.write("🫡 :red[数据库查询不需要用到api接口，AI查询需要用到api接口，并消耗费用]")
             if st.button('数据库查询',key="file_upload"):
-                ww=""
-                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                      environment="us-west1-gcp-free", 
-                      namespace=pinename
-                      )
-                index = pinecone.Index(index_name="kedu")
-                a=embeddings_cho.embed_query(input_file)
-                www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-                for i in range(top_k):
-                    ww+=www["matches"][i]["metadata"]["text"]
+                ww=upload_query(input_file)
                 st.success(ww)
                 do_question.append(input_file)
                 do_answer.append(ww)
+                
+            input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
+            if st.button('确认',key="file_uploads",type="primary"):
+                start_time = time.time()
+                input_list = re.split(r'#', input_files)[0:]
+                async def upload_all_files_async(input_list):
+                    tasks = []
+                    for input_file in input_list:
+                        task = asyncio.create_task(upload_query_async(input_file))
+                        tasks.append(task)
+                    results = await asyncio.gather(*tasks)
+                    for key, inter_result in zip(input_list, results):
+                        st.write(key)
+                        st.success(inter_result)
+                        do_question.append(key)
+                        do_answer.append(inter_result)
+                    return do_question,do_answer
+                async def upload_query_async(input_file):
+                    result = await asyncio.to_thread(upload_query.run, input_file)
+                    return result
+                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                with st.expander("费用"):
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
+                st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+
+                
             if st.button('AI查询',key="aifile_upload",type="primary"):
                 ww=""
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -174,6 +209,9 @@ if st.session_state.input_api:
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
+            
+            
+            
             if file is not None:
                 upload_file_pdf()
                 df_inter = pd.DataFrame({
