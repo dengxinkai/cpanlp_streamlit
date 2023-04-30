@@ -141,36 +141,7 @@ if st.session_state.input_api:
                 do_question.append(input_file)
                 do_answer.append(ww)
                 
-            input_files = st.text_input('**批量查询**','#公司名称#公司产品',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
-            if st.button('数据库批量查询',key="file_uploads1"):
-                input_list = re.split(r'#', input_files)[1:]
-                async def upload_all_files_async(input_list):
-                    do_question, do_answer = [], []
-
-                    tasks = []
-                    for input_file in input_list:
-                        task = asyncio.create_task(upload_query_async(input_file))
-                        tasks.append(task)
-                    results = await asyncio.gather(*tasks)
-                    for key, inter_result in zip(input_list, results):
-                        st.write(key)
-                        st.success(inter_result)
-                        do_question.append(key)
-                        do_answer.append(inter_result)
-                    return do_question,do_answer
-                async def upload_query_async(input_file):
-                    ww=""
-                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                                  environment="us-west1-gcp-free", 
-                                  namespace=pinename
-                                  )
-                    index = pinecone.Index(index_name="kedu")
-                    a=embeddings_cho.embed_query(input_file)
-                    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-                    for i in range(top_k):
-                        ww+=www["matches"][i]["metadata"]["text"]
-                    return ww
-                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
+            
                
             if st.button('AI查询',key="aifile_upload",type="primary"):
                 ww=""
@@ -211,7 +182,36 @@ if st.session_state.input_api:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 st.write(f"项目完成所需时间: {elapsed_time:.2f} 秒")  
             
-            
+            input_files = st.text_input('**批量查询**','#公司名称#公司产品',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
+            if st.button('数据库批量查询',key="file_uploads1"):
+                input_list = re.split(r'#', input_files)[1:]
+                async def upload_all_files_async(input_list):
+                    do_question, do_answer = [], []
+
+                    tasks = []
+                    for input_file in input_list:
+                        task = asyncio.create_task(upload_query_async(input_file))
+                        tasks.append(task)
+                    results = await asyncio.gather(*tasks)
+                    for key, inter_result in zip(input_list, results):
+                        st.write(key)
+                        st.success(inter_result)
+                        do_question.append(key)
+                        do_answer.append(inter_result)
+                    return do_question,do_answer
+                async def upload_query_async(input_file):
+                    ww=""
+                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                                  environment="us-west1-gcp-free", 
+                                  namespace=pinename
+                                  )
+                    index = pinecone.Index(index_name="kedu")
+                    a=embeddings_cho.embed_query(input_file)
+                    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                    for i in range(top_k):
+                        ww+=www["matches"][i]["metadata"]["text"]
+                    return ww
+                do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
             df_inter = pd.DataFrame({
                 '问题':do_question,
                 '回答':do_answer,
