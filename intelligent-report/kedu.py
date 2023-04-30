@@ -16,7 +16,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
 import asyncio
-
 st.set_page_config(
     page_title="ChatReport",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png",
@@ -130,6 +129,7 @@ if st.session_state.input_api:
         for i in range(top_k):
             ww+=www["matches"][i]["metadata"]["text"]
         return ww
+ #上传  
     with get_openai_callback() as cb:
         if fileoption=="本地上传":
             file = st.file_uploader("PDF上传", type="pdf",key="upload")
@@ -149,7 +149,7 @@ if st.session_state.input_api:
                     index = pinecone.Index(index_name="kedu")
                     upload_file(input_text)
                     st.cache_data.clear()
-                
+#主要功能                
         input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
         st.warning("使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
         if st.button('数据库查询',key="file_upload"):
