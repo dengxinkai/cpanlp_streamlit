@@ -16,7 +16,6 @@ from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.vectorstores import Pinecone
 import asyncio
-from pptx import Presentation
 
 st.set_page_config(
     page_title="ChatReport",
