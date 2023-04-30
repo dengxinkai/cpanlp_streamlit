@@ -142,15 +142,12 @@ if st.session_state.input_api:
                 do_answer.append(ww)
                 
             input_files = st.text_input('批量查询','',key="file_webss",help="不同问题用#隔开，比如：公司收入#公司名称#公司前景")
-            if st.button('确认',key="file_uploads",type="primary"):
+            if st.button('确认',key="file_uploads1"):
                 input_list = re.split(r'#', input_files)[1:]
                 async def upload_all_files_async(input_list):
+                    do_question, do_answer = [], []
+
                     tasks = []
-                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                                  environment="us-west1-gcp-free", 
-                                  namespace=pinename
-                                  )
-                    index = pinecone.Index(index_name="kedu")
                     for input_file in input_list:
                         task = asyncio.create_task(upload_query_async(input_file))
                         tasks.append(task)
@@ -162,8 +159,17 @@ if st.session_state.input_api:
                         do_answer.append(inter_result)
                     return do_question,do_answer
                 async def upload_query_async(input_file):
-                    result = await asyncio.to_thread(upload_query, input_file)
-                    return result
+                    ww=""
+                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                                  environment="us-west1-gcp-free", 
+                                  namespace=pinename
+                                  )
+                    index = pinecone.Index(index_name="kedu")
+                    a=embeddings_cho.embed_query(input_file)
+                    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+                    for i in range(top_k):
+                        ww+=www["matches"][i]["metadata"]["text"]
+                    return ww
                 do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
                
             if st.button('AI查询',key="aifile_upload",type="primary"):
