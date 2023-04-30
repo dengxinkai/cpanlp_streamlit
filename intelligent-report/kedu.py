@@ -61,7 +61,7 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-st.write("🫡 :red[记得经常使用刷新和清除缓存功能]")
+st.info("🫡 :red[记得经常使用刷新和清除缓存功能]")
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
 if st.button('清除所有缓存',key="clearcache"):
