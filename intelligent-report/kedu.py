@@ -91,7 +91,7 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
-    def upload_file(input_text):
+    def web_file_pdf(input_text):
         loader = PyPDFLoader(input_text)
         documents = loader.load()
         text_splitter = RecursiveCharacterTextSplitter(
@@ -101,6 +101,8 @@ if st.session_state.input_api:
         )
         texts = text_splitter.split_documents(documents)
         Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+        st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
+        st.cache_data.clear()
 #     @st.cache_resource
     def upload_file_pdf():
         with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
@@ -174,7 +176,7 @@ if st.session_state.input_api:
                           namespace=pinename
                           )
                     index = pinecone.Index(index_name="kedu")
-                    upload_file(input_text)
+                    web_file_pdf(input_text)
                     st.cache_data.clear()
 #主要功能                
         input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
