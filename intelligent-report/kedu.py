@@ -33,7 +33,6 @@ st.set_page_config(
 
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
-    st.image(logo_url,width=150)
     st.subheader("👇 :blue[第一步：输入 OpenAI API 密钥]")
     if 'input_api' in st.session_state:
         st.text_input("api-key",st.session_state["input_api"], key="input_api")
@@ -192,7 +191,6 @@ if st.session_state.input_api:
             web_file_docx(input_text)
         else:
             st.warning("不支持的文件类型，请上传 PPTX 、DOCX 或 PDF 文件。")
-    
     do_question=[]
     do_answer=[]
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
@@ -216,7 +214,6 @@ if st.session_state.input_api:
             if file is not None:
                 with st.spinner('Wait for it...'):
                     upload_file()
-                
         else:
             input_text = st.text_input('文件网址（支持格式包括：PPTX、DOCX 和 PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
             if st.button('载入数据库',key="pdfw"):
