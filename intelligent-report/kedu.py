@@ -179,15 +179,15 @@ with st.sidebar:
     if st.button('删除数据库',key="deletepine"):
         index = pinecone.Index(index_name="kedu")
         index.delete(deleteAll='true', namespace=pinename)
-    st.warning("⬆️别忘了删除不再使用的数据库")
-    st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
+    st.warning("⬆️ 别忘了删除不再使用的数据库")
+    st.subheader("👇 :blue[第三步：选择数据库文件上传方式]")
     fileoption = st.radio('**数据库创建方式**',('本地上传', 'URL'),key="fileoption")
     with st.expander("向量数据库配置"):
         chunk_size = st.number_input('chunk_size',value=800,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         top_k = st.number_input('top_k',value=3,min_value=0,max_value=10,step=1,key="top_k",help="用于控制查询的结果数量，指定从数据库中返回的与查询向量最相似的前 k 个向量")
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-    st.subheader("👇:blue[第四步：数据上传]")
+    st.subheader("👇 :blue[第四步：数据上传]")
     if fileoption=="本地上传":
         file = st.file_uploader("上传文件（支持格式包括：PPTX、DOCX和PDF）", type=("pptx",'pdf','docx'),key="upload")
         if file is not None:
@@ -212,11 +212,11 @@ with st.sidebar:
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
-st.warning("记得经常使用刷新和清除缓存功能")
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
+st.warning("⬆️ 记得经常使用刷新和清除缓存功能")
 
 if st.session_state.input_api:
     
