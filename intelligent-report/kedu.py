@@ -29,6 +29,108 @@ st.set_page_config(
         'About': "智能报告"
     }
 )
+def web_file_pdf(input_text):
+    loader = PyPDFLoader(input_text)
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=len,
+    )
+    texts = text_splitter.split_documents(documents)
+    Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+    st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
+    st.cache_data.clear()
+def web_file_pptx(input_text):
+    loader = UnstructuredPowerPointLoader(input_text)
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=len,
+    )
+    texts = text_splitter.split_documents(documents)
+    Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+    st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
+    st.cache_data.clear()
+def web_file_docx(input_text):
+    loader = Docx2txtLoader(input_text)
+    documents = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size,
+        chunk_overlap=chunk_overlap,
+        length_function=len,
+    )
+    texts = text_splitter.split_documents(documents)
+    Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+    st.success(f"已上传来自 DOCX 文件的 {len(texts)} 个文档。”")
+    st.cache_data.clear()    
+
+#     @st.cache_resource
+def upload_file_pdf():
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(file.read())
+        tmp_file.flush()
+        loader = PyPDFLoader(tmp_file.name)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+        st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
+        st.cache_data.clear()
+def upload_file_pptx():
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(file.read())
+        tmp_file.flush()
+        loader = UnstructuredPowerPointLoader(tmp_file.name)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+        st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
+        st.cache_data.clear()
+def upload_file_docx():
+    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+        tmp_file.write(file.read())
+        tmp_file.flush()
+        loader = Docx2txtLoader(tmp_file.name)
+        documents = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=chunk_size,
+            chunk_overlap=chunk_overlap,
+            length_function=len,
+        )
+        texts = text_splitter.split_documents(documents)
+        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
+        st.success(f"已上传来自 DOCX 文件的 {len(texts)} 个文档。”")
+        st.cache_data.clear()
+def upload_file():
+    file_ext = os.path.splitext(file.name)[1].lower()
+    if file_ext == ".pptx":
+        upload_file_pptx()
+    elif file_ext == ".pdf":
+        upload_file_pdf()
+    elif file_ext == ".docx":
+        upload_file_docx()
+    else:
+        st.warning("不支持的文件类型，请上传 PPTX、DOCX 或 PDF 文件。")
+def web_file(input_text):
+    if input_text.lower().endswith('.pptx'):
+        web_file_pptx(input_text)
+    elif input_text.lower().endswith('.pdf'):
+        web_file_pdf(input_text)
+    elif input_text.lower().endswith('.docx'):
+        web_file_docx(input_text)
+    else:
+        st.warning("不支持的文件类型，请上传 PPTX 、DOCX 或 PDF 文件。")
 
 
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
@@ -280,105 +382,3 @@ if st.session_state.input_api:
 else:
     st.header("请先输入正确的Openai api-key")
     
-def web_file_pdf(input_text):
-    loader = PyPDFLoader(input_text)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-        length_function=len,
-    )
-    texts = text_splitter.split_documents(documents)
-    Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-    st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
-    st.cache_data.clear()
-def web_file_pptx(input_text):
-    loader = UnstructuredPowerPointLoader(input_text)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-        length_function=len,
-    )
-    texts = text_splitter.split_documents(documents)
-    Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-    st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
-    st.cache_data.clear()
-def web_file_docx(input_text):
-    loader = Docx2txtLoader(input_text)
-    documents = loader.load()
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
-        length_function=len,
-    )
-    texts = text_splitter.split_documents(documents)
-    Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-    st.success(f"已上传来自 DOCX 文件的 {len(texts)} 个文档。”")
-    st.cache_data.clear()    
-
-#     @st.cache_resource
-def upload_file_pdf():
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        tmp_file.write(file.read())
-        tmp_file.flush()
-        loader = PyPDFLoader(tmp_file.name)
-        documents = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            length_function=len,
-        )
-        texts = text_splitter.split_documents(documents)
-        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-        st.success(f"已上传来自 PDF 文件的 {len(texts)} 个文档。”")
-        st.cache_data.clear()
-def upload_file_pptx():
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        tmp_file.write(file.read())
-        tmp_file.flush()
-        loader = UnstructuredPowerPointLoader(tmp_file.name)
-        documents = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            length_function=len,
-        )
-        texts = text_splitter.split_documents(documents)
-        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-        st.success(f"已上传来自 PPTX 文件的 {len(texts)} 个文档。”")
-        st.cache_data.clear()
-def upload_file_docx():
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        tmp_file.write(file.read())
-        tmp_file.flush()
-        loader = Docx2txtLoader(tmp_file.name)
-        documents = loader.load()
-        text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            length_function=len,
-        )
-        texts = text_splitter.split_documents(documents)
-        Pinecone.from_documents(texts, embeddings_cho, index_name="kedu",namespace=pinename)
-        st.success(f"已上传来自 DOCX 文件的 {len(texts)} 个文档。”")
-        st.cache_data.clear()
-def upload_file():
-    file_ext = os.path.splitext(file.name)[1].lower()
-    if file_ext == ".pptx":
-        upload_file_pptx()
-    elif file_ext == ".pdf":
-        upload_file_pdf()
-    elif file_ext == ".docx":
-        upload_file_docx()
-    else:
-        st.warning("不支持的文件类型，请上传 PPTX、DOCX 或 PDF 文件。")
-def web_file(input_text):
-    if input_text.lower().endswith('.pptx'):
-        web_file_pptx(input_text)
-    elif input_text.lower().endswith('.pdf'):
-        web_file_pdf(input_text)
-    elif input_text.lower().endswith('.docx'):
-        web_file_docx(input_text)
-    else:
-        st.warning("不支持的文件类型，请上传 PPTX 、DOCX 或 PDF 文件。")
