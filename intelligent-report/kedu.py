@@ -161,6 +161,14 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0,key="main_model")
+    llm=ChatOpenAI(
+        model_name=model,
+        temperature=temperature,
+        frequency_penalty=frequency_penalty,
+        presence_penalty=presence_penalty,
+        top_p=top_p,
+        openai_api_key=st.session_state.input_api
+    )
     st.subheader("👇 :blue[第二步：创建自己的数据库或连接到已有数据库]")
     pinename = st.text_input('**数据库名称**','report',key="pinename",help="系统每天定期清理数据库")
     pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
@@ -178,6 +186,7 @@ with st.sidebar:
         chunk_size = st.number_input('chunk_size',value=800,min_value=200,max_value=2500,step=100,key="chunk_size",help='每个文本数据块的大小。例如，如果将chunk_size设置为1000，则将输入文本数据分成1000个字符的块。')
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         top_k = st.number_input('top_k',value=3,min_value=0,max_value=10,step=1,key="top_k",help="用于控制查询的结果数量，指定从数据库中返回的与查询向量最相似的前 k 个向量")
+    embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     if fileoption=="本地上传":
         file = st.file_uploader("上传文件（支持格式包括：PPTX、DOCX和PDF）", type=("pptx",'pdf','docx'),key="upload")
         if file is not None:
@@ -212,15 +221,8 @@ if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
 if st.session_state.input_api:
-    embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
-    llm=ChatOpenAI(
-        model_name=model,
-        temperature=temperature,
-        frequency_penalty=frequency_penalty,
-        presence_penalty=presence_penalty,
-        top_p=top_p,
-        openai_api_key=st.session_state.input_api
-    )
+    
+    
     do_question=[]
     do_answer=[]
  #上传  
