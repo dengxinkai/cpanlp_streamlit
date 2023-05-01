@@ -309,16 +309,17 @@ if st.session_state.input_api:
             '问题':do_question,
             '回答':do_answer,
              })
-        with st.expander("回答记录"):
-            st.dataframe(df_inter, use_container_width=True)
-        csv_inter = convert_df(df_inter)
-        st.download_button(
-           "下载回答记录",
-           csv_inter,
-           "file.csv",
-           "text/csv",
-           key='download-csv_inter'
-        )
+        if df_inter:
+            with st.expander("回答记录"):
+                st.dataframe(df_inter, use_container_width=True)
+            csv_inter = convert_df(df_inter)
+            st.download_button(
+               "下载回答记录",
+               csv_inter,
+               "file.csv",
+               "text/csv",
+               key='download-csv_inter'
+            )
             
 else:
     st.header("请先输入正确的Openai api-key")
