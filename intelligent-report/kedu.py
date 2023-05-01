@@ -228,11 +228,12 @@ if st.session_state.input_api:
                     task = asyncio.create_task(upload_query_async(input_file))
                     tasks.append(task)
                 results = await asyncio.gather(*tasks)
-                for key, inter_result in zip(input_list, results):
-                    st.write(key)
-                    st.success(inter_result)
-                    do_question.append(key)
-                    do_answer.append(inter_result)
+                with st.expander("查询结果"):
+                    for key, inter_result in zip(input_list, results):
+                        st.write(key)
+                        st.success(inter_result)
+                        do_question.append(key)
+                        do_answer.append(inter_result)
                 return do_question,do_answer
             async def upload_query_async(input_file):
                 ww=""
