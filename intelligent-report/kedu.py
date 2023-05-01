@@ -247,7 +247,7 @@ if st.session_state.input_api:
                     ww+=www["matches"][i]["metadata"]["text"]
                 return ww
             do_question, do_answer=asyncio.run(upload_all_files_async(input_list))
-        st.warning("⬆️ 使用数据库查询只需要通过 API 接口获取嵌入向量， AI 查询需要使用 API 接口，并且会产生一定费用。")
+        st.warning("⬆️ 使用数据库查询只需要通过 API 接口获取嵌入向量")
         if st.button('AI批量查询',key="aifile_uploadss",type="primary"):
             with st.spinner('Wait for it...'):
                 start_time = time.time()
@@ -302,8 +302,7 @@ if st.session_state.input_api:
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                         st.success(f"Completion Tokens: {cb.completion_tokens}")
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
-        st.warning("⬆️ 使用 AI 查询需要使用 API 接口回答问题，并且会产生一定费用。")
-
+        st.warning("⬆️ 使用 AI 查询需要使用 API 接口回答问题，并且会产生一定费用")
         df_inter = pd.DataFrame({
             '问题':do_question,
             '回答':do_answer,
