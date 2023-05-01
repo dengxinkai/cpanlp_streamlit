@@ -131,7 +131,18 @@ def web_file(input_text):
         web_file_docx(input_text)
     else:
         st.warning("不支持的文件类型，请上传 PPTX 、DOCX 或 PDF 文件。")
-
+def upload_query(input_file):
+    ww=""
+    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+          environment="us-west1-gcp-free", 
+          namespace=pinename
+          )
+    index = pinecone.Index(index_name="kedu")
+    a=embeddings_cho.embed_query(input_file)
+    www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
+    for i in range(top_k):
+        ww+=www["matches"][i]["metadata"]["text"]
+    return ww
 
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
@@ -154,6 +165,22 @@ with st.sidebar:
     st.warning("⬆️别忘了删除不再使用的数据库")
     st.subheader("👇:blue[第三步：选择数据库文件上传方式]")
     fileoption = st.radio('**数据库创建方式**',('本地上传', 'URL'),key="fileoption")
+    if fileoption=="本地上传":
+        file = st.file_uploader("上传文件（支持格式包括：PPTX、DOCX和PDF）", type=("pptx",'pdf','docx'),key="upload")
+        if file is not None:
+            with st.spinner('Wait for it...'):
+                upload_file()
+    else:
+        input_text = st.text_input('文件网址（支持格式包括：PPTX、DOCX 和 PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
+        if st.button('载入数据库',key="pdfw"):
+            with st.spinner('Wait for it...'):
+                pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
+                      environment="us-west1-gcp-free", 
+                      namespace=pinename
+                      )
+                index = pinecone.Index(index_name="kedu")
+                web_file(input_text)
+                st.cache_data.clear()
     with st.expander("ChatOpenAI属性配置"):
         temperature = st.slider("`temperature`", 0.01, 0.99, 0.3,help="用于控制生成文本随机性和多样性的参数。较高的温度值通常适用于生成较为自由流畅的文本，而较低的温度值则适用于生成更加确定性的文本。")
         frequency_penalty = st.slider("`frequency_penalty`", 0.01, 0.99, 0.3,help="用于控制生成文本中单词重复频率的技术。数值越大，模型对单词重复使用的惩罚就越严格，生成文本中出现相同单词的概率就越低；数值越小，生成文本中出现相同单词的概率就越高。")
@@ -182,8 +209,6 @@ if st.button('刷新页面',key="rerun"):
 if st.button('清除所有缓存',key="clearcache"):
     st.cache_data.clear()
 
-
-
 if st.session_state.input_api:
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
     llm=ChatOpenAI(
@@ -194,40 +219,11 @@ if st.session_state.input_api:
         top_p=top_p,
         openai_api_key=st.session_state.input_api
     )
-    
     do_question=[]
     do_answer=[]
-    
-    def upload_query(input_file):
-        ww=""
-        pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-              environment="us-west1-gcp-free", 
-              namespace=pinename
-              )
-        index = pinecone.Index(index_name="kedu")
-        a=embeddings_cho.embed_query(input_file)
-        www=index.query(vector=a, top_k=top_k, namespace=pinename, include_metadata=True)
-        for i in range(top_k):
-            ww+=www["matches"][i]["metadata"]["text"]
-        return ww
  #上传  
     with get_openai_callback() as cb:
-        if fileoption=="本地上传":
-            file = st.file_uploader("上传文件（支持格式包括：PPTX、DOCX和PDF）", type=("pptx",'pdf','docx'),key="upload")
-            if file is not None:
-                with st.spinner('Wait for it...'):
-                    upload_file()
-        else:
-            input_text = st.text_input('文件网址（支持格式包括：PPTX、DOCX 和 PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
-            if st.button('载入数据库',key="pdfw"):
-                with st.spinner('Wait for it...'):
-                    pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
-                          environment="us-west1-gcp-free", 
-                          namespace=pinename
-                          )
-                    index = pinecone.Index(index_name="kedu")
-                    web_file(input_text)
-                    st.cache_data.clear()
+        
 #主要功能                
         input_file = st.text_input('**查询**','公司核心竞争力',key="file_web",help="例子")
         st.warning("使用数据库查询只需要通过 API 接口获取嵌入向量，而不需要进行其他 API 调用，但使用 AI 查询需要使用 API 接口，并且会产生一定费用。")
