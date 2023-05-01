@@ -146,7 +146,7 @@ def upload_query(input_file):
 
 logo_url = "https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app/%E6%9C%AA%E5%91%BD%E5%90%8D.png"
 with st.sidebar:
-    with st.expander("👇 :blue[第一步：输入 OpenAI API 密钥]"):
+    with st.expander("👇 :blue[**第一步：输入 OpenAI API 密钥**]"):
         if 'input_api' in st.session_state:
             st.text_input("api-key",st.session_state["input_api"], key="input_api")
         else:
