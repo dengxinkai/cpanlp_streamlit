@@ -187,6 +187,7 @@ with st.sidebar:
         chunk_overlap = st.number_input('chunk_overlap',value=0,min_value=0,max_value=500,step=50,key="chunk_overlap",help='每个文本数据块之间重叠的字符数。例如，如果将chunk_overlap设置为200，则相邻的两个块将有200个字符的重叠。这可以确保在块之间没有丢失的数据，同时还可以避免重复处理相邻块之间的数据。')
         top_k = st.number_input('top_k',value=3,min_value=0,max_value=10,step=1,key="top_k",help="用于控制查询的结果数量，指定从数据库中返回的与查询向量最相似的前 k 个向量")
     embeddings_cho = OpenAIEmbeddings(openai_api_key=st.session_state.input_api)
+    st.subheader("👇:blue[第四步：数据上传]")
     if fileoption=="本地上传":
         file = st.file_uploader("上传文件（支持格式包括：PPTX、DOCX和PDF）", type=("pptx",'pdf','docx'),key="upload")
         if file is not None:
