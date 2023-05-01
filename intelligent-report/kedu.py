@@ -194,7 +194,7 @@ with st.sidebar:
             with st.spinner('Wait for it...'):
                 upload_file()
     else:
-        input_text = st.text_input('文件网址（支持格式包括：PPTX、DOCX 和 PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload",help="例子")
+        input_text = st.text_input('文件网址（支持格式包括：PPTX、DOCX 和 PDF）', 'http://static.cninfo.com.cn/finalpage/2023-04-29/1216712300.PDF',key="webupload")
         if st.button('载入数据库',key="pdfw"):
             with st.spinner('Wait for it...'):
                 pinecone.init(api_key="1ebbc1a4-f41e-43a7-b91e-24c03ebf0114",  # find at app.pinecone.io
