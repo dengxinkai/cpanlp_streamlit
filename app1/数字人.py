@@ -181,7 +181,7 @@ class GenerativeAgent(BaseModel):
             +"{related_memories}"
             + "Do not embellish."
             +"\n\nSummary: "
-            +"输出用中文，除了关键词"
+            +"输出用中文"
         )
         # The agent seeks to think about their core characteristics.
         relevant_memories = self.fetch_memories(f"{self.name}'s core characteristics")
