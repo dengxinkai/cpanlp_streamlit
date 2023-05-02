@@ -49,12 +49,11 @@ with st.sidebar:
                                 ("gpt-3.5-turbo",
                                 "gpt-4"),
                                 index=0)
-    USER_NAME = st.text_input("请输入你的名字","Person", key="user_name")
+    USER_NAME = st.text_input("请填写创数人姓名","Person", key="user_name")
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
     st.experimental_rerun()
     st.cache_data.clear()
-
 if agent_keys:
     do_name=[]
     do_age=[]
