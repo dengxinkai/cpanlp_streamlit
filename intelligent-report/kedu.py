@@ -208,9 +208,8 @@ def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
 if st.button('刷新页面',key="rerun"):
     st.experimental_rerun()
-if st.button('清除所有缓存',key="clearcache"):
+if st.button('清除缓存',key="clearcache"):
     st.cache_data.clear()
-st.warning("⬆️ 记得经常使用刷新和清除缓存功能")
 
 if st.session_state.input_api:
     do_question=[]
