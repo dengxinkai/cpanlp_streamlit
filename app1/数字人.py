@@ -85,7 +85,7 @@ if agent_keys:
             if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
                 start_time = time.time()
                 with get_openai_callback() as cb:
-                    st.success(st.session_state[key].get_summary(force_refresh=True))
+                    st.success(st.session_state[key].get_summary())
                     with st.expander("费用"):
                         st.success(f"Total Tokens: {cb.total_tokens}")
                         st.success(f"Prompt Tokens: {cb.prompt_tokens}")
