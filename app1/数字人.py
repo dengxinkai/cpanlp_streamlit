@@ -138,7 +138,7 @@ if agent_keys:
              
 else:
     st.warning("当前不存在数字人") 
-tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新观察与记忆", "数字人访问","数字人对话"])
+tab1, tab2, tab3,tab4 = st.tabs(["👇 :blue[**数字人创建**]", "新观察与记忆", "数字人访问","数字人对话"])
 LLM = ChatOpenAI(
         model_name=model,
         temperature=temperature,
