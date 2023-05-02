@@ -12,25 +12,13 @@ from typing import List, Union,Callable,Dict, Optional, Any, Tuple
 from langchain.prompts import PromptTemplate
 from langchain import LLMChain
 from langchain.schema import BaseLanguageModel,Document
-from langchain.document_loaders import PyPDFLoader
 from langchain.docstore import InMemoryDocstore
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.chains import RetrievalQA
-from langchain.chains.base import Chain
-from langchain.llms import OpenAI,BaseLLM
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import Chroma,FAISS
-from langchain.vectorstores.base import VectorStore
-from langchain.chains.mapreduce import MapReduceChain
-from langchain.chains.summarize import load_summarize_chain
+from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
-from langchain.utilities import GoogleSearchAPIWrapper,WikipediaAPIWrapper,TextRequestsWrapper
 from langchain.callbacks import get_openai_callback
 from langchain.retrievers import TimeWeightedVectorStoreRetriever
-from langchain.prompts.chat import (
-    ChatPromptTemplate,
-    HumanMessagePromptTemplate,
-)
+
 st.set_page_config(
     page_title="数字人",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app1/shuziren.jpg",
