@@ -86,11 +86,10 @@ if agent_keys:
                     start_time = time.time()
                     with get_openai_callback() as cb:
                         st.success(st.session_state[key].get_summary())
-                        with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
                     end_time = time.time()
                     st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         df = pd.DataFrame({
@@ -120,11 +119,10 @@ if agent_keys:
                             summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
                             return summary
                         asyncio.run(summary_all_agents(agent_keys))
-                        with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                        st.success(f"Total Tokens: {cb.total_tokens}")
+                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                        st.success(f"Completion Tokens: {cb.completion_tokens}")
+                        st.success(f"Total Cost (USD): ${cb.total_cost}")
                     end_time = time.time()
                     st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         csv = convert_df(df)
