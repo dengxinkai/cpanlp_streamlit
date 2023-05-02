@@ -63,81 +63,81 @@ if agent_keys:
     do_reflection_threshold=[]
     do_memory=[]
     do_summary=[]
-    st.write("当前数字人：")
-    for i,key in enumerate(agent_keys):
-        y=st.session_state[key]
-        col1, col2, col3 = st.columns([2, 1,6])
-        with col1:
-            st.write(f"{i+1}、",y.name)
-            do_name.append(y.name)
-            do_age.append(y.age)
-            do_gender.append(y.gender)
-            do_traits.append(y.traits)
-            do_status.append(y.status)
-            do_reflection_threshold.append(y.reflection_threshold)
-            do_memory.append(y.agent_memory)
-            do_summary.append(y.summary)
-        with col2:
-            if st.button('删除',key=f"del_{key}"):
-                del st.session_state[key]
-                st.experimental_rerun()
-        with col3:        
-            if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
-                start_time = time.time()
-                with get_openai_callback() as cb:
-                    st.success(st.session_state[key].get_summary())
-                    with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                end_time = time.time()
-                st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    df = pd.DataFrame({
-                    '姓名': do_name,
-                    '年龄': do_age,
-                    '性别': do_gender,
-                    '特征': do_traits,
-                    '状态': do_status,
-                    '反思阈值': do_reflection_threshold,
-                    '记忆':do_memory,
-                    '总结':do_summary
-                })
-    with st.expander("数字人df"):
+    with st.expander("当前数字人："):
+        for i,key in enumerate(agent_keys):
+            y=st.session_state[key]
+            col1, col2, col3 = st.columns([2, 1,6])
+            with col1:
+                st.write(f"{i+1}、",y.name)
+                do_name.append(y.name)
+                do_age.append(y.age)
+                do_gender.append(y.gender)
+                do_traits.append(y.traits)
+                do_status.append(y.status)
+                do_reflection_threshold.append(y.reflection_threshold)
+                do_memory.append(y.agent_memory)
+                do_summary.append(y.summary)
+            with col2:
+                if st.button('删除',key=f"del_{key}"):
+                    del st.session_state[key]
+                    st.experimental_rerun()
+            with col3:        
+                if st.button('总结',help="总结",key=f"sum_{key}",type="primary"):
+                    start_time = time.time()
+                    with get_openai_callback() as cb:
+                        st.success(st.session_state[key].get_summary())
+                        with st.expander("费用"):
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                    end_time = time.time()
+                    st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+        df = pd.DataFrame({
+                        '姓名': do_name,
+                        '年龄': do_age,
+                        '性别': do_gender,
+                        '特征': do_traits,
+                        '状态': do_status,
+                        '反思阈值': do_reflection_threshold,
+                        '记忆':do_memory,
+                        '总结':do_summary
+                    })
+
         st.dataframe(df, use_container_width=True)
-    if st.button('总结所有数字人',help="总结所有",key=f"sum_all",type="primary"):
-                start_time = time.time()
-                with get_openai_callback() as cb:
-                    async def summary_all_agents(agent_keys):
-                        tasks = []
-                        for key in agent_keys:
-                            task = asyncio.create_task(get_summary_async(st.session_state[key]))
-                            tasks.append(task)
-                        results = await asyncio.gather(*tasks)
-                        for key, summary in zip(agent_keys, results):
-                            st.success(summary)
-                    async def get_summary_async(agent):
-                        summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
-                        return summary
-                    asyncio.run(summary_all_agents(agent_keys))
-                    with st.expander("费用"):
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                end_time = time.time()
-                st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    csv = convert_df(df)
-    st.download_button(
-       "下载数字人",
-       csv,
-       "file.csv",
-       "text/csv",
-       key='download-csv'
-    )
-             
-else:
-    st.warning("当前不存在数字人") 
+        if st.button('总结所有数字人',help="总结所有",key=f"sum_all",type="primary"):
+                    start_time = time.time()
+                    with get_openai_callback() as cb:
+                        async def summary_all_agents(agent_keys):
+                            tasks = []
+                            for key in agent_keys:
+                                task = asyncio.create_task(get_summary_async(st.session_state[key]))
+                                tasks.append(task)
+                            results = await asyncio.gather(*tasks)
+                            for key, summary in zip(agent_keys, results):
+                                st.success(summary)
+                        async def get_summary_async(agent):
+                            summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
+                            return summary
+                        asyncio.run(summary_all_agents(agent_keys))
+                        with st.expander("费用"):
+                            st.success(f"Total Tokens: {cb.total_tokens}")
+                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
+                            st.success(f"Completion Tokens: {cb.completion_tokens}")
+                            st.success(f"Total Cost (USD): ${cb.total_cost}")
+                    end_time = time.time()
+                    st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+        csv = convert_df(df)
+        st.download_button(
+           "下载数字人",
+           csv,
+           "file.csv",
+           "text/csv",
+           key='download-csv'
+        )
+
+    else:
+        st.warning("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["👇 :blue[**数字人创建**]", "新观察与记忆", "数字人访问","数字人对话"])
 LLM = ChatOpenAI(
         model_name=model,
