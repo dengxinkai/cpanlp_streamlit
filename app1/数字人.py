@@ -1,27 +1,17 @@
 import streamlit as st
 import asyncio
-import wikipedia
 import faiss
 import numpy as np
 import pandas as pd
-import base64
-import json
-import os
-import tempfile
-import pinecone 
-import requests
 import re
 import time
 import math
-import pickle
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
-from collections import deque
 from typing import List, Union,Callable,Dict, Optional, Any, Tuple
-from langchain.agents import  ZeroShotAgent,AgentExecutor, LLMSingleActionAgent, AgentOutputParser,initialize_agent, Tool,AgentType,create_pandas_dataframe_agent
-from langchain.prompts import StringPromptTemplate,PromptTemplate
-from langchain import OpenAI, SerpAPIWrapper, LLMChain
-from langchain.schema import BaseLanguageModel,AgentAction, AgentFinish,Document
+from langchain.prompts import PromptTemplate
+from langchain import LLMChain
+from langchain.schema import BaseLanguageModel,Document
 from langchain.document_loaders import PyPDFLoader
 from langchain.docstore import InMemoryDocstore
 from langchain.text_splitter import RecursiveCharacterTextSplitter
