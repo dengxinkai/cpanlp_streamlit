@@ -127,10 +127,9 @@ if agent_keys:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                 end_time = time.time()
                 st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-    
     csv = convert_df(df)
     st.download_button(
-       "下载所有数字人",
+       "下载数字人",
        csv,
        "file.csv",
        "text/csv",
@@ -138,7 +137,7 @@ if agent_keys:
     )
              
 else:
-    st.write("当前不存在数字人") 
+    st.warning("当前不存在数字人") 
 tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新观察与记忆", "数字人访问","数字人对话"])
 LLM = ChatOpenAI(
         model_name=model,
@@ -443,7 +442,7 @@ with tab1:
         status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
         reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
         memory = st.text_input('记忆','#妈妈很善良#喜欢看动漫#有过一个心爱的女人', key="mery_input1_5",help="记忆，不同记忆用#分隔")
-        if st.button('创建',help="创建数字人",type="primary"):
+        if st.button('创建',help="创建数字人"):
             global agent1
             global agentss
             agent1 = GenerativeAgent(name=name, 
