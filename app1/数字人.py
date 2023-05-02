@@ -66,6 +66,9 @@ with st.sidebar:
 agent_keys = [key for key in st.session_state.keys() if key.startswith('agent')]   
 if st.button('刷新页面'):
     st.experimental_rerun()
+if st.button('清除所有缓存',key="clearcache"):
+    st.cache_data.clear()
+st.warning("⬆️ 记得经常使用刷新和清除缓存功能")
 if agent_keys:
     do_name=[]
     do_age=[]
