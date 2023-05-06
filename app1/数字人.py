@@ -623,14 +623,14 @@ with tab3:
                 })
         with st.expander("采访记录"):
             st.dataframe(df_inter, use_container_width=True)
-        csv_inter = convert_df(df_inter)
-        st.download_button(
-           "下载采访记录",
-           csv_inter,
-           "file.csv",
-           "text/csv",
-           key='download-csv_inter'
-        )
+            csv_inter = convert_df(df_inter)
+            st.download_button(
+               "下载采访记录",
+               csv_inter,
+               "file.csv",
+               "text/csv",
+               key='download-csv_inter'
+            )
 
 
 
