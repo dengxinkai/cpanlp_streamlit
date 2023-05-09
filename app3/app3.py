@@ -20,7 +20,6 @@ st.set_page_config(
 st.write("[返回](https://cpanlp.com/example/)")
 st.title('S&P 500 App')
 if st.button('Show Plots',key="nihao"):
-    dynamodb = boto3.client('dynamodb')
     dynamodb = boto3.client(
     'dynamodb',
     aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
@@ -45,7 +44,21 @@ if st.button('Show Plots',key="nihao"):
         'WriteCapacityUnits': 5
     }
   )
-    
+if st.button('Show Plots1',key="nihao1"):  
+   dynamodb = boto3.client(
+    'dynamodb',
+    aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
+    )
+    dynamodb.put_item(
+        TableName='usersstrbutton',
+        Item={
+            'id': {'N': '1'},
+            'name': {'S': 'Alice'},
+            'email': {'S': 'alice@example.com'}
+        }
+    )
+
 st.markdown("""
 This app retrieves the list of the **S&P 500** (from Wikipedia) and its corresponding **stock closing price** (year-to-date)!
 * **Python libraries:** base64, pandas, streamlit, numpy, matplotlib, seaborn
