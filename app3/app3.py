@@ -21,6 +21,11 @@ st.write("[返回](https://cpanlp.com/example/)")
 st.title('S&P 500 App')
 if st.button('Show Plots',key="nihao"):
     dynamodb = boto3.client('dynamodb')
+    dynamodb = boto3.client(
+    'dynamodb',
+    aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
+    )
     dynamodb.create_table(
     TableName='usersstrbutton',
     KeySchema=[
