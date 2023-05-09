@@ -125,6 +125,10 @@ if agent_keys:
                         st.success(f"Total Cost (USD): ${cb.total_cost}")
                     end_time = time.time()
                     st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+        if st.button('删除所有数字人',key=f"delete_all"):
+            for i,key in enumerate(agent_keys):
+                del st.session_state[key]
+            st.experimental_rerun()
         csv = convert_df(df)
         st.download_button(
            "下载数字人",
