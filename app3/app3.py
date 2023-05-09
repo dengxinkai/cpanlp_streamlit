@@ -18,9 +18,9 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
-dynamodb = boto3.client('dynamodb')
 st.title('S&P 500 App')
 if st.button('Show Plots',key="nihao"):
+    dynamodb = boto3.client('dynamodb')
     dynamodb.create_table(
     TableName='usersstrbutton',
     KeySchema=[
