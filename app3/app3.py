@@ -45,7 +45,7 @@ if st.button('Show Plots',key="nihao"):
     }
   )
 if st.button('Show Plots1',key="nihao1"):  
-   dynamodb = boto3.client(
+    dynamodb = boto3.client(
     'dynamodb',
     aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
     aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
