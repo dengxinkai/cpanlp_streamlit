@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import yfinance as yf
+import boto3
 st.set_page_config(
     page_title="cpanlp的机器学习",
     page_icon="🐱",
@@ -17,9 +18,29 @@ st.set_page_config(
     }
 )
 st.write("[返回](https://cpanlp.com/example/)")
-
+dynamodb = boto3.client('dynamodb')
 st.title('S&P 500 App')
-
+if st.button('Show Plots',key="nihao"):
+    dynamodb.create_table(
+    TableName='usersstrbutton',
+    KeySchema=[
+        {
+            'AttributeName': 'id',
+            'KeyType': 'HASH'
+        }
+    ],
+    AttributeDefinitions=[
+        {
+            'AttributeName': 'id',
+            'AttributeType': 'N'
+        }
+    ],
+    ProvisionedThroughput={
+        'ReadCapacityUnits': 5,
+        'WriteCapacityUnits': 5
+    }
+  )
+    
 st.markdown("""
 This app retrieves the list of the **S&P 500** (from Wikipedia) and its corresponding **stock closing price** (year-to-date)!
 * **Python libraries:** base64, pandas, streamlit, numpy, matplotlib, seaborn
