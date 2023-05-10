@@ -36,14 +36,10 @@ dynamodb = boto3.client(
     aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
     aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
     )
-
-# 定义要查询的表名称
 table_name = 'digit_human1'
-# 查询DynamoDB表中的数据
 response = dynamodb.scan(
     TableName=table_name
 )
-# 将响应中的项目转换为Pandas DataFrame
 items = response['Items']
 df_aws = pd.DataFrame(items)
 df_aws['特征'] = df_aws['特征'].apply(lambda x: x.get('S', ''))
@@ -63,8 +59,7 @@ for index, row in df_aws.iterrows():
     status = row['状态']
     memory = row['记忆']
     summary = row['总结'] 
-    reflection_threshold = row['反思阈值']
-                                      
+    reflection_threshold = row['反思阈值']                                  
     st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
           age=age,
           gender=gender,
@@ -79,7 +74,6 @@ for index, row in df_aws.iterrows():
           summary=summary,
            reflection_threshold = reflection_threshold,
          )
-
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
