@@ -512,6 +512,31 @@ with tab1:
 #             memory_list = re.split(r'#', memory)[1:]
 #             for memory in memory_list:
 #                 agent1.add_memory(memory)   
+    if st.button('数据库生成',key="aws"):
+        dfaws = load_digitalaws()
+        for index, row in dfaws.iterrows():
+            name = row['姓名'].get('S', '')
+            age = int(row['年龄'].get('N', ''))
+            gender = row['性别'].get('S', '')
+            traits = row['特征'].get('S', '')
+            status = row['状态'].get('S', '')
+            memory = row['记忆'].get('S', '')
+            summary = ""
+            reflection_threshold = float(row['反思阈值'].get('N', ''))                                  
+            st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
+                  age=age,
+                  gender=gender,
+                  traits=traits,
+                  status=status,
+                  memory_retriever=create_new_memory_retriever(),
+                  llm=LLM,
+                  daily_summaries = [
+                       "",
+                   ],
+                  agent_memory=memory,
+                  summary=summary,
+                   reflection_threshold = reflection_threshold,
+                 )
 with tab2:   
     if agent_keys:  
         updates = []
@@ -657,36 +682,6 @@ with tab3:
                "text/csv",
                key='download-csv_inter'
             )
-dfaws = load_digitalaws()
-for index, row in dfaws.iterrows():
-    name = row['姓名'].get('S', '')
-    age = int(row['年龄'].get('N', ''))
-    gender = row['性别'].get('S', '')
-    traits = row['特征'].get('S', '')
-    status = row['状态'].get('S', '')
-    memory = row['记忆'].get('S', '')
-    summary = ""
-    reflection_threshold = float(row['反思阈值'].get('N', ''))                                  
-    st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
-          age=age,
-          gender=gender,
-          traits=traits,
-          status=status,
-          memory_retriever=create_new_memory_retriever(),
-          llm=LLM,
-          daily_summaries = [
-               "",
-           ],
-          agent_memory=memory,
-          summary=summary,
-           reflection_threshold = reflection_threshold,
-         )
-
-
-
-
-
-
 
 
 
