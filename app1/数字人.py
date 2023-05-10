@@ -37,16 +37,21 @@ dynamodb = boto3.client(
     aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
     )
 response = dynamodb.get_item(
-    TableName='usersstreamlit',
+    TableName='digit_human',
     Key={
         'id': {'N': '1'}
     }
 )
 item = response.get('Item', {})
-name = item.get('name', {}).get('S', '')
-email = item.get('email', {}).get('S', '')
-st.write(name)
-st.write(email)
+姓名 = item.get('姓名', {}).get('S', '')
+年龄 = item.get('年龄', {}).get('N', '')
+记忆 = item.get('记忆', {}).get('S', '')
+特征 = item.get('特征', {}).get('S', '')
+st.write(姓名)
+st.write(年龄)
+st.write(记忆)
+st.write(特征)
+
 
 @st.cache_data(persist="disk")
 def convert_df(df):
