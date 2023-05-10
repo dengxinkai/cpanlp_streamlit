@@ -30,18 +30,21 @@ st.set_page_config(
         'About': '社科实验数字人'
     }
 )
-dynamodb = boto3.client(
-    'dynamodb',
-    region_name="ap-southeast-1", 
-    aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
-    aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
+@st.cache_resource
+def load_digitalaws():
+    dynamodb = boto3.client(
+        'dynamodb',
+        region_name="ap-southeast-1", 
+        aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
+        )
+    table_name = 'digit_human1'
+    response = dynamodb.scan(
+        TableName=table_name
     )
-table_name = 'digit_human1'
-response = dynamodb.scan(
-    TableName=table_name
-)
-items = response['Items']
-dfaws = pd.DataFrame(items)
+    items = response['Items']
+    dfaws = pd.DataFrame(items)
+    return dfaws
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
@@ -649,7 +652,7 @@ with tab3:
             )
 
 
-
+dfaws = load_digitalaws()
 for index, row in dfaws.iterrows():
     name = row['姓名'].get('S', '')
     age = int(row['年龄'].get('N', ''))
