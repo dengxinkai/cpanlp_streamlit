@@ -42,41 +42,42 @@ response = dynamodb.scan(
 )
 items = response['Items']
 dfaws = pd.DataFrame(items)
-if 'dfaws' in locals():
-    dfaws['特征'] = dfaws['特征'].apply(lambda x: x.get('S', ''))
-    dfaws['姓名'] = dfaws['姓名'].apply(lambda x: x.get('S', ''))
-    dfaws['年龄'] = dfaws['年龄'].apply(lambda x: x.get('N', ''))
-    dfaws['年龄'] = dfaws['年龄'].astype(int)
-    dfaws['状态'] = dfaws['状态'].apply(lambda x: x.get('S', ''))
-    dfaws['反思阈值'] = dfaws['反思阈值'].apply(lambda x: x.get('N', '')
-    dfaws['反思阈值'] =dfaws['反思阈值'].astype(float)
-    dfaws['记忆'] = dfaws['记忆'].apply(lambda x: x.get('S', ''))
-    dfaws['性别'] = dfaws['性别'].apply(lambda x: x.get('S', ''))
-    dfaws['id'] = dfaws['id'].apply(lambda x: x.get('N', ''))
+st.dataframe(dfaws)
+# if 'dfaws' in locals():
+#     dfaws['特征'] = dfaws['特征'].apply(lambda x: x.get('S', ''))
+#     dfaws['姓名'] = dfaws['姓名'].apply(lambda x: x.get('S', ''))
+#     dfaws['年龄'] = dfaws['年龄'].apply(lambda x: x.get('N', ''))
+#     dfaws['年龄'] = dfaws['年龄'].astype(int)
+#     dfaws['状态'] = dfaws['状态'].apply(lambda x: x.get('S', ''))
+#     dfaws['反思阈值'] = dfaws['反思阈值'].apply(lambda x: x.get('N', '')
+#     dfaws['反思阈值'] =dfaws['反思阈值'].astype(float)
+#     dfaws['记忆'] = dfaws['记忆'].apply(lambda x: x.get('S', ''))
+#     dfaws['性别'] = dfaws['性别'].apply(lambda x: x.get('S', ''))
+#     dfaws['id'] = dfaws['id'].apply(lambda x: x.get('N', ''))
 
-for index, row in df_aws.iterrows():
-    name = row['姓名']
-    age = row['年龄']
-    gender = row['性别']
-    traits = row['特征']
-    status = row['状态']
-    memory = ""
-    summary = row['总结'] 
-    reflection_threshold = row['反思阈值']                                  
-    st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
-          age=age,
-          gender=gender,
-          traits=traits,
-          status=status,
-          memory_retriever=create_new_memory_retriever(),
-          llm=LLM,
-          daily_summaries = [
-               "",
-           ],
-          agent_memory=memory,
-          summary=summary,
-           reflection_threshold = reflection_threshold,
-         )
+# for index, row in df_aws.iterrows():
+#     name = row['姓名']
+#     age = row['年龄']
+#     gender = row['性别']
+#     traits = row['特征']
+#     status = row['状态']
+#     memory = ""
+#     summary = row['总结'] 
+#     reflection_threshold = row['反思阈值']                                  
+#     st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
+#           age=age,
+#           gender=gender,
+#           traits=traits,
+#           status=status,
+#           memory_retriever=create_new_memory_retriever(),
+#           llm=LLM,
+#           daily_summaries = [
+#                "",
+#            ],
+#           agent_memory=memory,
+#           summary=summary,
+#            reflection_threshold = reflection_threshold,
+#          )
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
