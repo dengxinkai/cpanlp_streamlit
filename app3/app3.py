@@ -77,6 +77,7 @@ if agent_keys:
             col1, col2= st.columns([1, 1])
             with col1:
                 do_traits.append(y.traits)
+                st.write(y.traits)
             with col2:
                 if st.button('删除',key=f"del_{key}"):
                     del st.session_state[key]
