@@ -70,9 +70,6 @@ if st.button('刷新页面'):
     st.experimental_rerun()
     st.cache_data.clear()
 if agent_keys:
-    do_name=[]
-    do_age=[]
-    do_gender=[]
     do_traits=[]
     do_status=[]
     do_reflection_threshold=[]
@@ -108,38 +105,10 @@ if agent_keys:
                     end_time = time.time()
                     st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         df = pd.DataFrame({
-                        '姓名': do_name,
-                        '年龄': do_age,
-                        '性别': do_gender,
-                        '特征': do_traits,
-                        '状态': do_status,
-                        '反思阈值': do_reflection_threshold,
-                        '记忆':do_memory,
-                        '总结':do_summary
+                        '特征': do_traits
                     })
 
         st.dataframe(df, use_container_width=True)
-        if st.button('总结所有数字人',help="总结所有",key=f"sum_all",type="primary"):
-                    start_time = time.time()
-                    with get_openai_callback() as cb:
-                        async def summary_all_agents(agent_keys):
-                            tasks = []
-                            for key in agent_keys:
-                                task = asyncio.create_task(get_summary_async(st.session_state[key]))
-                                tasks.append(task)
-                            results = await asyncio.gather(*tasks)
-                            for key, summary in zip(agent_keys, results):
-                                st.success(summary)
-                        async def get_summary_async(agent):
-                            summary = await asyncio.to_thread(agent.get_summary, force_refresh=True)
-                            return summary
-                        asyncio.run(summary_all_agents(agent_keys))
-                        st.success(f"Total Tokens: {cb.total_tokens}")
-                        st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                        st.success(f"Completion Tokens: {cb.completion_tokens}")
-                        st.success(f"Total Cost (USD): ${cb.total_cost}")
-                    end_time = time.time()
-                    st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         if st.button('删除所有数字人',key=f"delete_all"):
             for i,key in enumerate(agent_keys):
                 del st.session_state[key]
