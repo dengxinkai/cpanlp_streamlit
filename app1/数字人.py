@@ -41,18 +41,18 @@ response = dynamodb.scan(
     TableName=table_name
 )
 items = response['Items']
-df_aws = pd.DataFrame(items)
+dfaws = pd.DataFrame(items)
 if 'df_aws' in locals():
-    df_aws['特征'] = df_aws['特征'].apply(lambda x: x.get('S', ''))
-    df_aws['姓名'] = df_aws['姓名'].apply(lambda x: x.get('S', ''))
-    df_aws['年龄'] = df_aws['年龄'].apply(lambda x: x.get('N', ''))
+    dfaws['特征'] = dfaws['特征'].apply(lambda x: x.get('S', ''))
+    dfaws['姓名'] = dfaws['姓名'].apply(lambda x: x.get('S', ''))
+    dfaws['年龄'] = dfaws['年龄'].apply(lambda x: x.get('N', ''))
 #     df_aws['年龄'] = df_aws['年龄'].astype(int)
-    df_aws['状态'] = df_aws['状态'].apply(lambda x: x.get('S', ''))
-    df_aws['反思阈值'] = df_aws['反思阈值'].apply(lambda x: x.get('N', '')
+    dfaws['状态'] = dfaws['状态'].apply(lambda x: x.get('S', ''))
+    dfaws['反思阈值'] = dfaws['反思阈值'].apply(lambda x: x.get('N', '')
 #     df_aws['反思阈值'] =df_aws['反思阈值'].astype(float)
-    df_aws['记忆'] = df_aws['记忆'].apply(lambda x: x.get('S', ''))
-    df_aws['性别'] = df_aws['性别'].apply(lambda x: x.get('S', ''))
-    df_aws['id'] = df_aws['id'].apply(lambda x: x.get('N', ''))
+    dfaws['记忆'] = dfaws['记忆'].apply(lambda x: x.get('S', ''))
+    dfaws['性别'] = dfaws['性别'].apply(lambda x: x.get('S', ''))
+    dfaws['id'] = dfaws['id'].apply(lambda x: x.get('N', ''))
 
 for index, row in df_aws.iterrows():
     name = row['姓名']
