@@ -537,6 +537,7 @@ with tab1:
                   summary=summary,
                    reflection_threshold = reflection_threshold,
                  )
+        st.experimental_rerun()
 with tab2:   
     if agent_keys:  
         updates = []
