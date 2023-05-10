@@ -225,7 +225,7 @@ with tab1:
               traits=traits,
               llm=LLM
              )            
-            st.session_state[f"agent_{name}"] = agent1
+            st.session_state[f"agent_{traits}"] = agent1
             st.experimental_rerun()
     uploaded_file = st.file_uploader("csv文件上传批量建立", type=["csv"],help="csv格式：姓名、年龄、性别、特征、状态、反思阈值、记忆、总结")
     if uploaded_file is not None:
