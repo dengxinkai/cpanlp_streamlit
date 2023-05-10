@@ -114,16 +114,6 @@ agents={}
 class GenerativeAgent(BaseModel):
     traits: str
     llm: BaseLanguageModel
-    verbose: bool = False
-    agent_memory: str= ""
-    reflection_threshold: Optional[float] = None
-    
-    current_plan: List[str] = []    
-    summary: str = ""  #: :meta private:
-    summary_refresh_seconds: int= 3600  #: :meta private:
-    last_refreshed: datetime =Field(default_factory=datetime.now)  #: :meta private:
-    daily_summaries: List[str] = [] #: :meta private:
-    memory_importance: float = 0.0 #: :meta private:
     max_tokens_limit: int = 1200 #: :meta private:
     class Config:
         arbitrary_types_allowed = True
@@ -233,12 +223,7 @@ with tab1:
             global agentss
             agent1 = GenerativeAgent(
               traits=traits,
-              llm=LLM,
-              daily_summaries = [
-                   "",
-               ],
-               agent_memory=memory,
-               reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+              llm=LLM
              )
             memory_list = re.split(r'#', memory)[1:]
             
