@@ -112,11 +112,7 @@ LLM = ChatOpenAI(
     ) 
 agents={}
 class GenerativeAgent(BaseModel):
-    name: str
-    age: int
-    gender: str
     traits: str
-    status: str
     llm: BaseLanguageModel
     memory_retriever: TimeWeightedVectorStoreRetriever
     verbose: bool = False
@@ -136,159 +132,7 @@ class GenerativeAgent(BaseModel):
     def _parse_list(text: str) -> List[str]:
         lines = re.split(r'\n', text.strip())
         return [re.sub(r'^\s*\d+\.\s*', '', line).strip() for line in lines]
-    def _compute_agent_summary(self):
-        """"""
-        prompt = PromptTemplate.from_template(
-            "How would you summarize {name}'s core characteristics given the"
-            +" following statements:\n"
-            +"{related_memories}"
-            + "Do not embellish."
-            +"\n\nSummary: "
-            +"输出用中文"
-        )
-        # The agent seeks to think about their core characteristics.
-        relevant_memories = self.fetch_memories(f"{self.name}'s core characteristics")
-        relevant_memories_str = "\n".join([f"{mem.page_content}" for mem in relevant_memories])
-        chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        return chain.run(name=self.name, related_memories=relevant_memories_str).strip()
-    
-    def _get_topics_of_reflection(self, last_k: int = 50) -> Tuple[str, str, str]:
-        """Return the 3 most salient high-level questions about recent observations."""
-        prompt = PromptTemplate.from_template(
-            "{observations}\n\n"
-            + "Given only the information above, what are the 3 most salient"
-            + " high-level questions we can answer about the subjects in the statements?"
-            + " Provide each question on a new line.\n\n"
-                        +"输出用中文"
-        )
-        reflection_chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        observations = self.memory_retriever.memory_stream[-last_k:]
-        observation_str = "\n".join([o.page_content for o in observations])
-        result = reflection_chain.run(observations=observation_str)
-        return self._parse_list(result)
-    
-    def _get_insights_on_topic(self, topic: str) -> List[str]:
-        """Generate 'insights' on a topic of reflection, based on pertinent memories."""
-        prompt = PromptTemplate.from_template(
-            "Statements about {topic}\n"
-            +"{related_statements}\n\n"
-            + "What 5 high-level insights can you infer from the above statements?"
-            + " (example format: insight (because of 1, 5, 3))"
-                        +"输出用中文，除了关键词"
-        )
-        related_memories = self.fetch_memories(topic)
-        related_statements = "\n".join([f"{i+1}. {memory.page_content}" 
-                                        for i, memory in 
-                                        enumerate(related_memories)])
-        reflection_chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        result = reflection_chain.run(topic=topic, related_statements=related_statements)
-        return self._parse_list(result)
-    def pause_to_reflect(self) -> List[str]:
-        print(f"Character {self.name} is reflecting")
-        new_insights = []
-        topics = self._get_topics_of_reflection()
-        for topic in topics:
-            insights = self._get_insights_on_topic( topic)
-            for insight in insights:
-                self.add_memory(insight)
-            new_insights.extend(insights)
-        return new_insights
-    def _score_memory_importance(self, memory_content: str, weight: float = 0.15) -> float:
-        prompt = PromptTemplate.from_template(
-         "On the scale of 1 to 10, where 1 is purely mundane"
-         +" (e.g., brushing teeth, making bed) and 10 is"
-         + " extremely poignant (e.g., a break up, college"
-         + " acceptance), rate the likely poignancy of the"
-         + " following piece of memory. Respond with a single integer."
-         + "\nMemory: {memory_content}"
-         + "\nRating: "
-        )
-        chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        score = chain.run(memory_content=memory_content).strip()
-        match = re.search(r"^\D*(\d+)", score)
-        if match:
-            return (float(score[0]) / 10) * weight
-        else:
-            return 0.0
-    def add_memory(self, memory_content: str) -> List[str]:
-        """Add an observation or memory to the agent's memory."""
-        importance_score = self._score_memory_importance(memory_content)
-        self.memory_importance += importance_score
-        document = Document(page_content=memory_content, metadata={"importance": importance_score})
-        result = self.memory_retriever.add_documents([document])
-        if (self.reflection_threshold is not None 
-            and self.memory_importance > self.reflection_threshold
-            and self.status != "Reflecting"):
-            old_status = self.status
-            self.status = "Reflecting"
-            self.pause_to_reflect()
-            # Hack to clear the importance from reflection
-            self.memory_importance = 0.0
-            self.status = old_status
-        return result
-    def fetch_memories(self, observation: str) -> List[Document]:
-        return self.memory_retriever.get_relevant_documents(observation)
-    def get_summary(self, force_refresh: bool = False) -> str:
-        current_time = datetime.now()
-        since_refresh = (current_time - self.last_refreshed).seconds
-        if not self.summary or since_refresh >= self.summary_refresh_seconds or force_refresh:
-            self.summary = self._compute_agent_summary()
-            self.last_refreshed = current_time
-        return (
-            f"{self.summary}"
-        )
-    def get_full_header(self, force_refresh: bool = False) -> str:
-        summary = self.get_summary(force_refresh=force_refresh)
-        current_time_str =  datetime.now().strftime("%B %d, %Y, %I:%M %p")
-        return f"{summary}\nIt is {current_time_str}.\n{self.name}'s status: {self.status}"
-    def _get_entity_from_observation(self, observation: str) -> str:
-        prompt = PromptTemplate.from_template(
-            "What is the observed entity in the following observation? {observation}"
-            +"\nEntity="
-        )
-        chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        return chain.run(observation=observation).strip()
-    def _get_entity_action(self, observation: str, entity_name: str) -> str:
-        prompt = PromptTemplate.from_template(
-            "What is the {entity} doing in the following observation? {observation}"
-            +"\nThe {entity} is"
-        )
-        chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        return chain.run(entity=entity_name, observation=observation).strip()
-    def _format_memories_to_summarize(self, relevant_memories: List[Document]) -> str:
-        content_strs = set()
-        content = []
-        for mem in relevant_memories:
-            if mem.page_content in content_strs:
-                continue
-            content_strs.add(mem.page_content)
-            created_time = mem.metadata["created_at"].strftime("%B %d, %Y, %I:%M %p")
-            content.append(f"- {created_time}: {mem.page_content.strip()}")
-        return "\n".join([f"{mem}" for mem in content])
-    def summarize_related_memories(self, observation: str) -> str:
-        """Summarize memories that are most relevant to an observation."""
-        entity_name = self._get_entity_from_observation(observation)
-        entity_action = self._get_entity_action(observation, entity_name)
-        q1 = f"What is the relationship between {self.name} and {entity_name}"
-        relevant_memories = self.fetch_memories(q1) # Fetch memories related to the agent's relationship with the entity
-        q2 = f"{entity_name} is {entity_action}"
-        relevant_memories += self.fetch_memories(q2) # Fetch things related to the entity-action pair
-        context_str = self._format_memories_to_summarize(relevant_memories)
-        prompt = PromptTemplate.from_template(
-            "{q1}?\nContext from memory:\n{context_str}\nRelevant context: "
-        )
-        chain = LLMChain(llm=self.llm, prompt=prompt, verbose=self.verbose)
-        return chain.run(q1=q1, context_str=context_str.strip()).strip()
-    def _get_memories_until_limit(self, consumed_tokens: int) -> str:
-        """Reduce the number of tokens in the documents."""
-        result = []
-        for doc in self.memory_retriever.memory_stream[::-1]:
-            if consumed_tokens >= self.max_tokens_limit:
-                break
-            consumed_tokens += self.llm.get_num_tokens(doc.page_content)
-            if consumed_tokens < self.max_tokens_limit:
-                result.append(doc.page_content) 
-        return "; ".join(result[::-1])
+  
     def _generate_reaction(
         self,
         observation: str,
@@ -364,18 +208,6 @@ class GenerativeAgent(BaseModel):
             return True, f"{self.name} 说：{response_text}"
         else:
             return False, result
-def relevance_score_fn(score: float) -> float:
-    """Return a similarity score on a scale [0, 1]."""
-    return 1.0 - score / math.sqrt(2)
-def create_new_memory_retriever():
-    """Create a new vector store retriever unique to the agent."""
-    # Define your embedding model
-    embeddings_model = OpenAIEmbeddings()
-    # Initialize the vectorstore as empty
-    embedding_size = 1536
-    index = faiss.IndexFlatL2(embedding_size)
-    vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
-    return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 def interview_agent(agent: GenerativeAgent, message: str) -> str:
     new_message = f"{message}"
     return agent.generate_dialogue_response(new_message)[1]
@@ -396,25 +228,12 @@ def run_conversation(agents: List[GenerativeAgent], initial_observation: str) ->
         turns += 1
 with tab1:
     with st.expander("单个创建"):
-        name = st.text_input('姓名','Graham', key="name_input1_6")
-        age = st.number_input('年龄',min_value=0, max_value=100, value=20, step=1, key="name_input1_8")
-        gender = st.selectbox(
-            "性别",
-            ("男", "女"),
-            label_visibility="collapsed"
-              )
         traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
-        status = st.text_input('状态','博士在读，创业实践中', key="status_input1_5",help="状态，不同状态用逗号分隔")
-        reflection_threshold = st.slider("反思阈值",min_value=1, max_value=10, value=8, step=1, key="name_input1_9",help="当记忆的总重要性超过该阈值时，模型将停止反思，即不再深入思考已经记住的内容。设置得太高，模型可能会忽略一些重要的信息；设置得太低，模型可能会花费过多时间在不太重要的信息上，从而影响学习效率。")
-        memory = st.text_input('记忆','#妈妈很善良#喜欢看动漫#有过一个心爱的女人', key="mery_input1_5",help="记忆，不同记忆用#分隔")
         if st.button('创建',help="创建数字人"):
             global agent1
             global agentss
-            agent1 = GenerativeAgent(name=name, 
-              age=age,
-              gender=gender,
+            agent1 = GenerativeAgent(
               traits=traits,
-              status=status,
               memory_retriever=create_new_memory_retriever(),
               llm=LLM,
               daily_summaries = [
@@ -424,8 +243,7 @@ with tab1:
                reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
              )
             memory_list = re.split(r'#', memory)[1:]
-            for memory in memory_list:
-                agent1.add_memory(memory)    
+            
             st.session_state[f"agent_{name}"] = agent1
             st.experimental_rerun()
     uploaded_file = st.file_uploader("csv文件上传批量建立", type=["csv"],help="csv格式：姓名、年龄、性别、特征、状态、反思阈值、记忆、总结")
@@ -442,10 +260,9 @@ with tab1:
             summary = row['总结'] 
             reflection_threshold = row['反思阈值']
             st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
-                  age=age,
-                  gender=gender,
+               
                   traits=traits,
-                  status=status,
+                
                   memory_retriever=create_new_memory_retriever(),
                   llm=LLM,
                   daily_summaries = [
