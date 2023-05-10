@@ -645,7 +645,7 @@ with tab3:
             merged_results = ''.join(df_inter['采访结果'])
             summary_template = """根据上述这些的回答{answer},对关于{question}问题的回答进行总结?"""
             summary_prompt = PromptTemplate(template=summary_template, input_variables=["answer", "question"])
-            llm_chain = LLMChain(prompt=summary_prompt, llm=llm)
+            llm_chain = LLMChain(prompt=summary_prompt, llm=LLM)
             st.write(llm_chain.predict(answer=merged_results, question=question))
         with st.expander("采访记录"):
             st.dataframe(df_inter, use_container_width=True)
