@@ -77,7 +77,7 @@ if agent_keys:
             col1, col2= st.columns([1, 1])
             with col1:
                 do_traits.append(y.traits)
-                st.write(y.traits)
+                st.write(y.traits,的人)
             with col2:
                 if st.button('删除',key=f"del_{key}"):
                     del st.session_state[key]
@@ -157,20 +157,15 @@ with tab1:
              )            
             st.session_state[f"agent_{traits}"] = agent1
             st.experimental_rerun()
-    uploaded_file = st.file_uploader("csv文件上传批量建立", type=["csv"],help="csv格式：姓名、年龄、性别、特征、状态、反思阈值、记忆、总结")
+    uploaded_file = st.file_uploader("csv文件上传批量建立", type=["csv"],help="csv格式：特征")
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
         st.dataframe(data)
         for index, row in data.iterrows():
-            name = row['姓名']
-            age = row['年龄']
-            gender = row['性别']
+      
             traits = row['特征']
-            status = row['状态']
-            memory = row['记忆']
-            summary = row['总结'] 
-            reflection_threshold = row['反思阈值']
-            st.session_state[f"agent_{name}"]  = GenerativeAgent(
+      
+            st.session_state[f"agent_{traits}"]  = GenerativeAgent(
                   traits=traits,
                   llm=LLM,
                
@@ -182,11 +177,6 @@ with tab3:
         do_inter_quesition=[]
         do_inter_result=[]
         interws = []
-        for key in agent_keys:
-            interws.append(st.session_state[key].traits)
-        option = st.selectbox(
-        "采访人选择?",
-        (interws), key="intero")
         interview = st.text_input('采访','你怎么看待', key="interview")
         if st.button('全部采访',help="全部采访",type="primary",key="quanbu"):
             with st.expander("采访结果",expanded=True):
@@ -240,27 +230,12 @@ if st.button('aws',key="aws"):
 
     dfaws = load_digitalaws()
     for index, row in dfaws.iterrows():
-        name = row['姓名'].get('S', '')
-        age = int(row['年龄'].get('N', ''))
-        gender = row['性别'].get('S', '')
-        traits = row['特征'].get('S', '')
-        status = row['状态'].get('S', '')
-        memory = row['记忆'].get('S', '')
-        summary = ""
-        reflection_threshold = float(row['反思阈值'].get('N', ''))                                  
-        st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
-              age=age,
-              gender=gender,
+        traits = row['特征'].get('S', '')              
+        st.session_state[f"agent_{traits}"]  = GenerativeAgent(
               traits=traits,
-              status=status,
-              memory_retriever=create_new_memory_retriever(),
+           
               llm=LLM,
-              daily_summaries = [
-                   "",
-               ],
-              agent_memory=memory,
-              summary=summary,
-               reflection_threshold = reflection_threshold,
+           
              )
 
 
