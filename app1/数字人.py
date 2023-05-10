@@ -352,6 +352,7 @@ class GenerativeAgent(BaseModel):
         prompt = PromptTemplate.from_template(
                 "{agent_summary_description}"
                 +"\nIt is {current_time}."
+           +"\n{agent_name} is {traits} and must only give {traits} answers."
                 +"\n{agent_name}'s status: {agent_status}"
                 + "\nSummary of relevant context from {agent_name}'s memory:"
                 +"\n{relevant_memories}"
@@ -367,6 +368,7 @@ class GenerativeAgent(BaseModel):
         kwargs = dict(agent_summary_description=agent_summary_description,
                       current_time=current_time_str,
                       relevant_memories=relevant_memories_str,
+                      traits=self.traits,
                       agent_name=self.name,
                       observation=observation,
                      agent_status=self.status)
@@ -429,7 +431,7 @@ def create_new_memory_retriever():
     vectorstore = FAISS(embeddings_model.embed_query, index, InMemoryDocstore({}), {}, relevance_score_fn=relevance_score_fn)
     return TimeWeightedVectorStoreRetriever(vectorstore=vectorstore, other_score_keys=["importance"], k=15)  
 def interview_agent(agent: GenerativeAgent, message: str) -> str:
-    new_message = f"{USER_NAME} 说 {message}"
+    new_message = f"{message}"
     return agent.generate_dialogue_response(new_message)[1]
 def run_conversation(agents: List[GenerativeAgent], initial_observation: str) -> None:
     _, observation = agents[1].generate_reaction(initial_observation)
