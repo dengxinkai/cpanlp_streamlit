@@ -18,7 +18,7 @@ from langchain.vectorstores import FAISS
 from langchain.chat_models import ChatOpenAI
 from langchain.callbacks import get_openai_callback
 from langchain.retrievers import TimeWeightedVectorStoreRetriever
-
+import boto3
 st.set_page_config(
     page_title="数字人",
     page_icon="https://raw.githubusercontent.com/dengxinkai/cpanlp_streamlit/main/app1/shuziren.jpg",
@@ -30,6 +30,19 @@ st.set_page_config(
         'About': '社科实验数字人'
     }
 )
+dynamodb = boto3.client(
+    'dynamodb',
+    region_name="ap-southeast-1", 
+    aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
+    aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
+    )
+response = dynamodb.get_item(
+    TableName='usersstreamlit',
+    Key={
+        'id': {'N': '1'}
+    }
+)
+st.write(response)
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
