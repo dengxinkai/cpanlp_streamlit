@@ -42,14 +42,14 @@ response = dynamodb.scan(
 )
 items = response['Items']
 dfaws = pd.DataFrame(items)
-if 'df_aws' in locals():
+if 'dfaws' in locals():
     dfaws['特征'] = dfaws['特征'].apply(lambda x: x.get('S', ''))
     dfaws['姓名'] = dfaws['姓名'].apply(lambda x: x.get('S', ''))
     dfaws['年龄'] = dfaws['年龄'].apply(lambda x: x.get('N', ''))
-#     df_aws['年龄'] = df_aws['年龄'].astype(int)
+    dfaws['年龄'] = dfaws['年龄'].astype(int)
     dfaws['状态'] = dfaws['状态'].apply(lambda x: x.get('S', ''))
     dfaws['反思阈值'] = dfaws['反思阈值'].apply(lambda x: x.get('N', '')
-#     df_aws['反思阈值'] =df_aws['反思阈值'].astype(float)
+    dfaws['反思阈值'] =dfaws['反思阈值'].astype(float)
     dfaws['记忆'] = dfaws['记忆'].apply(lambda x: x.get('S', ''))
     dfaws['性别'] = dfaws['性别'].apply(lambda x: x.get('S', ''))
     dfaws['id'] = dfaws['id'].apply(lambda x: x.get('N', ''))
