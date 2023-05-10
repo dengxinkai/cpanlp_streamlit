@@ -42,7 +42,12 @@ response = dynamodb.get_item(
         'id': {'N': '1'}
     }
 )
-st.write(response)
+item = response.get('Item', {})
+name = item.get('name', {}).get('S', '')
+email = item.get('email', {}).get('S', '')
+st.write(name)
+st.write(email)
+
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
