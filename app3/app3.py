@@ -114,7 +114,6 @@ agents={}
 class GenerativeAgent(BaseModel):
     traits: str
     llm: BaseLanguageModel
-    max_tokens_limit: int = 1200 #: :meta private:
     class Config:
         arbitrary_types_allowed = True
     @staticmethod
@@ -122,99 +121,29 @@ class GenerativeAgent(BaseModel):
         lines = re.split(r'\n', text.strip())
         return [re.sub(r'^\s*\d+\.\s*', '', line).strip() for line in lines]
   
-    def _generate_reaction(
+    def generate_reaction(
         self,
         observation: str,
-        suffix: str
     ) -> str:
-        """React to a given observation."""
         prompt = PromptTemplate.from_template(
-                "{agent_summary_description}"
-                +"\nIt is {current_time}."
-           +"\n{agent_name} is {traits} and must only give {traits} answers."
-                +"\n{agent_name}'s status: {agent_status}"
-                + "\nSummary of relevant context from {agent_name}'s memory:"
-                +"\n{relevant_memories}"
-                +"\nMost recent observations: {recent_observations}"
-                + "\nObservation: {observation}"
-                + "\n\n" + suffix
-                +"输出用中文，除了SAY:、REACT:"
-
+            "You are {traits} and must only give {traits} answers."
+                +"\nQuestion: {observation}"
+                +"\n{traits}answer:中文回答"       
         )
-        agent_summary_description = self.get_summary()
-        relevant_memories_str = self.summarize_related_memories(observation)
-        current_time_str = datetime.now().strftime("%B %d, %Y, %I:%M %p")
-        kwargs = dict(agent_summary_description=agent_summary_description,
-                      current_time=current_time_str,
-                      relevant_memories=relevant_memories_str,
+ 
+        kwargs = dict(
                       traits=self.traits,
-                      agent_name=self.name,
-                      observation=observation,
-                     agent_status=self.status)
-        consumed_tokens = self.llm.get_num_tokens(prompt.format(recent_observations="", **kwargs))
-        kwargs["recent_observations"] = self._get_memories_until_limit(consumed_tokens)
+                     
+                      observation=observation
+                    )
         action_prediction_chain = LLMChain(llm=self.llm, prompt=prompt)
         result = action_prediction_chain.run(**kwargs)
         return result.strip()
-    def generate_reaction(self, observation: str) -> Tuple[bool, str]:
-        call_to_action_template = (
-            "Should {agent_name} react to the observation, and if so,"
-            +" what would be an appropriate reaction? Respond in one line."
-            +' If the action is to engage in dialogue, write:\nSAY: "what to say"'
-            +"\notherwise, write:\nREACT: {agent_name}'s reaction (if anything)."
-            + "\nEither do nothing, react, or say something but not both.\n\n"
-                +"输出用中文，除了SAY:、REACT:"
-        )
-        full_result = self._generate_reaction(observation, call_to_action_template)
-        result = full_result.strip().split('\n')[0]
-        self.add_memory(f"{self.name} 观察到 {observation} 同时反应了 {result}")
-        if "REACT:" in result or "REACT：" in result or "反应：" in result or "反应:" in result:
-            reaction = re.split(r'REACT:|REACT：|反应：|反应:', result)[-1].strip()
-            return False, f"{reaction}"
-        if "SAY:" in result or "SAY：" in result or "说：" in result or "说:" in result:
-            said_value = re.split(r'SAY:|SAY：|说：|说:', result)[-1].strip()
-            return True, f"{self.name} 说 {said_value}"
-        else:
-            return False, result
-    def generate_dialogue_response(self, observation: str) -> Tuple[bool, str]:
-        call_to_action_template = (
-            'What would {agent_name} say? To end the conversation,'
-            +'write: GOODBYE: "what to say". '
-            +'Otherwise to continue the conversation, write: SAY: "what to say next"\n\n'
-            +'输出用中文，除了GOODBYE:、SAY:'
-        )
-        full_result = self._generate_reaction(observation, call_to_action_template)
-        result = full_result.strip().split('\n')[0]
-        if "GOODBYE:" in result or "GOODBYE：" in result or "再见：" in result or "再见:" in result:
-            farewell = re.split(r'GOODBYE：|GOODBYE:|再见:|再见：', result)[-1].strip()
-            self.add_memory(f"{self.name} 观察到 {observation} 同时说 {farewell}")
-            self.agent_memory += f"#{self.name} 观察到 {observation} 同时说 {farewell}"
-            return False, f"{self.name} 说：{farewell}"
-        if "SAY:" in result or "SAY：" in result or "说：" in result or "说:" in result:
-            response_text = re.split(r'SAY：|说：|SAY:|说:', result)[-1].strip()
-            self.add_memory(f"{self.name} 观察到 {observation} 同时说 {response_text}")
-            self.agent_memory += f"#{self.name} 观察到 {observation} 同时说 {response_text}"
-            return True, f"{self.name} 说：{response_text}"
-        else:
-            return False, result
+  
 def interview_agent(agent: GenerativeAgent, message: str) -> str:
     new_message = f"{message}"
-    return agent.generate_dialogue_response(new_message)[1]
-def run_conversation(agents: List[GenerativeAgent], initial_observation: str) -> None:
-    _, observation = agents[1].generate_reaction(initial_observation)
-    st.success(observation)
-    turns = 0
-    while True:
-        break_dialogue = False
-        for agent in agents:
-            stay_in_dialogue, observation = agent.generate_dialogue_response(observation)
-            st.success(observation)
-            # observation = f"{agent.name} said {reaction}"
-            if not stay_in_dialogue:
-                break_dialogue = True   
-        if break_dialogue:
-            break
-        turns += 1
+    return agent.generate_reaction(new_message)
+
 with tab1:
     with st.expander("单个创建"):
         traits = st.text_input('特征','既内向也外向，渴望成功', key="name_input1_4",help="性格特征，不同特征用逗号分隔")
