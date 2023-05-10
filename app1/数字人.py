@@ -608,33 +608,31 @@ with tab3:
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         if st.button('全部采访',help="全部采访",type="primary",key="quanbu"):
-            start_time = time.time()
-            with get_openai_callback() as cb:
-                async def interview_all_agents(agent_keys, interview):
-                    tasks = []
-                    for key in agent_keys:
-                        task = asyncio.create_task(interview_agent_async(st.session_state[key], interview))
-                        tasks.append(task)
-                    results = await asyncio.gather(*tasks)
-                    for key, inter_result in zip(agent_keys, results):
-                        st.success(inter_result)
-                        do_inter_name.append(st.session_state[key].name)
-                        do_inter_quesition.append(interview)
-                        do_inter_result.append(inter_result)
-                    return do_inter_name,do_inter_quesition, do_inter_result
-
-                async def interview_agent_async(agent, interview):
-                    inter_result = await asyncio.to_thread(interview_agent, agent, interview)
-                    return inter_result
-                do_inter_name, do_inter_quesition,do_inter_result = asyncio.run(interview_all_agents(agent_keys, interview))
-
-                with st.expander("费用"):
+            with st.expander("采访结果",expanded=True):
+                start_time = time.time()
+                with get_openai_callback() as cb:
+                    async def interview_all_agents(agent_keys, interview):
+                        tasks = []
+                        for key in agent_keys:
+                            task = asyncio.create_task(interview_agent_async(st.session_state[key], interview))
+                            tasks.append(task)
+                        results = await asyncio.gather(*tasks)
+                        for key, inter_result in zip(agent_keys, results):
+                            st.success(inter_result)
+                            do_inter_name.append(st.session_state[key].name)
+                            do_inter_quesition.append(interview)
+                            do_inter_result.append(inter_result)
+                        return do_inter_name,do_inter_quesition, do_inter_result
+                    async def interview_agent_async(agent, interview):
+                        inter_result = await asyncio.to_thread(interview_agent, agent, interview)
+                        return inter_result
+                    do_inter_name, do_inter_quesition,do_inter_result = asyncio.run(interview_all_agents(agent_keys, interview))
                     st.success(f"Total Tokens: {cb.total_tokens}")
                     st.success(f"Prompt Tokens: {cb.prompt_tokens}")
                     st.success(f"Completion Tokens: {cb.completion_tokens}")
                     st.success(f"Total Cost (USD): ${cb.total_cost}")
-            end_time = time.time()
-            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+                end_time = time.time()
+                st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         df_inter = pd.DataFrame({
                     '被采访人':do_inter_name,
                     '采访问题':do_inter_quesition,
@@ -643,7 +641,7 @@ with tab3:
         if len(df_inter) > 1:
             question = df_inter.loc[0, '采访问题']
             merged_results = ''.join(df_inter['采访结果'])
-            summary_template = """根据上述这些的回答{answer},对关于{question}问题的回答进行总结?"""
+            summary_template = """用统计学的方法根据上述回答{answer},对关于{question}问题的回答进行总结，并分析结论是否有显著性?"""
             summary_prompt = PromptTemplate(template=summary_template, input_variables=["answer", "question"])
             llm_chain = LLMChain(prompt=summary_prompt, llm=LLM)
             st.write(llm_chain.predict(answer=merged_results, question=question))
