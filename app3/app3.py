@@ -155,7 +155,7 @@ if agent_keys:
 
 else:
     st.warning("当前不存在数字人") 
-tab1, tab2, tab3,tab4 = st.tabs(["数字人创建", "新观察与记忆", ":blue[**社科调查**]", "数字人对话"])
+tab1, tab2, tab3 = st.tabs(["数字人创建", "新观察与记忆", ":blue[**社科调查**]"])
 LLM = ChatOpenAI(
         model_name=model,
         temperature=temperature,
@@ -546,40 +546,6 @@ with tab2:
                             st.success(f"Total Cost (USD): ${cb.total_cost}")
             end_time = time.time()
             st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
-with tab4:
-    if len(agent_keys) > 1: 
-        diags = []
-        for key in agent_keys:
-            diags.append(st.session_state[key].name)
-        diag1 = st.selectbox(
-        "第一对话人选择?",
-        (diags), key="diag1")
-        diag2 = st.selectbox(
-        "第二对话人选择?",
-        (diags), key="diag2")
-        if diag2 == diag1:
-            st.write(diag1,"自问自答道：", key="diagself")
-        else:
-            st.write(diag1, "对",diag2,"说：",key="diag2")
-        diag = st.text_input('', key="diaglogue",label_visibility="collapsed")
-        if st.button('对话',help="对话生成",type="primary"):
-            start_time = time.time()
-            diagagents=[]
-            with get_openai_callback() as cb:
-                for key in agent_keys:
-                    if getattr(st.session_state[key], 'name') == diag1:
-                        diagagents.append(st.session_state[key])
-                for key in agent_keys:
-                    if getattr(st.session_state[key], 'name') == diag2: 
-                        diagagents.append(st.session_state[key])
-                run_conversation(diagagents, diag)
-                with st.expander("费用"):
-                    st.success(f"Total Tokens: {cb.total_tokens}")
-                    st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                    st.success(f"Completion Tokens: {cb.completion_tokens}")
-                    st.success(f"Total Cost (USD): ${cb.total_cost}")
-            end_time = time.time()
-            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
 with tab3:            
     if agent_keys:
         do_inter_name=[]
@@ -592,23 +558,6 @@ with tab3:
         "采访人选择?",
         (interws), key="intero")
         interview = st.text_input('采访','你怎么看待', key="interview")
-        if st.button('单个采访',help="单个采访",type="primary",key="dange"):
-            start_time = time.time()
-            with get_openai_callback() as cb:
-                for key in agent_keys:
-                    if getattr(st.session_state[key], 'name') == option:
-                        inter_result=interview_agent(st.session_state[key], interview)
-                        st.success(inter_result)
-                        do_inter_name.append(st.session_state[key].name)
-                        do_inter_quesition.append(interview)
-                        do_inter_result.append(inter_result)
-                        with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
-            end_time = time.time()
-            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
         if st.button('全部采访',help="全部采访",type="primary",key="quanbu"):
             with st.expander("采访结果",expanded=True):
                 start_time = time.time()
