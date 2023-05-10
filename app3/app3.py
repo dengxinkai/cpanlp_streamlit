@@ -101,7 +101,7 @@ if agent_keys:
 
 else:
     st.warning("当前不存在数字人") 
-tab1, tab2, tab3 = st.tabs(["数字人创建", "新观察与记忆", ":blue[**社科调查**]"])
+tab1, tab3 = st.tabs(["数字人创建", ":blue[**社科调查**]"])
 LLM = ChatOpenAI(
         model_name=model,
         temperature=temperature,
@@ -455,43 +455,7 @@ with tab1:
                   summary=summary,
                    reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
                  )
-#             memory_list = re.split(r'#', memory)[1:]
-#             for memory in memory_list:
-#                 agent1.add_memory(memory)   
-with tab2:   
-    if agent_keys:  
-        updates = []
-        for key in agent_keys:
-            updates.append(st.session_state[key].name)
-        option = st.selectbox("更新人选择",
-        (updates), key="update")
-        memory = st.text_input('记忆更新','', key="update_memo",help="新记忆，不同新记忆用#标记")
-        if st.button('确认',help="记忆更新",type="primary"):
-            memory_list = re.split(r'#', memory)[0:]
-            for key in agent_keys:
-                if getattr(st.session_state[key], 'name') == option:
-                    for memory in memory_list:
-                        st.session_state[key].add_memory(memory)
-                        st.session_state[key].agent_memory = st.session_state[key].agent_memory + '#' + memory
-            st.experimental_rerun()  
-        observ = st.text_input('观察更新','', key="update_observ",help="新观察，不同新观察用#标记")
-        if st.button('确认',help="观察更新",type="primary"):
-            start_time = time.time()
-            observ_list = re.split(r'#', observ)[0:]
-            with get_openai_callback() as cb:
-                for key in agent_keys:
-                    if getattr(st.session_state[key], 'name') == option:
-                        for i, observation in enumerate(observ_list):
-                            _, reaction = st.session_state[key].generate_reaction(observation)
-                            st.write(f"{i+1}、 {observation}")
-                            st.success(reaction)
-                        with st.expander("费用"):
-                            st.success(f"Total Tokens: {cb.total_tokens}")
-                            st.success(f"Prompt Tokens: {cb.prompt_tokens}")
-                            st.success(f"Completion Tokens: {cb.completion_tokens}")
-                            st.success(f"Total Cost (USD): ${cb.total_cost}")
-            end_time = time.time()
-            st.write(f"采访用时：{round(end_time-start_time,2)} 秒")
+
 with tab3:            
     if agent_keys:
         do_inter_name=[]
