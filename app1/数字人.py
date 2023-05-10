@@ -36,22 +36,49 @@ dynamodb = boto3.client(
     aws_access_key_id=st.secrets["AWS_ACCESS_KEY_ID"],
     aws_secret_access_key=st.secrets["AWS_SECRET_ACCESS_KEY"]
     )
-response = dynamodb.get_item(
-    TableName='digit_human',
-    Key={
-        'id': {'N': '1'}
-    }
-)
-item = response.get('Item', {})
-姓名 = item.get('姓名', {}).get('S', '')
-年龄 = item.get('年龄', {}).get('N', '')
-记忆 = item.get('记忆', {}).get('S', '')
-特征 = item.get('特征', {}).get('S', '')
-st.write(姓名)
-st.write(年龄)
-st.write(记忆)
-st.write(特征)
 
+# 定义要查询的表名称
+table_name = 'digit_human1'
+# 查询DynamoDB表中的数据
+response = dynamodb.scan(
+    TableName=table_name
+)
+# 将响应中的项目转换为Pandas DataFrame
+items = response['Items']
+df_aws = pd.DataFrame(items)
+df_aws['特征'] = df_aws['特征'].apply(lambda x: x.get('S', ''))
+df_aws['姓名'] = df_aws['姓名'].apply(lambda x: x.get('S', ''))
+df_aws['年龄'] = df_aws['年龄'].apply(lambda x: x.get('N', ''))
+df_aws['状态'] = df_aws['状态'].apply(lambda x: x.get('S', ''))
+df_aws['反思阈值'] = df_aws['反思阈值'].apply(lambda x: x.get('N', '')
+df_aws['记忆'] = df_aws['记忆'].apply(lambda x: x.get('S', ''))
+df_aws['性别'] = df_aws['性别'].apply(lambda x: x.get('S', ''))
+df_aws['id'] = df_aws['id'].apply(lambda x: x.get('N', ''))
+
+for index, row in df_aws.iterrows():
+    name = row['姓名']
+    age = row['年龄']
+    gender = row['性别']
+    traits = row['特征']
+    status = row['状态']
+    memory = row['记忆']
+    summary = row['总结'] 
+    reflection_threshold = row['反思阈值']
+                                      
+    st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
+          age=age,
+          gender=gender,
+          traits=traits,
+          status=status,
+          memory_retriever=create_new_memory_retriever(),
+          llm=LLM,
+          daily_summaries = [
+               "",
+           ],
+          agent_memory=memory,
+          summary=summary,
+           reflection_threshold = reflection_threshold,
+         )
 
 @st.cache_data(persist="disk")
 def convert_df(df):
