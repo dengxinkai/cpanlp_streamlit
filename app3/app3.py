@@ -253,7 +253,7 @@ with tab3:
         do_inter_result=[]
         interws = []
         for key in agent_keys:
-            interws.append(st.session_state[key].name)
+            interws.append(st.session_state[key].traits)
         option = st.selectbox(
         "采访人选择?",
         (interws), key="intero")
@@ -270,7 +270,7 @@ with tab3:
                         results = await asyncio.gather(*tasks)
                         for key, inter_result in zip(agent_keys, results):
                             st.success(inter_result)
-                            do_inter_name.append(st.session_state[key].name)
+                            do_inter_name.append(st.session_state[key].traits)
                             do_inter_quesition.append(interview)
                             do_inter_result.append(inter_result)
                         return do_inter_name,do_inter_quesition, do_inter_result
