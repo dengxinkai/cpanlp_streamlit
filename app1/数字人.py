@@ -676,6 +676,8 @@ for index, row in dfaws.iterrows():
           summary=summary,
            reflection_threshold = reflection_threshold,
          )
+st.experimental_rerun()
+
 
 
 
