@@ -1,8 +1,15 @@
 streamlit
-matplotlib
-scikit-learn
 pandas
-seaborn
+scikit-learn
 numpy
-yfinance
+langchain == 0.0.145
+openai
+tiktoken
+chromadb
+pypdf
+wikipedia
+pinecone-client
+google-api-python-client
+faiss-cpu
+asyncio
 boto3
