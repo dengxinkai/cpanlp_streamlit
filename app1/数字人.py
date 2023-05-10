@@ -62,7 +62,7 @@ for index, row in dfaws.iterrows():
     traits = row['特征'].get('S', '')
     status = row['状态'].get('S', '')
     memory = row['记忆'].get('S', '')
-    summary = row['总结'].get('S', '') 
+    summary = ""
     reflection_threshold = float(row['反思阈值'].get('N', ''))                                  
     st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
           age=age,
