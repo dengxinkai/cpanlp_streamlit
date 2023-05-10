@@ -114,7 +114,6 @@ agents={}
 class GenerativeAgent(BaseModel):
     traits: str
     llm: BaseLanguageModel
-    memory_retriever: TimeWeightedVectorStoreRetriever
     verbose: bool = False
     agent_memory: str= ""
     reflection_threshold: Optional[float] = None
@@ -234,7 +233,6 @@ with tab1:
             global agentss
             agent1 = GenerativeAgent(
               traits=traits,
-              memory_retriever=create_new_memory_retriever(),
               llm=LLM,
               daily_summaries = [
                    "",
