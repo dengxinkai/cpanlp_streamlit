@@ -142,7 +142,7 @@ class GenerativeAgent(BaseModel):
   
 def interview_agent(agent: GenerativeAgent, message: str) -> str:
     new_message = f"{message}"
-    return agent.generate_reaction(new_message)
+    return (agent.traits+"的人觉得："+agent.generate_reaction(new_message))
 
 with tab1:
     with st.expander("单个创建"):
