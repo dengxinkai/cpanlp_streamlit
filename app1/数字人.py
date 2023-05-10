@@ -650,8 +650,6 @@ with tab3:
                "text/csv",
                key='download-csv_inter'
             )
-
-
 dfaws = load_digitalaws()
 for index, row in dfaws.iterrows():
     name = row['姓名'].get('S', '')
@@ -676,7 +674,6 @@ for index, row in dfaws.iterrows():
           summary=summary,
            reflection_threshold = reflection_threshold,
          )
-st.experimental_rerun()
 
 
 
