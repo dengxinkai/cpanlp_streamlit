@@ -30,24 +30,6 @@ st.set_page_config(
         'About': '社科实验数字人'
     }
 )
-import sqlite3
-
-# 连接到SQLite3数据库
-conn = sqlite3.connect('/Users/dengxinkaiacca163.com/Desktop/语言学理论/intelligent-report/report.db')
-
-# 创建一个游标对象
-cursor = conn.cursor()
-
-# 执行SQL查询并获取结果
-cursor.execute('SELECT * FROM COMPONY')
-results = cursor.fetchall()
-
-# 在Streamlit应用程序中显示结果
-st.write(results)
-
-# 关闭连接
-conn.close()
-
 @st.cache_data(persist="disk")
 def convert_df(df):
    return df.to_csv(index=False).encode('utf-8')
