@@ -47,7 +47,7 @@ df_aws['姓名'] = df_aws['姓名'].apply(lambda x: x.get('S', ''))
 df_aws['年龄'] = df_aws['年龄'].apply(lambda x: x.get('N', '')).astype(int)
 df_aws['状态'] = df_aws['状态'].apply(lambda x: x.get('S', ''))
 df_aws['反思阈值'] = df_aws['反思阈值'].apply(lambda x: x.get('N', '').astype(float)
-df_aws['记忆'] = df_aws['记忆'].apply(lambda x: x.get('S', ''))
+# df_aws['记忆'] = df_aws['记忆'].apply(lambda x: x.get('S', ''))
 df_aws['性别'] = df_aws['性别'].apply(lambda x: x.get('S', ''))
 df_aws['id'] = df_aws['id'].apply(lambda x: x.get('N', '')).astype(int)
 
@@ -57,7 +57,7 @@ for index, row in df_aws.iterrows():
     gender = row['性别']
     traits = row['特征']
     status = row['状态']
-    memory = row['记忆']
+    memory = ""
     summary = row['总结'] 
     reflection_threshold = row['反思阈值']                                  
     st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
