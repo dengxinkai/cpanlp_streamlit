@@ -640,6 +640,13 @@ with tab3:
                     '采访问题':do_inter_quesition,
                     '采访结果': do_inter_result,
                 })
+        if len(df_inter) > 1:
+            question = df_inter.loc[0, '采访问题']
+            merged_results = ''.join(df_inter['采访结果'])
+            summary_template = """根据上述这些的回答{answer},对关于{question}问题的回答进行总结?"""
+            summary_prompt = PromptTemplate(template=summary_template, input_variables=["answer", "question"])
+            llm_chain = LLMChain(prompt=summary_prompt, llm=llm)
+            st.write(llm_chain.predict(answer=merged_results, question=question))
         with st.expander("采访记录"):
             st.dataframe(df_inter, use_container_width=True)
             csv_inter = convert_df(df_inter)
