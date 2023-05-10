@@ -224,9 +224,7 @@ with tab1:
             agent1 = GenerativeAgent(
               traits=traits,
               llm=LLM
-             )
-            memory_list = re.split(r'#', memory)[1:]
-            
+             )            
             st.session_state[f"agent_{name}"] = agent1
             st.experimental_rerun()
     uploaded_file = st.file_uploader("csv文件上传批量建立", type=["csv"],help="csv格式：姓名、年龄、性别、特征、状态、反思阈值、记忆、总结")
@@ -242,18 +240,10 @@ with tab1:
             memory = row['记忆']
             summary = row['总结'] 
             reflection_threshold = row['反思阈值']
-            st.session_state[f"agent_{name}"]  = GenerativeAgent(name=name, 
-               
+            st.session_state[f"agent_{name}"]  = GenerativeAgent(
                   traits=traits,
-                
-                  memory_retriever=create_new_memory_retriever(),
                   llm=LLM,
-                  daily_summaries = [
-                       "",
-                   ],
-                  agent_memory=memory,
-                  summary=summary,
-                   reflection_threshold = reflection_threshold, # we will give this a relatively low number to show how reflection works
+               
                  )
 
 with tab3:            
